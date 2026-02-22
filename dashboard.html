@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tanya Fisika</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* =============================================
+           DASHBOARD — MODERN EDUCATIONAL PLATFORM
+           ============================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body.dashboard-page {
+            font-family: 'Inter', sans-serif !important;
+            background: #0a0e27 !important;
+            color: #e8eaf6 !important;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 72px;
+        }
+
+        /* Remove old wallpaper and physics animations */
+        .chalk-wallpaper {
+            display: none !important;
+        }
+
+        #app {
+            display: none !important;
+        }
+
+        .physics-particle,
+        .physics-orb,
+        .physics-grid-overlay {
+            display: none !important;
+        }
+
+        /* ===== STARFIELD BACKGROUND ===== */
+        .cosmos-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .cosmos-bg canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* All content above bg */
+        .dashboard-wrapper {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ===== TOP NAVBAR ===== */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 28px;
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-brand .brand-dot {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, #818cf8, #6366f1);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-brand .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            color: rgba(196, 204, 230, 0.6);
+            font-size: 0.88rem;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            position: static !important;
+        }
+
+        .nav-btn:hover {
+            background: rgba(99, 102, 241, 0.12);
+            color: #a5b4fc;
+        }
+
+        .nav-btn .notif-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            background: #f43f5e;
+            border-radius: 50%;
+            border: 2px solid rgba(10, 14, 39, 0.9);
+        }
+
+        .notif-wrapper {
+            position: relative;
+        }
+
+        /* ===== HERO / GREETING ===== */
+        .hero-greeting {
+            padding: 32px 28px 24px;
+        }
+
+        .greeting-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .greeting-text h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e0e7ff;
+            line-height: 1.3;
+        }
+
+        .greeting-text h1 .wave {
+            display: inline-block;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(20deg);
+            }
+
+            50% {
+                transform: rotate(-10deg);
+            }
+
+            75% {
+                transform: rotate(15deg);
+            }
+        }
+
+        .greeting-text .subtitle {
+            font-size: 0.88rem;
+            color: rgba(196, 204, 230, 0.5);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* === STREAK FLAME WIDGET === */
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #fbbf24;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .streak-badge:hover {
+            background: rgba(251, 191, 36, 0.15);
+            transform: scale(1.05);
+        }
+
+        /* Flame tiers */
+        .streak-badge .flame-icon {
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .streak-badge.flame-small .flame-icon {
+            font-size: 0.95rem;
+            color: #fb923c;
+        }
+
+        .streak-badge.flame-medium .flame-icon {
+            font-size: 1.1rem;
+            color: #f59e0b;
+            animation: flameSway 1s ease-in-out infinite;
+        }
+
+        .streak-badge.flame-large .flame-icon {
+            font-size: 1.25rem;
+            color: #fbbf24;
+            animation: flameGlow 0.8s ease-in-out infinite;
+            text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+        }
+
+        @keyframes flameSway {
+
+            0%,
+            100% {
+                transform: rotate(-3deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(3deg) scale(1.1);
+            }
+        }
+
+        @keyframes flameGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+                filter: brightness(1.3);
+            }
+        }
+
+        @keyframes flamePop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.4);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .flame-pop {
+            animation: flamePop 0.5s ease;
+        }
+
+        /* === STREAK POPUP === */
+        .streak-popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .streak-popup-overlay.show {
+            display: flex;
+        }
+
+        .streak-popup {
+            background: linear-gradient(145deg, #12163a 0%, #0f1230 100%);
+            border: 1px solid rgba(99, 102, 241, 0.12);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .streak-popup .close-sp {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(196, 204, 230, 0.35);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .sp-flame {
+            font-size: 3rem;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .sp-flame.flame-small {
+            color: #fb923c;
+        }
+
+        .sp-flame.flame-medium {
+            color: #f59e0b;
+            animation: flameSway 1s ease-in-out infinite;
+        }
+
+        .sp-flame.flame-large {
+            color: #fbbf24;
+            animation: flameGlow 0.8s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .sp-count {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #e0e7ff;
+            line-height: 1;
+        }
+
+        .sp-label {
+            font-size: 0.88rem;
+            color: rgba(196, 204, 230, 0.5);
+            margin-top: 2px;
+        }
+
+        .sp-motivation {
+            font-size: 0.8rem;
+            color: rgba(196, 204, 230, 0.4);
+            margin: 10px 0 16px;
+        }
+
+        /* Mini calendar */
+        .sp-calendar {
+            margin: 16px 0;
+        }
+
+        .sp-cal-label {
+            font-size: 0.72rem;
+            color: rgba(196, 204, 230, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .sp-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .sp-cal-day {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.04);
+            color: rgba(196, 204, 230, 0.25);
+        }
+
+        .sp-cal-day.active {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+        }
+
+        .sp-cal-day.today {
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Stats row */
+        .sp-stats {
+            display: flex;
+            gap: 12px;
+            margin: 14px 0;
+        }
+
+        .sp-stat {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.06);
+        }
+
+        .sp-stat-val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e0e7ff;
+        }
+
+        .sp-stat-lbl {
+            font-size: 0.65rem;
+            color: rgba(196, 204, 230, 0.3);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Milestone progress */
+        .sp-milestone {
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        .sp-ms-label {
+            font-size: 0.72rem;
+            color: rgba(196, 204, 230, 0.35);
+            margin-bottom: 6px;
+        }
+
+        .sp-ms-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .sp-ms-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        .sp-ms-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 0.65rem;
+            color: rgba(196, 204, 230, 0.3);
+        }
+
+        /* — Stats Row — */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .stat-card:nth-child(1) .stat-value {
+            color: #818cf8;
+        }
+
+        .stat-card:nth-child(2) .stat-value {
+            color: #34d399;
+        }
+
+        .stat-card:nth-child(3) .stat-value {
+            color: #fbbf24;
+        }
+
+        /* ===== CONTINUE LEARNING BANNER ===== */
+        .continue-banner {
+            margin: 0 28px 20px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(52, 211, 153, 0.06) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .continue-info {
+            flex: 1;
+        }
+
+        .continue-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #818cf8;
+            margin-bottom: 6px;
+        }
+
+        .continue-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e0e7ff;
+        }
+
+        .continue-meta {
+            font-size: 0.78rem;
+            color: rgba(196, 204, 230, 0.45);
+            margin-top: 4px;
+        }
+
+        .continue-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .continue-progress .bar {
+            height: 100%;
+            width: 35%;
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+            border-radius: 2px;
+        }
+
+        .continue-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        /* ===== SECTION CONTAINER ===== */
+        .section {
+            padding: 0 28px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e0e7ff;
+        }
+
+        .section-link {
+            font-size: 0.78rem;
+            color: #818cf8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .section-link:hover {
+            color: #a5b4fc;
+        }
+
+        /* ===== MAIN MENU GRID ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .menu-card {
+            display: flex;
+            flex-direction: column;
+            padding: 22px 20px;
+            border-radius: 16px;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .menu-card:hover {
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.18);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Color accents per card */
+        .kelas-card::before {
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+        }
+
+        .bank-soal-card::before {
+            background: linear-gradient(90deg, #34d399, #6ee7b7);
+        }
+
+        .forum-card::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .materi-card::before {
+            background: linear-gradient(90deg, #f43f5e, #fb7185);
+        }
+
+        .menu-card .mc-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            position: static !important;
+        }
+
+        .kelas-card .mc-icon {
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+        }
+
+        .bank-soal-card .mc-icon {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+        }
+
+        .forum-card .mc-icon {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .materi-card .mc-icon {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+        }
+
+        .menu-card .mc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #e0e7ff;
+            margin-bottom: 4px;
+        }
+
+        .menu-card .mc-desc {
+            font-size: 0.78rem;
+            color: rgba(196, 204, 230, 0.45);
+            line-height: 1.4;
+        }
+
+        .menu-card .mc-arrow {
+            position: absolute;
+            top: 20px;
+            right: 18px;
+            font-size: 0.75rem;
+            color: rgba(196, 204, 230, 0.2);
+            transition: all 0.3s;
+            position: static !important;
+        }
+
+        .menu-card:hover .mc-arrow {
+            color: rgba(196, 204, 230, 0.5);
+            transform: translateX(3px);
+        }
+
+        /* ===== QUICK ACCESS PILLS ===== */
+        .quick-pills {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .quick-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.65);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .quick-pill:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a5b4fc;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .quick-pill i {
+            font-size: 0.85rem;
+            position: static !important;
+        }
+
+        .qp-bolt i {
+            color: #fbbf24;
+        }
+
+        .qp-video i {
+            color: #818cf8;
+        }
+
+        .qp-game i {
+            color: #34d399;
+        }
+
+        .qp-notif i {
+            color: #f43f5e;
+        }
+
+        .qp-history i {
+            color: #a78bfa;
+        }
+
+        /* Type badge in history widget */
+        .ai-badge {
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .ai-badge.t-materi {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+        }
+
+        .ai-badge.t-kelas {
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+        }
+
+        .ai-badge.t-forum {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .ai-badge.t-bank_soal {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+        }
+
+        /* ===== RECENT ACTIVITY ===== */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.03);
+            border: 1px solid rgba(99, 102, 241, 0.06);
+        }
+
+        .activity-item .ai-icon {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            position: static !important;
+        }
+
+        .activity-item:nth-child(1) .ai-icon {
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+        }
+
+        .activity-item:nth-child(2) .ai-icon {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+        }
+
+        .activity-item:nth-child(3) .ai-icon {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+
+        .activity-item .ai-text {
+            flex: 1;
+        }
+
+        .activity-item .ai-title {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.8);
+        }
+
+        .activity-item .ai-time {
+            font-size: 0.7rem;
+            color: rgba(196, 204, 230, 0.3);
+            margin-top: 2px;
+        }
+
+        .empty-activity {
+            text-align: center;
+            padding: 24px;
+            color: rgba(196, 204, 230, 0.3);
+            font-size: 0.82rem;
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 10px 0 12px;
+            background: rgba(10, 14, 39, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(99, 102, 241, 0.08);
+        }
+
+        .bottom-nav .bnav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            text-decoration: none;
+            color: rgba(196, 204, 230, 0.35);
+            font-size: 0.65rem;
+            font-weight: 500;
+            transition: color 0.25s;
+        }
+
+        .bottom-nav .bnav-item i {
+            font-size: 1.05rem;
+            position: static !important;
+        }
+
+        .bottom-nav .bnav-item.active {
+            color: #818cf8;
+        }
+
+        .bottom-nav .bnav-item:hover {
+            color: rgba(196, 204, 230, 0.6);
+        }
+
+        .bottom-nav .bnav-item.active:hover {
+            color: #a5b4fc;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .continue-banner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .continue-btn {
+                text-align: center;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .hero-greeting,
+            .section,
+            .continue-banner {
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .top-nav {
+                padding: 14px 40px;
+            }
+        }
+
+        /* ===== ENTRANCE ANIMATION ===== */
+        body.dashboard-page.loaded .dashboard-wrapper>* {
+            animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        body.dashboard-page.loaded .hero-greeting {
+            animation-delay: 0.05s;
+        }
+
+        body.dashboard-page.loaded .continue-banner {
+            animation-delay: 0.1s;
+        }
+
+        body.dashboard-page.loaded .section:nth-child(1) {
+            animation-delay: 0.15s;
+        }
+
+        body.dashboard-page.loaded .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        body.dashboard-page.loaded .section:nth-child(3) {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+    <!-- Background -->
+    <div class="cosmos-bg"><canvas id="starfield"></canvas></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-dot"></div>
+            <span class="brand-text">Tanya Fisika</span>
+        </a>
+        <div class="nav-actions">
+            <a href="pages/notifikasi.html" class="nav-btn notif-wrapper" title="Notifikasi">
+                <i class="fas fa-bell"></i>
+                <span class="notif-dot" id="notifDot" style="display: none;"></span>
+            </a>
+            <button class="nav-btn" id="logoutBtn" title="Keluar">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper">
+
+        <!-- Hero Greeting -->
+        <div class="hero-greeting">
+            <div class="greeting-row">
+                <div class="greeting-text">
+                    <h1>Halo, <span id="userName">Siswa</span>! <span class="wave">👋</span></h1>
+                    <p class="subtitle">Apa yang ingin kamu pelajari hari ini?</p>
+                </div>
+                <div class="streak-badge flame-small" id="streakBadge" title="Klik untuk detail streak">
+                    <i class="fas fa-fire-flame-curved flame-icon"></i>
+                    <span><span id="streakCount">0</span> hari</span>
+                </div>
+
+                <!-- Streak Detail Popup -->
+                <div class="streak-popup-overlay" id="streakPopup">
+                    <div class="streak-popup" style="position:relative;">
+                        <button class="close-sp" id="closeStreakPopup">&times;</button>
+                        <div class="sp-flame flame-small" id="spFlame">🔥</div>
+                        <div class="sp-count" id="spCount">0</div>
+                        <div class="sp-label">Hari Streak</div>
+                        <div class="sp-motivation" id="spMotivation"></div>
+                        <div class="sp-stats">
+                            <div class="sp-stat">
+                                <div class="sp-stat-val" id="spCurrent">0</div>
+                                <div class="sp-stat-lbl">Streak Sekarang</div>
+                            </div>
+                            <div class="sp-stat">
+                                <div class="sp-stat-val" id="spLongest">0</div>
+                                <div class="sp-stat-lbl">Rekor Terbaik</div>
+                            </div>
+                        </div>
+                        <div class="sp-calendar">
+                            <div class="sp-cal-label">Aktivitas 28 Hari Terakhir</div>
+                            <div class="sp-cal-grid" id="spCalendar"></div>
+                        </div>
+                        <div class="sp-milestone" id="spMilestone"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="xpBarContainer" style="margin-bottom:12px"></div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Total XP</div>
+                    <div class="stat-value" id="xpCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="levelCount">1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue Learning Banner -->
+        <div class="continue-banner">
+            <div class="continue-info">
+                <div class="continue-label">Lanjutkan Belajar</div>
+                <div class="continue-title">Usaha & Energi</div>
+                <div class="continue-meta">Bab 3 • Progress 35%</div>
+                <div class="continue-progress">
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <a href="pages/usaha-energi.html" class="continue-btn">Lanjutkan →</a>
+        </div>
+
+        <!-- Menu Utama -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Menu Utama</h2>
+            </div>
+            <div class="menu-grid">
+                <a href="pages/kelas.html" class="menu-card kelas-card">
+                    <div class="mc-icon"><i class="fas fa-school"></i></div>
+                    <div class="mc-title">Kelas</div>
+                    <div class="mc-desc">Lihat tugas & kumpulkan jawaban</div>
+                    <i class="fas fa-arrow-right mc-arrow"></i>
+                </a>
+                <a href="pages/materi.html" class="menu-card bank-soal-card">
+                    <div class="mc-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="mc-title">Bank Soal</div>
+                    <div class="mc-desc">Latihan soal & pembahasan lengkap</div>
+                    <i class="fas fa-arrow-right mc-arrow"></i>
+                </a>
+                <a href="pages/forum.html" class="menu-card forum-card">
+                    <div class="mc-icon"><i class="fas fa-comments"></i></div>
+                    <div class="mc-title">Forum</div>
+                    <div class="mc-desc">Diskusi & tanya jawab sesama siswa</div>
+                    <i class="fas fa-arrow-right mc-arrow"></i>
+                </a>
+                <a href="pages/materi.html" class="menu-card materi-card">
+                    <div class="mc-icon"><i class="fas fa-book-open"></i></div>
+                    <div class="mc-title">Materi</div>
+                    <div class="mc-desc">Pelajari topik & modul pembelajaran</div>
+                    <i class="fas fa-arrow-right mc-arrow"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Akses Cepat -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Akses Cepat</h2>
+            </div>
+            <div class="quick-pills">
+                <a href="pages/drill.html" class="quick-pill qp-bolt"><i class="fas fa-bolt"></i> Drill Soal</a>
+                <a href="pages/materi.html#video-pembelajaran" class="quick-pill qp-video"><i
+                        class="fas fa-play-circle"></i> Video</a>
+                <a href="pages/materi.html#game" class="quick-pill qp-game"><i class="fas fa-gamepad"></i> Game
+                    Edukasi</a>
+                <a href="pages/history.html" class="quick-pill qp-history"><i class="fas fa-clock-rotate-left"></i>
+                    History</a>
+                <a href="pages/notifikasi.html" class="quick-pill qp-notif"><i class="fas fa-bell"></i> Notifikasi</a>
+            </div>
+        </div>
+
+        <!-- History Terakhir -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">History Terakhir</h2>
+                <a href="pages/history.html" class="section-link">Lihat Semua →</a>
+            </div>
+            <div class="activity-list" id="historyWidget">
+                <div class="empty-activity">Belum ada history. Mulai belajar untuk melihat riwayat!</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="bnav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="pages/kelas.html" class="bnav-item">
+            <i class="fas fa-school"></i>
+            <span>Kelas</span>
+        </a>
+        <a href="pages/materi.html" class="bnav-item">
+            <i class="fas fa-book-open"></i>
+            <span>Materi</span>
+        </a>
+        <a href="pages/notifikasi.html" class="bnav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifikasi</span>
+        </a>
+        <a href="pages/profile.html" class="bnav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script src="pages/xp-manager.js"></script>
+    <script>
+        // Initialize XP display
+        (function initXP() {
+            const info = XPManager.getData();
+            document.getElementById('xpCount').textContent = info.totalXP.toLocaleString('id-ID');
+            document.getElementById('levelCount').textContent = info.level;
+            XPManager.renderXPBar('xpBarContainer');
+            // Daily login bonus
+            const loginResult = XPManager.checkDailyLogin();
+            if (loginResult && loginResult.leveledUp) {
+                XPManager.showLevelUpPopup(loginResult.newInfo);
+            }
+        })();
+    </script>
+    <!-- Starfield Script -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('starfield');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [];
+            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+            for (let i = 0; i < 120; i++) {
+                stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2 + 0.2, a: Math.random() * 0.35 + 0.08, tw: Math.random() * Math.PI * 2 });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.tw += 0.008;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200,210,255,${s.a * (0.5 + Math.sin(s.tw) * 0.5)})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+
+    <script src="streak-manager.js"></script>
+    <script src="history-manager.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        (function () {
+            // Entrance animation
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => document.body.classList.add('loaded'), 100);
+            });
+
+            // Fallback: ensure username is displayed
+            try {
+                const name = sessionStorage.getItem('userName') || localStorage.getItem('userName') || '';
+                if (name) {
+                    const el = document.getElementById('userName');
+                    if (el) el.textContent = name;
+                }
+            } catch (e) { }
+
+            // XP display — now handled by XPManager init above
+
+            // Logout handler (fallback)
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function () {
+                    if (confirm('Yakin ingin keluar?')) {
+                        try {
+                            localStorage.removeItem('userLoggedIn');
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userEmail');
+                            localStorage.removeItem('userRole');
+                            sessionStorage.clear();
+                        } catch (e) { }
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+
+            // Service Worker for PWA notifications
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('../sw.js', { scope: './' })
+                    .then(r => console.log('✅ SW registered:', r))
+                    .catch(e => console.log('⚠️ SW failed:', e));
+            }
+
+            // Render History Widget
+            function renderHistoryWidget() {
+                if (!window.HistoryManager) return;
+                const container = document.getElementById('historyWidget');
+                if (!container) return;
+
+                const items = HistoryManager.getHistory(5);
+                if (!items || items.length === 0) {
+                    container.innerHTML = '<div class="empty-activity">Belum ada history. Mulai belajar untuk melihat riwayat!</div>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => {
+                    const icon = item.icon || HistoryManager.iconForType(item.contentType);
+                    const label = HistoryManager.labelForType(item.contentType);
+                    const time = HistoryManager.timeAgo(item.accessedAt);
+                    const badgeClass = 't-' + (item.contentType || 'materi');
+                    return `
+                    <a href="${item.urlPath}" class="activity-item" style="text-decoration:none;color:inherit;cursor:pointer;">
+                        <div class="ai-icon"><i class="${icon}"></i></div>
+                        <div class="ai-text">
+                            <div class="ai-title">${item.title}</div>
+                            <span class="ai-badge ${badgeClass}">${label}</span>
+                            <div class="ai-time">${time}</div>
+                        </div>
+                    </a>`;
+                }).join('');
+            }
+
+            // Render on load
+            document.addEventListener('DOMContentLoaded', renderHistoryWidget);
+            // Also try immediately in case DOMContentLoaded already fired
+            if (document.readyState !== 'loading') renderHistoryWidget();
+
+            // ===== STREAK WIDGET =====
+            function updateStreakBadge() {
+                if (!window.StreakManager) return;
+                const data = StreakManager.getData();
+                const streak = data.currentStreak || 0;
+                const level = StreakManager.getFlameLevel(streak);
+
+                // Update badge
+                const badge = document.getElementById('streakBadge');
+                if (badge) {
+                    badge.className = 'streak-badge flame-' + level;
+                    const countEl = document.getElementById('streakCount');
+                    if (countEl) countEl.textContent = streak;
+                }
+            }
+
+            function renderStreakPopup() {
+                if (!window.StreakManager) return;
+                const data = StreakManager.getData();
+                const streak = data.currentStreak || 0;
+                const level = StreakManager.getFlameLevel(streak);
+
+                // Flame
+                const spFlame = document.getElementById('spFlame');
+                if (spFlame) { spFlame.className = 'sp-flame flame-' + level; }
+
+                // Count
+                const spCount = document.getElementById('spCount');
+                if (spCount) spCount.textContent = streak;
+
+                // Motivation
+                const spMotivation = document.getElementById('spMotivation');
+                if (spMotivation) spMotivation.textContent = StreakManager.getMotivation(streak);
+
+                // Stats
+                const spCurrent = document.getElementById('spCurrent');
+                const spLongest = document.getElementById('spLongest');
+                if (spCurrent) spCurrent.textContent = streak;
+                if (spLongest) spLongest.textContent = data.longestStreak || 0;
+
+                // Calendar
+                const calGrid = document.getElementById('spCalendar');
+                if (calGrid) {
+                    const days = StreakManager.getCalendar(28);
+                    calGrid.innerHTML = days.map(d => {
+                        let cls = 'sp-cal-day';
+                        if (d.active) cls += ' active';
+                        if (d.isToday) cls += ' today';
+                        return '<div class="' + cls + '">' + d.dayNum + '</div>';
+                    }).join('');
+                }
+
+                // Milestone
+                const msEl = document.getElementById('spMilestone');
+                if (msEl) {
+                    const next = StreakManager.getNextMilestone();
+                    if (next) {
+                        msEl.innerHTML = '<div class="sp-ms-label">Milestone Berikutnya: ' + next.milestone.icon + ' ' + next.milestone.badge + ' (' + next.milestone.day + ' hari)</div>' +
+                            '<div class="sp-ms-bar"><div class="fill" style="width:' + next.progress + '%"></div></div>' +
+                            '<div class="sp-ms-info"><span>' + streak + '/' + next.milestone.day + ' hari</span><span>+' + next.milestone.reward + ' XP</span></div>';
+                    } else {
+                        msEl.innerHTML = '<div class="sp-ms-label">✅ Semua milestone tercapai! 🏆</div>';
+                    }
+                }
+            }
+
+            // Popup open/close
+            document.addEventListener('DOMContentLoaded', function () {
+                const badge = document.getElementById('streakBadge');
+                const popup = document.getElementById('streakPopup');
+                const closeBtn = document.getElementById('closeStreakPopup');
+
+                if (badge && popup) {
+                    badge.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        renderStreakPopup();
+                        popup.classList.add('show');
+                    });
+                }
+                if (closeBtn) closeBtn.addEventListener('click', function () { popup.classList.remove('show'); });
+                if (popup) popup.addEventListener('click', function (e) { if (e.target === popup) popup.classList.remove('show'); });
+
+                // Init streak badge
+                updateStreakBadge();
+            });
+            if (document.readyState !== 'loading') updateStreakBadge();
+        })();
+    </script>
+</body>
+
+</html>

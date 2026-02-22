@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usaha & Energi - Materi</title>
+    <link rel="stylesheet" href="../style.css">
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .formula-box {
+            background: #f0f7ff;
+            border-left: 4px solid #4361ee;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+
+        .definition-box {
+            background: #f9f5ff;
+            border-left: 4px solid #a78bfa;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .funfact-box {
+            background: #eef2ff;
+            border-left: 4px solid #6366f1;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .tips-box {
+            background: #f0fdfa;
+            border-left: 4px solid #14b8a6;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .subsection {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .analogy-box {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body data-content-type="materi">
+    <header class="page-header">
+        <a href="materi.html" class="back-link">← Kembali</a>
+        <div class="material-hero">
+            <div class="hero-left">
+                <div class="icon-circle">⚙️</div>
+            </div>
+            <div class="hero-right">
+                <h1>Usaha & Energi</h1>
+                <p>Hubungan usaha, energi kinetik &amp; potensial, daya, dan efisiensi sistem.</p>
+                <div class="hero-meta"><span class="tag-badge">Topik: Mekanika</span> <span class="tag-badge">Level:
+                        2</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <section class="material-detail">
+            <h2>Ringkasan Umum</h2>
+            <p>Usaha dan energi adalah konsep-konsep kunci dalam fisika mekanika yang menghubungkan gaya dengan
+                perubahan gerak dan keadaan benda. Setiap kali kamu mendorong pintu, mengayuh sepeda, atau bahkan
+                sekadar bernapas — konsep usaha dan energi bekerja di baliknya.</p>
+
+            <p>Topik ini mencakup:</p>
+            <ul>
+                <li><strong>Definisi usaha</strong> — apa yang terjadi saat gaya bekerja pada benda</li>
+                <li><strong>Energi kinetik dan potensial</strong> — dua bentuk energi mekanik utama</li>
+                <li><strong>Hukum kekekalan energi</strong> — energi tidak pernah hilang, hanya berubah bentuk</li>
+                <li><strong>Daya</strong> — seberapa cepat energi berpindah</li>
+                <li><strong>Efisiensi</strong> — seberapa baik sistem memanfaatkan energi</li>
+            </ul>
+
+            <!-- ============================================ -->
+            <!-- SECTION 1: USAHA -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>1. Definisi Usaha (Work)</h3>
+
+                <div class="definition-box">
+                    <strong>Usaha</strong> adalah energi yang dipindahkan kepada atau dari benda oleh gaya yang bekerja
+                    padanya. Usaha terjadi ketika gaya menyebabkan perpindahan pada benda.
+                    <br><br>
+                    <strong>Satuan:</strong> Joule (J) = Newton × meter (N·m)
+                </div>
+
+                <div class="analogy-box">
+                    <strong>🎯 Analogi Mudah:</strong> Bayangkan kamu mendorong meja sejauh 2 meter. Gaya yang kamu
+                    berikan × jarak yang ditempuh = usaha yang kamu lakukan. Semakin berat meja atau semakin jauh kamu
+                    dorong, semakin besar usahanya.
+                </div>
+
+                <h4>Kapan Usaha = 0?</h4>
+                <p>Ini sering membingungkan siswa. Ada situasi di mana kamu merasa bekerja keras, tapi secara fisika,
+                    usahanya nol!</p>
+                <ul>
+                    <li><strong>Membawa tas berjalan lurus horizontal:</strong> Gaya menahan tas ke atas, tapi
+                        perpindahan ke samping — arah gaya tegak lurus perpindahan, jadi usaha = 0.</li>
+                    <li><strong>Mendorong tembok sekuat tenaga:</strong> Kalau tembok tidak bergeser, tidak ada
+                        perpindahan, jadi usaha = 0.</li>
+                    <li><strong>Benda bergerak melingkar (gaya sentripetal):</strong> Gaya selalu tegak lurus arah
+                        gerak, jadi usaha = 0.</li>
+                </ul>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Seorang pelayan restoran yang membawa nampan berjalan bolak-balik
+                    sejauh 5 km secara fisika melakukan usaha = 0 J untuk nampan itu (selama nampan tetap di ketinggian
+                    yang sama)! Tentu saja, tubuhnya tetap membakar energi — tapi itu adalah energi biokimia yang diubah
+                    menjadi panas, bukan usaha mekanik.
+                </div>
+
+                <h4>Usaha Positif dan Negatif</h4>
+                <ul>
+                    <li><strong>Usaha positif:</strong> Gaya searah dengan arah gerak benda → benda
+                        <strong>dipercepat</strong>. Contoh: mendorong mobil mogok ke depan.
+                    </li>
+                    <li><strong>Usaha negatif:</strong> Gaya berlawanan arah gerak benda → benda
+                        <strong>diperlambat</strong>. Contoh: rem sepeda menghambat roda, gesekan pada benda yang
+                        meluncur.
+                    </li>
+                </ul>
+
+                <div class="example-box">
+                    <strong>Contoh Kehidupan Nyata:</strong>
+                    <br><br>
+                    Kamu mendorong kotak 10 kg di lantai sejauh 3 meter dengan gaya 40 N. Di saat yang sama, gesekan
+                    lantai memberikan gaya hambat 10 N.
+                    <br><br>
+                    • Usaha oleh kamu (positif): 40 × 3 = 120 J → mempercepat kotak
+                    <br>
+                    • Usaha oleh gesekan (negatif): -10 × 3 = -30 J → menghambat kotak
+                    <br>
+                    • Usaha total pada kotak: 120 - 30 = 90 J
+                    <br><br>
+                    <em>90 J inilah yang benar-benar mengubah kecepatan kotak.</em>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 2: ENERGI KINETIK -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>2. Energi Kinetik</h3>
+
+                <div class="definition-box">
+                    <strong>Energi Kinetik (E<sub>k</sub>)</strong> adalah energi yang dimiliki oleh benda karena
+                    geraknya. Setiap benda yang bergerak — dari molekul udara hingga planet — memiliki energi kinetik.
+                </div>
+
+                <div class="formula-box">
+                    $$E_k = \frac{1}{2} m v^2$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$m$ = massa benda (kg)</li>
+                        <li>$v$ = kecepatan benda (m/s)</li>
+                        <li>$E_k$ = energi kinetik (J)</li>
+                    </ul>
+                </div>
+
+                <h4>Karakteristik Energi Kinetik</h4>
+                <ul>
+                    <li><strong>Selalu positif atau nol</strong> — tidak mungkin negatif karena $v^2$ selalu positif
+                    </li>
+                    <li><strong>Bergantung kuadrat kecepatan</strong> — dua kali lipat kecepatan berarti <strong>empat
+                            kali lipat</strong> energi kinetik! Ini sangat penting untuk keselamatan berkendara.</li>
+                    <li><strong>Bergantung pada kerangka acuan</strong> — kecepatan bersifat relatif terhadap pengamat
+                    </li>
+                    <li><strong>Tidak memiliki arah</strong> — energi adalah besaran skalar</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>⚠️ Mengapa Kecepatan Sangat Berbahaya?</strong>
+                    <br><br>
+                    Karena E<sub>k</sub> bergantung pada v², kendaraan yang melaju 60 km/jam memiliki energi kinetik
+                    <strong>4× lebih besar</strong> dari kendaraan 30 km/jam (bukan 2×!). Inilah alasan jarak pengereman
+                    meningkat drastis pada kecepatan tinggi, dan mengapa batas kecepatan ada di jalan raya.
+                </div>
+
+                <h4>Perbandingan Energi Kinetik dalam Kehidupan Sehari-hari</h4>
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Benda</th>
+                        <th style="text-align: left; padding: 6px;">Massa</th>
+                        <th style="text-align: left; padding: 6px;">Kecepatan</th>
+                        <th style="text-align: left; padding: 6px;">E<sub>k</sub></th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Pejalan kaki</td>
+                        <td style="padding: 6px;">60 kg</td>
+                        <td style="padding: 6px;">1.5 m/s</td>
+                        <td style="padding: 6px;">67.5 J</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Pesepeda</td>
+                        <td style="padding: 6px;">80 kg (+ sepeda)</td>
+                        <td style="padding: 6px;">5 m/s</td>
+                        <td style="padding: 6px;">1,000 J</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Mobil di jalan kota</td>
+                        <td style="padding: 6px;">1,200 kg</td>
+                        <td style="padding: 6px;">14 m/s (50 km/jam)</td>
+                        <td style="padding: 6px;">117,600 J</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Mobil di jalan tol</td>
+                        <td style="padding: 6px;">1,200 kg</td>
+                        <td style="padding: 6px;">28 m/s (100 km/jam)</td>
+                        <td style="padding: 6px;">470,400 J</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Peluru senapan</td>
+                        <td style="padding: 6px;">0.01 kg</td>
+                        <td style="padding: 6px;">700 m/s</td>
+                        <td style="padding: 6px;">2,450 J</td>
+                    </tr>
+                </table>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Seekor nyamuk yang terbang memiliki energi kinetik sekitar
+                    0.000001 J (satu mikro-joule). Sementara sebuah pesawat Boeing 747 yang terbang pada kecepatan
+                    jelajah memiliki energi kinetik sekitar <strong>7 miliar joule</strong> — setara dengan energi yang
+                    dihasilkan 2 ton dinamit!
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh Perhitungan:</strong> Mobil bermassa 1000 kg bergerak dengan kecepatan 20 m/s (72
+                    km/jam)
+                    <br><br>
+                    $E_k = \frac{1}{2} \times 1000 \times 20^2 = 500 \times 400 = 200,000$ J = 200 kJ
+                    <br><br>
+                    Ini setara dengan energi yang dibutuhkan untuk mengangkat beban 2 ton setinggi 10 meter! Semua
+                    energi ini harus diserap oleh rem saat mobil berhenti.
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 3: ENERGI POTENSIAL -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>3. Energi Potensial</h3>
+
+                <h4>3.1 Energi Potensial Gravitasi</h4>
+
+                <div class="definition-box">
+                    <strong>Energi Potensial Gravitasi (E<sub>p</sub>)</strong> adalah energi yang dimiliki benda karena
+                    posisinya dalam medan gravitasi. Semakin tinggi posisi benda, semakin besar energi potensialnya.
+                </div>
+
+                <div class="formula-box">
+                    $$E_p = m \cdot g \cdot h$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$m$ = massa benda (kg)</li>
+                        <li>$g$ = percepatan gravitasi ≈ 9.8 m/s² (atau 10 m/s² untuk perhitungan sederhana)</li>
+                        <li>$h$ = tinggi relatif terhadap titik referensi (m)</li>
+                        <li>$E_p$ = energi potensial (J)</li>
+                    </ul>
+                </div>
+
+                <div class="analogy-box">
+                    <strong>🎯 Analogi Mudah:</strong> Energi potensial seperti "tabungan energi". Saat kamu mengangkat
+                    batu ke atas, kamu "menabung" energi di sana. Saat batu dilepaskan dan jatuh, "tabungan" itu diambil
+                    dan diubah menjadi energi gerak (kinetik). Semakin tinggi kamu angkat, semakin besar tabungannya.
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Catatan Penting:</strong> Energi potensial bersifat <strong>relatif</strong>. Nilainya
+                    bergantung pada pilihan titik referensi (h = 0). Kamu bebas menentukan lantai, meja, atau tanah
+                    sebagai titik nol. Yang penting, <strong>perubahan</strong> energi potensial ($\Delta E_p$) selalu
+                    sama, apapun titik referensinya.
+                </div>
+
+                <h4>Perbandingan Energi Potensial Gravitasi</h4>
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Situasi</th>
+                        <th style="text-align: left; padding: 6px;">Massa</th>
+                        <th style="text-align: left; padding: 6px;">Ketinggian</th>
+                        <th style="text-align: left; padding: 6px;">E<sub>p</sub></th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Buku di meja</td>
+                        <td style="padding: 6px;">0.5 kg</td>
+                        <td style="padding: 6px;">0.8 m</td>
+                        <td style="padding: 6px;">3.9 J</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Anak di perosotan</td>
+                        <td style="padding: 6px;">30 kg</td>
+                        <td style="padding: 6px;">3 m</td>
+                        <td style="padding: 6px;">882 J</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Air di bendungan</td>
+                        <td style="padding: 6px;">1,000,000 kg</td>
+                        <td style="padding: 6px;">100 m</td>
+                        <td style="padding: 6px;">980,000,000 J</td>
+                    </tr>
+                </table>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Air Terjun Niagara menjatuhkan sekitar 2,800 m³ air setiap detik
+                    dari ketinggian 51 meter. Energi potensial yang diubah menjadi kinetik setiap detik mencapai sekitar
+                    <strong>1.4 miliar joule</strong> — cukup untuk menyalakan lebih dari 1 juta lampu LED secara
+                    bersamaan!
+                </div>
+
+                <h4>3.2 Energi Potensial Pegas (Elastis)</h4>
+
+                <div class="definition-box">
+                    <strong>Energi Potensial Elastis</strong> adalah energi yang disimpan dalam pegas, karet, atau benda
+                    elastis yang terdistorsi (ditarik atau dikompres). Semakin besar distorsinya, semakin besar energi
+                    yang disimpan.
+                </div>
+
+                <div class="analogy-box">
+                    <strong>🎯 Contoh Sehari-hari:</strong> Saat kamu menarik karet ketapel, kamu menyimpan energi
+                    potensial elastis. Saat dilepaskan, energi itu berubah menjadi energi kinetik batu. Prinsip yang
+                    sama berlaku pada busur panah, trampolin, dan bahkan bola yang memantul.
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 4: TEOREMA USAHA-ENERGI -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>4. Teorema Usaha-Energi</h3>
+
+                <div class="definition-box">
+                    <strong>Teorema Usaha-Energi:</strong> Usaha netto (total) yang dilakukan pada benda sama dengan
+                    perubahan energi kinetiknya.
+                </div>
+
+                <p>Ini adalah salah satu hubungan <strong>paling penting</strong> dalam mekanika. Artinya:</p>
+                <ul>
+                    <li>Jika usaha netto <strong>positif</strong> → energi kinetik bertambah → benda <strong>semakin
+                            cepat</strong></li>
+                    <li>Jika usaha netto <strong>negatif</strong> → energi kinetik berkurang → benda
+                        <strong>melambat</strong>
+                    </li>
+                    <li>Jika usaha netto <strong>nol</strong> → energi kinetik tetap → benda bergerak dengan
+                        <strong>kecepatan konstan</strong>
+                    </li>
+                </ul>
+
+                <div class="analogy-box">
+                    <strong>🎯 Analogi:</strong> Bayangkan rekening bank. Usaha positif seperti memasukkan uang — saldo
+                    (energi kinetik) bertambah. Usaha negatif seperti menarik uang — saldo berkurang. Usaha nol = saldo
+                    tidak berubah.
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh:</strong> Seorang pemain sepak bola menendang bola bermassa 0.45 kg yang awalnya
+                    diam, sehingga bola bergerak dengan kecepatan 25 m/s.
+                    <br><br>
+                    Energi kinetik awal: $E_{k,i} = 0$ J (bola diam)
+                    <br>
+                    Energi kinetik akhir: $E_{k,f} = \frac{1}{2} \times 0.45 \times 25^2 = 140.6$ J
+                    <br>
+                    Jadi usaha yang dilakukan kaki pemain = 140.6 J
+                    <br><br>
+                    <em>Seluruh energi kinetik bola berasal dari usaha yang dilakukan oleh tendangan!</em>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 5: KEKEKALAN ENERGI -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>5. Hukum Kekekalan Energi Mekanik</h3>
+
+                <div class="definition-box">
+                    <strong>Hukum Kekekalan Energi Mekanik:</strong> Dalam sistem konservatif (tanpa gesekan atau gaya
+                    non-konservatif), energi mekanik total (E<sub>k</sub> + E<sub>p</sub>) selalu tetap konstan. Energi
+                    hanya berubah bentuk — dari kinetik ke potensial atau sebaliknya — tanpa pernah hilang.
+                </div>
+
+                <h4>5.1 Roller Coaster — Contoh Sempurna Kekekalan Energi</h4>
+                <p>Roller coaster adalah demonstrasi paling seru dari kekekalan energi!</p>
+                <ul>
+                    <li><strong>Di puncak tertinggi:</strong> E<sub>p</sub> maksimum, E<sub>k</sub> minimum → kereta
+                        hampir berhenti</li>
+                    <li><strong>Di lembah terendah:</strong> E<sub>p</sub> minimum, E<sub>k</sub> maksimum → kecepatan
+                        paling tinggi</li>
+                    <li><strong>Di titik manapun:</strong> E<sub>k</sub> + E<sub>p</sub> = konstan (jika kita abaikan
+                        gesekan)</li>
+                </ul>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Inilah mengapa roller coaster tidak pernah bisa naik lebih tinggi
+                    dari titik awal perjalanannya (tanpa tambahan motor). Setiap kali naik, energi kinetik diubah
+                    menjadi potensial, dan karena selalu ada sedikit gesekan, ketinggian berikutnya selalu sedikit lebih
+                    rendah dari sebelumnya.
+                </div>
+
+                <h4>5.2 Contoh Lain Kekekalan Energi</h4>
+                <ul>
+                    <li><strong>Pendulum (bandul):</strong> Berayun tinggi (Ep maks) → turun ke bawah (Ek maks) → naik
+                        ke sisi lain (Ep maks lagi). Berulang terus!</li>
+                    <li><strong>Anak di ayunan:</strong> Sama seperti pendulum — posisi tertinggi = kecepatan nol,
+                        posisi terendah = kecepatan maksimum.</li>
+                    <li><strong>Bola yang dijatuhkan:</strong> Mulai dari diam di ketinggian (Ep) → jatuh → kecepatan
+                        meningkat (Ek) → saat sampai tanah, seluruh Ep sudah berubah jadi Ek.</li>
+                    <li><strong>Skateboard di halfpipe:</strong> Skater turun dari bibir halfpipe (Ep → Ek), meluncur ke
+                        atas sisi lain (Ek → Ep), dan kembali lagi.</li>
+                </ul>
+
+                <div class="example-box">
+                    <strong>Contoh Perhitungan — Benda Jatuh Bebas:</strong> Bola bermassa 2 kg dijatuhkan dari
+                    ketinggian 5 m. Abaikan hambatan udara. Berapa kecepatan bola tepat sebelum menyentuh tanah?
+                    <br><br>
+                    <strong>Metode Energi:</strong>
+                    <br>
+                    Energi awal: $E_i = mgh = 2 \times 10 \times 5 = 100$ J (seluruhnya potensial, $v = 0$)
+                    <br>
+                    Energi akhir: $E_f = \frac{1}{2}mv^2$ (seluruhnya kinetik, $h = 0$)
+                    <br>
+                    Dari kekekalan energi: $100 = \frac{1}{2} \times 2 \times v^2$
+                    <br>
+                    $v^2 = 100$ → $v = 10$ m/s
+                    <br><br>
+                    <strong>Verifikasi dengan Kinematika:</strong>
+                    <br>
+                    $v^2 = u^2 + 2as = 0 + 2 \times 10 \times 5 = 100$ → $v = 10$ m/s ✓
+                </div>
+
+                <h4>5.3 Sistem Non-Konservatif (dengan Gesekan)</h4>
+
+                <p>Di dunia nyata, hampir selalu ada gesekan. Saat ada gesekan, sebagian energi mekanik berubah menjadi
+                    <strong>energi panas</strong>. Energi total tetap konservasi (tidak hilang), tapi energi mekarik
+                    berkurang.
+                </p>
+
+                <div class="analogy-box">
+                    <strong>🎯 Analogi:</strong> Bayangkan air mengalir dari wadah atas ke wadah bawah melalui pipa
+                    berlubang. Air yang sampai ke bawah lebih sedikit karena kebocoran (gesekan = kebocoran energi). Air
+                    tidak hilang — hanya tumpah ke tempat lain (menjadi panas).
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh:</strong> Bola 2 kg dijatuhkan dari 5 m dengan hambatan udara yang menghasilkan usaha
+                    -20 J. Berapa kecepatan akhir?
+                    <br><br>
+                    Energi awal: $E_i = mgh = 100$ J
+                    <br>
+                    Usaha oleh hambatan udara: $W = -20$ J
+                    <br>
+                    Energi akhir: $E_f = 100 - 20 = 80$ J
+                    <br>
+                    $\frac{1}{2} \times 2 \times v^2 = 80$ → $v^2 = 80$ → $v ≈ 8.94$ m/s
+                    <br><br>
+                    <em>Lebih lambat dari 10 m/s (tanpa hambatan) karena 20 J "hilang" menjadi panas akibat gesekan
+                        udara.</em>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 6: DAYA -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>6. Daya (Power)</h3>
+
+                <div class="definition-box">
+                    <strong>Daya</strong> adalah laju perubahan energi atau laju usaha — seberapa cepat energi berpindah
+                    atau digunakan.
+                </div>
+
+                <p><strong>Satuan:</strong> Watt (W) = Joule per sekon (J/s). Satuan lain: 1 kW = 1000 W, 1 hp (horse
+                    power) ≈ 746 W.</p>
+
+                <div class="analogy-box">
+                    <strong>🎯 Analogi:</strong> Kalau usaha adalah "jumlah air yang dipindahkan", maka daya adalah
+                    "debit air" (seberapa cepat air mengalir). Dua orang bisa memindahkan jumlah air yang sama (usaha
+                    sama), tapi yang satu melakukannya dalam 1 menit dan yang lain dalam 10 menit — yang pertama
+                    memiliki daya 10× lebih besar.
+                </div>
+
+                <h4>Perbandingan Daya dalam Kehidupan</h4>
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Sumber/Alat</th>
+                        <th style="text-align: left; padding: 6px;">Daya</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Lampu LED</td>
+                        <td style="padding: 6px;">5-15 W</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Kipas angin</td>
+                        <td style="padding: 6px;">50-75 W</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Tubuh manusia saat istirahat</td>
+                        <td style="padding: 6px;">~80 W</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Tubuh manusia saat olahraga</td>
+                        <td style="padding: 6px;">300-500 W</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Mesin cuci</td>
+                        <td style="padding: 6px;">500-800 W</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">AC ruangan</td>
+                        <td style="padding: 6px;">1,000-2,500 W</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Motor mobil sedan</td>
+                        <td style="padding: 6px;">~100,000 W (134 hp)</td>
+                    </tr>
+                </table>
+
+                <div class="example-box">
+                    <strong>Contoh:</strong> Dua orang mengangkat karung beras 50 kg ke lantai 2 (tinggi 3 m). Andi
+                    melakukannya dalam 10 detik, Budi dalam 30 detik.
+                    <br><br>
+                    Usaha keduanya sama: $W = mgh = 50 \times 10 \times 3 = 1500$ J
+                    <br>
+                    Daya Andi: $P = \frac{1500}{10} = 150$ W
+                    <br>
+                    Daya Budi: $P = \frac{1500}{30} = 50$ W
+                    <br><br>
+                    <em>Andi melakukan usaha yang sama tapi 3× lebih cepat, jadi dayanya 3× lebih besar.</em>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 7: EFISIENSI -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>7. Efisiensi</h3>
+
+                <div class="definition-box">
+                    <strong>Efisiensi</strong> adalah perbandingan antara energi keluaran (output) yang berguna dengan
+                    energi masukan (input) total. Efisiensi dinyatakan dalam persen (%).
+                </div>
+
+                <p>Efisiensi selalu bernilai <strong>≤ 100%</strong>. Dalam dunia nyata, tidak ada mesin yang
+                    efisiensinya 100% — selalu ada energi yang "hilang" (berubah menjadi panas, bunyi, getaran, dll).
+                </p>
+
+                <h4>Efisiensi Berbagai Alat</h4>
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Alat/Mesin</th>
+                        <th style="text-align: left; padding: 6px;">Efisiensi</th>
+                        <th style="text-align: left; padding: 6px;">Energi yang Terbuang</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Motor listrik</td>
+                        <td style="padding: 6px;">85-95%</td>
+                        <td style="padding: 6px;">Panas</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Turbin air (PLTA)</td>
+                        <td style="padding: 6px;">85-90%</td>
+                        <td style="padding: 6px;">Gesekan, panas</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Panel surya</td>
+                        <td style="padding: 6px;">15-22%</td>
+                        <td style="padding: 6px;">Panas, refleksi</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Mesin mobil bensin</td>
+                        <td style="padding: 6px;">~25%</td>
+                        <td style="padding: 6px;">Panas, bunyi, getaran</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Lampu pijar</td>
+                        <td style="padding: 6px;">~5%</td>
+                        <td style="padding: 6px;">95% jadi panas!</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Tubuh manusia</td>
+                        <td style="padding: 6px;">~25%</td>
+                        <td style="padding: 6px;">Panas tubuh</td>
+                    </tr>
+                </table>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Lampu pijar (bohlam lama) hanya mengubah 5% energi listrik menjadi
+                    cahaya — sisanya 95% jadi panas! Itulah mengapa lampu pijar terasa sangat panas. Lampu LED jauh
+                    lebih efisien (30-50%), menghasilkan cahaya lebih banyak dengan listrik lebih sedikit.
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh 1 — Mesin:</strong> Mesin diesel menerima 5000 J energi kimia dan menghasilkan kerja
+                    mekanik 1500 J. Berapa efisiensi?
+                    <br><br>
+                    $\eta = \frac{1500}{5000} \times 100\% = 30\%$
+                    <br>
+                    Energi yang hilang = 3500 J (menjadi panas, bunyi, dll)
+                    <br><br>
+                    <strong>Contoh 2 — Motor Listrik:</strong> Motor listrik dengan efisiensi 85% menerima daya 1000 W.
+                    Berapa daya output mekanik?
+                    <br><br>
+                    $P_{\text{output}} = \eta \times P_{\text{input}} = 0.85 \times 1000 = 850$ W
+                    <br>
+                    <em>150 W "hilang" menjadi panas di motor.</em>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 8: PENERAPAN SEHARI-HARI -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>8. Penerapan Usaha & Energi dalam Kehidupan</h3>
+
+                <h4>🏭 Pembangkit Listrik</h4>
+                <p>Semua pembangkit listrik bekerja berdasarkan konversi energi:</p>
+                <ul>
+                    <li><strong>PLTA:</strong> E<sub>p</sub> air → E<sub>k</sub> air → E<sub>k</sub> turbin → Energi
+                        listrik</li>
+                    <li><strong>PLTU:</strong> Energi kimia batu bara → Panas → E<sub>k</sub> uap → E<sub>k</sub> turbin
+                        → Energi listrik</li>
+                    <li><strong>PLTS:</strong> Energi cahaya matahari → Energi listrik (langsung melalui sel
+                        fotovoltaik)</li>
+                </ul>
+
+                <h4>🏃 Olahraga</h4>
+                <ul>
+                    <li><strong>Lompat tinggi:</strong> E<sub>k</sub> lari → E<sub>p</sub> di ketinggian (inilah mengapa
+                        pelompat harus berlari dulu — kecepatan lari diubah menjadi ketinggian)</li>
+                    <li><strong>Panahan:</strong> E<sub>p</sub> elastis busur → E<sub>k</sub> anak panah</li>
+                    <li><strong>Renang:</strong> Energi kimia otot → E<sub>k</sub> gerakan → Gaya dorong air</li>
+                </ul>
+
+                <h4>🚗 Keselamatan Kendaraan</h4>
+                <ul>
+                    <li><strong>Crumple zone:</strong> Bagian depan mobil dirancang untuk penyok saat tabrakan, menyerap
+                        E<sub>k</sub> secara bertahap sehingga penumpang terlindungi</li>
+                    <li><strong>Airbag:</strong> Mengubah E<sub>k</sub> penumpang menjadi usaha menekan kantung udara
+                        dalam waktu lebih lama, mengurangi gaya pada tubuh</li>
+                    <li><strong>Sabuk pengaman:</strong> Memastikan tubuh melambat bersamaan dengan mobil, bukan tetap
+                        bergerak saat mobil sudah berhenti</li>
+                </ul>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Pada tabrakan kecepatan 60 km/jam, tubuh penumpang tanpa sabuk
+                    pengaman akan menghantam dashboard dengan gaya setara berat benda 3-4 ton! Sabuk pengaman menyebar
+                    gaya ini ke area lebih luas dan waktu lebih lama, mengurangi risiko cedera fatal.
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 9: TIPS BELAJAR -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>9. Tips Belajar & Kesalahan Umum</h3>
+
+                <div class="tips-box">
+                    <strong>📚 Tips Belajar Efektif:</strong>
+                    <ol>
+                        <li><strong>Gambar diagram energi</strong> — Untuk setiap soal, gambar posisi awal dan akhir
+                            benda. Tulis E<sub>k</sub> dan E<sub>p</sub> di masing-masing posisi.</li>
+                        <li><strong>Tentukan sistem</strong> — Apa bendanya? Gaya apa saja yang bekerja? Ada gesekan
+                            tidak?</li>
+                        <li><strong>Pilih titik referensi h = 0</strong> — Biasanya pilih titik terendah. Ini memudahkan
+                            perhitungan.</li>
+                        <li><strong>Gunakan kekekalan energi</strong> — Jika tidak ada gesekan, total E<sub>k</sub> +
+                            E<sub>p</sub> di awal = total di akhir.</li>
+                        <li><strong>Periksa satuan</strong> — Pastikan massa dalam kg, kecepatan dalam m/s, dan tinggi
+                            dalam m.</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    <strong>❌ Kesalahan yang Sering Dilakukan Siswa:</strong>
+                    <ul>
+                        <li><strong>"Usaha = tenaga yang dikeluarkan"</strong> — Salah! Usaha = gaya × perpindahan. Kamu
+                            bisa menguras tenaga tapi melakukan usaha nol (misal mendorong tembok).</li>
+                        <li><strong>Lupa bahwa E<sub>k</sub> bergantung pada v²</strong> — 2× kecepatan = 4× energi
+                            kinetik, BUKAN 2×.</li>
+                        <li><strong>Mencampur satuan</strong> — Menggunakan gram, bukan kg; atau km/jam, bukan m/s.
+                            Selalu konversi dulu!</li>
+                        <li><strong>Mengabaikan gesekan</strong> — Di soal nyata, perhatikan apakah soal mengatakan
+                            "licin" (tanpa gesekan) atau "kasar" (ada gesekan).</li>
+                        <li><strong>Salah memilih referensi h</strong> — Tidak masalah mana yang dipilih, asal konsisten
+                            sepanjang soal.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 10: SOAL LATIHAN -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>10. Soal Latihan</h3>
+
+                <ol>
+                    <li>
+                        <strong>Teorema Usaha-Energi:</strong><br>
+                        Sebuah balok 3 kg mula-mula diam di atas lantai licin. Gaya horizontal 12 N diterapkan sejauh 4
+                        m. Hitung:
+                        <ul style="margin-top: 8px;">
+                            <li>Usaha oleh gaya</li>
+                            <li>Kecepatan akhir balok</li>
+                        </ul>
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Kekekalan Energi Mekanik:</strong><br>
+                        Anak panah dilepaskan dari busur pegas dengan energi awal 50 J pada posisi horizontal. Anak
+                        panah kemudian meninggi 2 m. Abaikan hambatan udara. Berapa kecepatan anak panah di ketinggian 2
+                        m? (Massa anak panah = 0.1 kg, g = 10 m/s²)
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Daya dan Efisiensi:</strong><br>
+                        Motor penggerak pompa air menerima daya listrik 2000 W dan efisiensinya 80%. Motor tersebut
+                        digunakan untuk mengangkat air 200 kg ke ketinggian 10 m dalam waktu 5 detik. Berapa:
+                        <ul style="margin-top: 8px;">
+                            <li>Daya output mekanik motor</li>
+                            <li>Energi potensial yang diperoleh air</li>
+                            <li>Apakah daya output cukup? Jelaskan</li>
+                        </ul>
+                        (g = 10 m/s²)
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Aplikasi Roller Coaster:</strong><br>
+                        Kereta roller coaster bermassa 500 kg berada di puncak lintasan setinggi 40 m di atas tanah
+                        dalam keadaan diam. Abaikan gesekan. Hitung:
+                        <ul style="margin-top: 8px;">
+                            <li>Energi potensial di puncak</li>
+                            <li>Kecepatan kereta saat melewati titik setinggi 15 m</li>
+                            <li>Kecepatan kereta saat di titik terendah (tanah)</li>
+                        </ul>
+                        (g = 10 m/s²)
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Sistem dengan Gesekan:</strong><br>
+                        Sebuah balok 5 kg meluncur dari puncak bidang miring licin setinggi 3 m. Di dasar bidang miring,
+                        terdapat lantai kasar sepanjang 4 m dengan gaya gesekan 15 N. Berapa kecepatan balok setelah
+                        melewati lantai kasar? (g = 10 m/s²)
+                    </li>
+                </ol>
+
+                <details style="margin-top: 16px; background: #f3f4f6; padding: 12px; border-radius: 6px;">
+                    <summary style="cursor: pointer; font-weight: 600;">📋 Jawaban Singkat (Klik untuk Buka)</summary>
+                    <div style="margin-top: 12px;">
+                        <h4>Nomor 1:</h4>
+                        <p>
+                            • Usaha: $W = F \cdot s = 12 \times 4 = 48$ J
+                            <br>
+                            • Dari teorema usaha-energi: $48 = \frac{1}{2} \times 3 \times v^2$
+                            <br>
+                            • $v^2 = 32$ → $v = 4\sqrt{2} ≈ 5.66$ m/s
+                        </p>
+
+                        <h4>Nomor 2:</h4>
+                        <p>
+                            • Energi awal: $E_i = 50$ J (kinetik + potensial di posisi awal)
+                            <br>
+                            • Perubahan potensial: $\Delta E_p = mgh = 0.1 \times 10 \times 2 = 2$ J
+                            <br>
+                            • Energi kinetik di ketinggian 2m: $E_k = E_i - \Delta E_p = 50 - 2 = 48$ J
+                            <br>
+                            • $48 = \frac{1}{2} \times 0.1 \times v^2$ → $v = \sqrt{960} ≈ 30.98$ m/s
+                        </p>
+
+                        <h4>Nomor 3:</h4>
+                        <p>
+                            • Daya output: $P_{\text{out}} = 0.80 \times 2000 = 1600$ W
+                            <br>
+                            • Energi potensial air: $E_p = mgh = 200 \times 10 \times 10 = 20,000$ J
+                            <br>
+                            • Daya yang dibutuhkan: $P_{\text{butuh}} = \frac{E_p}{t} = \frac{20000}{5} = 4000$ W
+                            <br>
+                            • Kesimpulan: Daya output (1600 W) < daya yang dibutuhkan (4000 W), jadi motor <strong>tidak
+                                cukup</strong>
+                        </p>
+
+                        <h4>Nomor 4:</h4>
+                        <p>
+                            • E<sub>p</sub> di puncak: $mgh = 500 \times 10 \times 40 = 200,000$ J = 200 kJ
+                            <br>
+                            • Di ketinggian 15 m: $E_k = mg(h_1 - h_2) = 500 \times 10 \times 25 = 125,000$ J → $v =
+                            \sqrt{\frac{2 \times 125000}{500}} = \sqrt{500} ≈ 22.4$ m/s
+                            <br>
+                            • Di titik terendah: $E_k = 200,000$ J → $v = \sqrt{\frac{2 \times 200000}{500}} =
+                            \sqrt{800} ≈ 28.3$ m/s
+                        </p>
+
+                        <h4>Nomor 5:</h4>
+                        <p>
+                            • E<sub>p</sub> awal: $mgh = 5 \times 10 \times 3 = 150$ J
+                            <br>
+                            • Usaha gesekan di lantai kasar: $W_f = -15 \times 4 = -60$ J
+                            <br>
+                            • E<sub>k</sub> akhir: $150 - 60 = 90$ J
+                            <br>
+                            • $90 = \frac{1}{2} \times 5 \times v^2$ → $v = \sqrt{36} = 6$ m/s
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <button class="modal-btn" id="markDoneUsahaEnergi" style="margin-top: 32px;">Tandai Selesai</button>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setLastActivity(getPageNameFromPath());
+            const btn = document.getElementById('markDoneUsahaEnergi');
+            if (btn) btn.addEventListener('click', function () {
+                completeTask('usaha-energi');
+                alert('Aktivitas "Usaha & Energi" ditandai selesai.');
+            });
+        });
+    </script>
+    <script src="../streak-manager.js"></script>
+    <script src="../history-manager.js"></script>
+    <script src="tts-reader.js"></script>
+</body>
+
+</html>

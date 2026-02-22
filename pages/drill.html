@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drill Soal Fisika — Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --card: #141a2e;
+            --card2: #1b2340;
+            --cyan: #00d9ff;
+            --green: #4ade80;
+            --orange: #FFB347;
+            --red: #f43f5e;
+            --gold: #fbbf24;
+            --text: #e6f7ff;
+            --muted: rgba(180, 200, 230, 0.5);
+            --glass: rgba(255, 255, 255, 0.04)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            min-height: 100vh
+        }
+
+        /* HEADER */
+        .drill-hdr {
+            background: linear-gradient(135deg, #0d1128, #141a2e);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px)
+        }
+
+        .drill-hdr .back {
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: .2s
+        }
+
+        .drill-hdr .back:hover {
+            opacity: .7
+        }
+
+        .drill-hdr h1 {
+            font-size: 16px;
+            margin: 0;
+            flex: 1;
+            text-align: center;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .hdr-stats {
+            display: flex;
+            gap: 8px
+        }
+
+        .stat-chip {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        /* MAP */
+        #mapView {
+            padding: 20px 16px;
+            max-width: 560px;
+            margin: 0 auto
+        }
+
+        .ch-block {
+            margin-bottom: 28px
+        }
+
+        .ch-label {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--glass);
+            border-left: 3px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px
+        }
+
+        .ch-label .ico {
+            font-size: 20px
+        }
+
+        .ch-label .name {
+            flex: 1
+        }
+
+        .ch-label .badge {
+            font-size: 10px;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--cyan);
+            padding: 2px 8px;
+            border-radius: 10px
+        }
+
+        .nodes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .nd {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all .25s;
+            border: 2.5px solid rgba(255, 255, 255, 0.06);
+            background: var(--card);
+            font-weight: 700
+        }
+
+        .nd:hover {
+            transform: scale(1.12)
+        }
+
+        .nd .num {
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1
+        }
+
+        .nd .prog {
+            font-size: 7px;
+            color: var(--muted);
+            margin-top: 1px
+        }
+
+        .nd.done {
+            border-color: var(--green);
+            background: rgba(74, 222, 128, 0.08)
+        }
+
+        .nd.done::after {
+            content: '✓';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            background: var(--green);
+            color: #000;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .nd.now {
+            border-color: var(--cyan);
+            box-shadow: 0 0 18px rgba(0, 217, 255, 0.25);
+            animation: glow 2.5s ease-in-out infinite
+        }
+
+        .nd.off {
+            opacity: .3;
+            cursor: not-allowed;
+            border-color: transparent
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(0, 217, 255, 0.15)
+            }
+
+            50% {
+                box-shadow: 0 0 24px rgba(0, 217, 255, 0.4)
+            }
+        }
+
+        .tot-box {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .tot-box .pct {
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .prog-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 8px 0
+        }
+
+        .prog-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            transition: width .6s ease
+        }
+
+        /* QUIZ */
+        #quizView {
+            display: none;
+            padding: 16px;
+            max-width: 560px;
+            margin: 0 auto
+        }
+
+        .q-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px
+        }
+
+        .q-top .bk {
+            background: none;
+            border: none;
+            color: var(--cyan);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit
+        }
+
+        .q-top .title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted)
+        }
+
+        .hearts {
+            display: flex;
+            gap: 2px;
+            font-size: 13px
+        }
+
+        .dots {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 16px
+        }
+
+        .dots .d {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            transition: .2s
+        }
+
+        .dots .d.ok {
+            background: var(--green)
+        }
+
+        .dots .d.cur {
+            background: var(--cyan);
+            box-shadow: 0 0 6px var(--cyan)
+        }
+
+        .dots .d.bad {
+            background: var(--red)
+        }
+
+        .q-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 18px 16px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .q-lbl {
+            font-size: 11px;
+            color: var(--cyan);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            text-transform: uppercase
+        }
+
+        .q-txt {
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-line
+        }
+
+        .opts {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 14px
+        }
+
+        .ob {
+            background: var(--card);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 11px 14px;
+            text-align: left;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all .15s;
+            line-height: 1.5
+        }
+
+        .ob:hover {
+            border-color: rgba(0, 217, 255, 0.3);
+            background: rgba(0, 217, 255, 0.03)
+        }
+
+        .ob.sel {
+            border-color: var(--cyan);
+            background: rgba(0, 217, 255, 0.08)
+        }
+
+        .ob.ok {
+            border-color: var(--green) !important;
+            background: rgba(74, 222, 128, 0.1) !important
+        }
+
+        .ob.bad {
+            border-color: var(--red) !important;
+            background: rgba(244, 63, 94, 0.1) !important
+        }
+
+        .btns {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s
+        }
+
+        .btn-go {
+            background: linear-gradient(135deg, var(--green), #22c55e);
+            color: #000
+        }
+
+        .btn-go:disabled {
+            opacity: .25;
+            cursor: not-allowed
+        }
+
+        .btn-skip {
+            background: var(--glass);
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .btn-nxt {
+            background: linear-gradient(135deg, var(--cyan), #0ea5e9);
+            color: #000
+        }
+
+        .btn-formula {
+            background: var(--glass);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 217, 255, 0.15)
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted)
+        }
+
+        /* EXPLANATION */
+        .exp {
+            background: var(--card2);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+            border-left: 3px solid var(--green);
+            display: none
+        }
+
+        .exp.show {
+            display: block;
+            animation: pop .25s ease
+        }
+
+        .exp.wrong {
+            border-left-color: var(--red)
+        }
+
+        .exp h4 {
+            margin: 0 0 6px;
+            font-size: 13px
+        }
+
+        .exp p {
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 3px 0;
+            color: rgba(200, 220, 255, 0.8)
+        }
+
+        .exp .ftag {
+            background: rgba(0, 217, 255, 0.08);
+            color: var(--cyan);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            display: inline-block;
+            margin: 5px 0
+        }
+
+        .exp .ttag {
+            background: rgba(251, 191, 36, 0.08);
+            color: var(--gold);
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-top: 6px
+        }
+
+        .exp .stag {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* RESULT */
+        #resultView {
+            display: none;
+            padding: 20px;
+            max-width: 560px;
+            margin: 0 auto;
+            text-align: center
+        }
+
+        .res-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .res-sc {
+            font-size: 44px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .res-stars {
+            font-size: 28px;
+            margin: 10px 0
+        }
+
+        .res-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 14px
+        }
+
+        .res-stats div {
+            text-align: center
+        }
+
+        .res-stats .v {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cyan)
+        }
+
+        .res-stats .l {
+            font-size: 10px;
+            color: var(--muted)
+        }
+
+        .wr-box {
+            text-align: left;
+            margin-top: 14px
+        }
+
+        .wr-box h4 {
+            font-size: 13px;
+            color: var(--red);
+            margin-bottom: 6px
+        }
+
+        .wr-item {
+            background: rgba(244, 63, 94, 0.04);
+            border: 1px solid rgba(244, 63, 94, 0.08);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            line-height: 1.5
+        }
+
+        /* MODAL */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-bg.show {
+            display: flex
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 380px;
+            width: 90%;
+            max-height: 75vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 217, 255, 0.1)
+        }
+
+        .modal h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            color: var(--cyan)
+        }
+
+        .modal .fi {
+            background: rgba(0, 217, 255, 0.04);
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5
+        }
+
+        .modal .cls {
+            background: var(--red);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: inherit;
+            font-weight: 600
+        }
+
+        /* FLASH */
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 150;
+            opacity: 0;
+            transition: opacity .12s
+        }
+
+        .flash.g {
+            background: rgba(74, 222, 128, 0.12);
+            opacity: 1
+        }
+
+        .flash.r {
+            background: rgba(244, 63, 94, 0.12);
+            opacity: 1
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flash" id="fl"></div>
+    <header class="drill-hdr">
+        <a href="../dashboard.html" class="back"><i class="fas fa-arrow-left"></i> HOME</a>
+        <h1>DRILL SOAL FISIKA</h1>
+        <div class="hdr-stats">
+            <span class="stat-chip">⭐ <span id="txp">0</span></span>
+            <span class="stat-chip">🔥 <span id="tst">0</span></span>
+        </div>
+    </header>
+    <div id="mapView"></div>
+    <div id="quizView">
+        <div class="q-top">
+            <button class="bk" onclick="backToMap()"><i class="fas fa-arrow-left"></i> Kembali</button>
+            <span class="title" id="qt"></span>
+            <div class="hearts" id="hr"></div>
+        </div>
+        <div class="dots" id="dots"></div>
+        <div class="q-card">
+            <div class="q-lbl" id="ql"></div>
+            <div class="q-txt" id="qtx"></div>
+        </div>
+        <div class="opts" id="ol"></div>
+        <div class="exp" id="ex">
+            <h4 id="et"></h4>
+            <p id="ep"></p>
+            <div class="ftag" id="ef"></div>
+            <div class="ttag" id="etp"></div>
+            <div class="stag" id="es"></div>
+        </div>
+        <div class="btns" id="br1">
+            <button class="btn btn-go" id="bc" disabled onclick="checkAns()">CEK JAWABAN</button>
+            <button class="btn btn-skip" onclick="skipQ()">LEWAT</button>
+        </div>
+        <div class="btns" id="br2" style="display:none">
+            <button class="btn btn-nxt" onclick="nextQ()">LANJUT →</button>
+            <button class="btn btn-formula" onclick="showF()">📐 RUMUS</button>
+        </div>
+        <div class="info-row">
+            <span>⭐ Skor: <b id="sc">0</b></span>
+            <span id="qc">1/5</span>
+        </div>
+    </div>
+    <div id="resultView">
+        <div class="res-card">
+            <div id="re" style="font-size:44px">🎉</div>
+            <div class="res-sc" id="rs">100</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:4px">SKOR</div>
+            <div class="res-stars" id="rst">⭐⭐⭐</div>
+            <div class="res-stats">
+                <div>
+                    <div class="v" id="rc">5</div>
+                    <div class="l">Benar</div>
+                </div>
+                <div>
+                    <div class="v" id="rw">0</div>
+                    <div class="l">Salah</div>
+                </div>
+                <div>
+                    <div class="v" id="rx">+50</div>
+                    <div class="l">XP</div>
+                </div>
+            </div>
+        </div>
+        <div class="wr-box" id="wrv"></div>
+        <div class="btns"><button class="btn btn-nxt" onclick="backToMap()">🗺️ KEMBALI</button></div>
+        <div class="btns" id="rtr" style="display:none"><button class="btn btn-go" onclick="retry()">🔄 COBA
+                LAGI</button></div>
+    </div>
+    <div class="modal-bg" id="fm">
+        <div class="modal">
+            <h3>📐 Rumus Cepat</h3>
+            <div id="fl2"></div>
+            <button class="cls" onclick="closeF()">Tutup</button>
+        </div>
+    </div>
+    <script src="xp-manager.js"></script>
+    <script src="drill-soal-data.js"></script>
+    <script>
+        const LS = 'drill_progress';
+        const DRILL_VERSION = 2;
+        let S = load(), Q = { ci: 0, si: 0, qi: 0, sel: -1, done: false, hp: 5, sc: 0, ok: 0, ng: 0, wq: [], ans: [] };
+        function load() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(LS));
+                if (!raw || raw.version !== DRILL_VERSION) { localStorage.removeItem(LS); return def(); }
+                // Validate structure
+                const numChapters = DRILL_DATA.chapters.length;
+                let valid = true;
+                DRILL_DATA.chapters.forEach((c, i) => c.sessions.forEach((_, j) => {
+                    if (raw.comp[i + '_' + j] === undefined) valid = false;
+                }));
+                if (!valid) { localStorage.removeItem(LS); return def(); }
+                return raw;
+            } catch (e) { localStorage.removeItem(LS); return def(); }
+        }
+        function def() {
+            const s = { version: DRILL_VERSION, xp: 0, comp: {}, stars: {} };
+            DRILL_DATA.chapters.forEach((c, i) => c.sessions.forEach((_, j) => {
+                s.comp[i + '_' + j] = 0;
+                s.stars[i + '_' + j] = 0;
+            }));
+            return s;
+        }
+        function save() { localStorage.setItem(LS, JSON.stringify(S)); }
+        function unlocked(ci, si) { return si === 0 || (S.comp[ci + '_' + (si - 1)] || 0) >= 5; }
+
+        function renderMap() {
+            document.getElementById('mapView').style.display = 'block';
+            document.getElementById('quizView').style.display = 'none';
+            document.getElementById('resultView').style.display = 'none';
+            let h = '', tq = 0, td = 0;
+            DRILL_DATA.chapters.forEach((c, ci) => {
+                let dn = 0; c.sessions.forEach((_, si) => { let d = S.comp[ci + '_' + si] || 0; if (d >= 5) dn++; });
+                h += `<div class="ch-block"><div class="ch-label" style="border-left-color:${c.color}"><span class="ico">${c.icon}</span><span class="name">BAGIAN ${ci + 1}: ${c.name}</span><span class="badge">${dn}/${c.sessions.length}</span></div><div class="nodes">`;
+                c.sessions.forEach((ss, si) => {
+                    const d = S.comp[ci + '_' + si] || 0, u = unlocked(ci, si), cp = d >= 5, ac = u && !cp;
+                    const cls = cp ? 'done' : ac ? 'now' : 'off';
+                    tq += 5; td += Math.min(d, 5);
+                    h += `<div class="nd ${cls}" onclick="${u ? `startS(${ci},${si})` : 'void(0)'}" title="${ss.name} (${ss.difficulty})"><span class="num">${si + 1}</span><span class="prog">${u ? (cp ? '✓' : d + '/5') : '🔒'}</span></div>`;
+                });
+                h += '</div></div>';
+            });
+            const pct = Math.round(td / tq * 100);
+            h += `<div class="tot-box"><div class="pct">${pct}%</div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">PROGRES TOTAL</div><div class="prog-bar"><div class="fill" style="width:${pct}%"></div></div><div style="font-size:11px;color:var(--muted);margin-top:6px">⭐ XP: ${S.xp} · Soal: ${td}/${tq}</div></div>`;
+            document.getElementById('mapView').innerHTML = h;
+            document.getElementById('txp').textContent = S.xp;
+            try { document.getElementById('tst').textContent = JSON.parse(localStorage.getItem('streakData') || '{}').currentStreak || 0; } catch (e) { }
+        }
+
+        function startS(ci, si) {
+            Q = { ci, si, qi: 0, sel: -1, done: false, hp: 5, sc: 0, ok: 0, ng: 0, wq: [], ans: [] };
+            document.getElementById('mapView').style.display = 'none';
+            document.getElementById('quizView').style.display = 'block';
+            document.getElementById('resultView').style.display = 'none';
+            const c = DRILL_DATA.chapters[ci], ss = c.sessions[si];
+            document.getElementById('qt').textContent = `${c.icon} BAB ${ci + 1} · SESI ${si + 1}`;
+            renderQ();
+        }
+
+        function renderQ() {
+            const ss = DRILL_DATA.chapters[Q.ci].sessions[Q.si], q = ss.questions[Q.qi];
+            Q.sel = -1; Q.done = false;
+            let dt = ''; ss.questions.forEach((_, i) => { const c = i < Q.qi ? (Q.ans[i] ? 'ok' : 'bad') : i === Q.qi ? 'cur' : ''; dt += `<div class="d ${c}"></div>`; });
+            document.getElementById('dots').innerHTML = dt;
+            let hr = ''; for (let i = 0; i < 5; i++)hr += i < Q.hp ? '❤️' : '🖤';
+            document.getElementById('hr').innerHTML = hr;
+            document.getElementById('ql').textContent = `SOAL ${Q.qi + 1}/5 · ${ss.difficulty.toUpperCase()}`;
+            document.getElementById('qtx').textContent = q.q;
+            let ot = ''; const L = 'ABCDE';
+            q.opts.forEach((o, i) => { ot += `<button class="ob" data-i="${i}" onclick="selO(${i})">${L[i]}. ${o}</button>`; });
+            document.getElementById('ol').innerHTML = ot;
+            document.getElementById('br1').style.display = 'flex';
+            document.getElementById('br2').style.display = 'none';
+            document.getElementById('bc').disabled = true;
+            document.getElementById('ex').className = 'exp';
+            document.getElementById('sc').textContent = Q.sc;
+            document.getElementById('qc').textContent = `${Q.qi + 1}/5`;
+        }
+
+        function selO(i) {
+            if (Q.done) return; Q.sel = i;
+            document.querySelectorAll('.ob').forEach(b => b.classList.remove('sel'));
+            document.querySelector(`.ob[data-i="${i}"]`).classList.add('sel');
+            document.getElementById('bc').disabled = false;
+        }
+
+        function checkAns() {
+            if (Q.sel < 0 || Q.done) return; Q.done = true;
+            const q = DRILL_DATA.chapters[Q.ci].sessions[Q.si].questions[Q.qi], ok = Q.sel === q.ans;
+            document.querySelectorAll('.ob').forEach(b => b.style.pointerEvents = 'none');
+            document.querySelector(`.ob[data-i="${q.ans}"]`).classList.add('ok');
+            if (!ok) { document.querySelector(`.ob[data-i="${Q.sel}"]`).classList.add('bad'); Q.hp--; Q.ng++; Q.wq.push({ q: q.q, pick: q.opts[Q.sel], cor: q.opts[q.ans] }); Q.ans.push(false); flash('r'); }
+            else {
+                Q.sc += 10; Q.ok++; Q.ans.push(true); flash('g');
+                const xpResult = XPManager.addXP(XPManager.getReward('drill_correct'), 'drill_correct');
+                if (xpResult.leveledUp) setTimeout(() => XPManager.showLevelUpPopup(xpResult.newInfo), 400);
+            }
+            const e = document.getElementById('ex'); e.className = 'exp show' + (ok ? '' : ' wrong');
+            document.getElementById('et').textContent = ok ? '✅ BENAR! (+10 XP)' : '❌ SALAH';
+            document.getElementById('ep').textContent = q.exp;
+            document.getElementById('ef').textContent = '📌 ' + q.formula;
+            document.getElementById('etp').textContent = '💡 ' + q.tips;
+            document.getElementById('es').textContent = 'Sumber: ' + q.src;
+            document.getElementById('br1').style.display = 'none';
+            document.getElementById('br2').style.display = 'flex';
+            let hr = ''; for (let i = 0; i < 5; i++)hr += i < Q.hp ? '❤️' : '🖤';
+            document.getElementById('hr').innerHTML = hr;
+            document.getElementById('sc').textContent = Q.sc;
+            if (Q.hp <= 0) setTimeout(() => showRes(true), 600);
+            save();
+        }
+
+        function skipQ() { Q.ans.push(null); Q.ng++; Q.hp--; if (Q.hp <= 0) { showRes(true); return; } if (Q.qi < 4) { Q.qi++; renderQ(); } else showRes(false); }
+        function nextQ() { if (Q.qi < 4) { Q.qi++; renderQ(); } else showRes(false); }
+        function flash(c) { const f = document.getElementById('fl'); f.className = 'flash ' + c; setTimeout(() => f.className = 'flash', 250); }
+
+        function showRes(fail) {
+            document.getElementById('quizView').style.display = 'none';
+            document.getElementById('resultView').style.display = 'block';
+            const k = Q.ci + '_' + Q.si;
+            if (!fail && Q.ok > 0) {
+                S.comp[k] = Math.max(S.comp[k] || 0, Q.ok);
+                const st = Q.ok >= 5 ? 3 : Q.ok >= 3 ? 2 : 1;
+                S.stars[k] = Math.max(S.stars[k] || 0, st);
+                // Session completion XP via XPManager
+                let xpResult = XPManager.addXP(XPManager.getReward('drill_session'), 'drill_session');
+                if (Q.ok >= 5) {
+                    xpResult = XPManager.addXP(XPManager.getReward('drill_perfect'), 'drill_perfect');
+                }
+                if (xpResult.leveledUp) setTimeout(() => XPManager.showLevelUpPopup(xpResult.newInfo), 800);
+            }
+            save();
+            const st = Q.ok >= 5 ? '⭐⭐⭐' : Q.ok >= 3 ? '⭐⭐' : Q.ok >= 1 ? '⭐' : '';
+            document.getElementById('re').textContent = fail ? '💔' : Q.ok >= 5 ? '🎉' : Q.ok >= 3 ? '👍' : '😅';
+            document.getElementById('rs').textContent = Q.sc;
+            document.getElementById('rst').textContent = st || 'Coba lagi!';
+            document.getElementById('rc').textContent = Q.ok;
+            document.getElementById('rw').textContent = Q.ng;
+            document.getElementById('rx').textContent = fail ? '+0' : `+${Q.ok * 10 + 50}`;
+            let w = ''; if (Q.wq.length) { w = `<h4>❌ Soal Salah (${Q.wq.length})</h4>`; Q.wq.forEach(x => { w += `<div class="wr-item"><b>${x.q.split('\n')[0]}</b><br>Jawabmu: <span style="color:var(--red)">${x.pick}</span><br>Benar: <span style="color:var(--green)">${x.cor}</span></div>`; }); }
+            document.getElementById('wrv').innerHTML = w;
+            document.getElementById('rtr').style.display = fail || Q.ok < 5 ? 'flex' : 'none';
+        }
+
+        function retry() { startS(Q.ci, Q.si); }
+        function backToMap() { renderMap(); }
+
+        const FM = {
+            0: ['Δx = x₂ − x₁', 'Ketelitian mistar = 0,5 mm', 'JS: Hasil = SU + (n × 0,05) mm', 'Mikrometer: Hasil = SU + (n × 0,01) mm', 'x̄ = Σxᵢ / n', 'Δx̄ = Σ|xᵢ − x̄| / n', 'Koreksi ZE: Hasil = Terbaca − ZE', 'Notasi ilmiah: a × 10ⁿ (1≤a<10)'],
+            1: ['η = (E_out / E_in) × 100%', 'P = E/t [Watt]', '1 kWh = 3,6 × 10⁶ J', 'Terbarukan: surya, angin, air, biomassa', 'Tak terbarukan: fosil (batu bara, minyak, gas)', 'Fotovoltaik: cahaya → listrik', 'E kimia ⇌ E listrik (aki)'],
+            2: ['W = F·s·cos θ [Joule]', 'Ek = ½mv²', 'Ep = mgh', 'Em = Ek + Ep = konstan', 'P = W/t [Watt]', 'v jatuh bebas = √(2gh)', 'h maks = v₀²/(2g)', 'η = (W_out/W_in) × 100%']
+        };
+        function showF() { let h = ''; (FM[Q.ci] || []).forEach(r => { h += `<div class="fi">${r}</div>`; }); document.getElementById('fl2').innerHTML = h; document.getElementById('fm').classList.add('show'); }
+        function closeF() { document.getElementById('fm').classList.remove('show'); }
+
+        renderMap();
+    </script>
+</body>
+
+</html>

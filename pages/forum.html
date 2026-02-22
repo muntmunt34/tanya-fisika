@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Kelas - Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Forum visuals */
+        .forum-message {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 18px rgba(10, 20, 60, 0.04);
+        }
+
+        .forum-message .msg-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .forum-message .msg-meta {
+            color: #254;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .forum-message .msg-body {
+            color: #222;
+            font-size: 14px;
+            margin-top: 6px;
+            white-space: pre-wrap;
+        }
+
+        .forum-message .replies {
+            margin-top: 10px;
+            padding-left: 10px;
+            border-left: 2px solid #f1f6fb;
+        }
+
+        .reply-item {
+            background: #fbfdff;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .reply-meta {
+            font-size: 12px;
+            color: #4361ee;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .msg-controls .btn {
+            margin-left: 6px;
+        }
+
+        .msg-menu {
+            background: #fff;
+            border: 1px solid #eef4ff;
+            padding: 6px;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(10, 20, 60, 0.06);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            right: 18px;
+            bottom: 86px;
+            background: linear-gradient(90deg, #06d6a0, #04a777);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            font-weight: 600;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .28s ease, transform .28s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* New message highlight */
+        .forum-message.message-new {
+            animation: highlight 1.8s ease;
+        }
+
+        @keyframes highlight {
+            0% {
+                box-shadow: 0 10px 30px rgba(4, 167, 119, 0.18);
+                transform: translateY(-4px);
+            }
+
+            70% {
+                transform: translateY(0);
+            }
+
+            100% {
+                box-shadow: 0 6px 18px rgba(10, 20, 60, 0.04);
+            }
+        }
+
+        .toast .toast-action {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            padding: 6px 8px;
+            margin-left: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+
+<body class="page" data-content-type="forum">
+    <header class="page-header">
+        <a href="#" onclick="window.history.back(); return false" class="back-link">← Kembali</a>
+        <h1>Forum Kelas (Anonim)</h1>
+        <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </header>
+
+    <main class="page-content">
+        <section class="forum-container">
+            <div class="forum-left">
+                <!-- Hero / wallpaper for forum -->
+                <div class="forum-hero">
+                    <div class="hero-overlay">
+                        <h2>Forum Kelas</h2>
+                        <p>Diskusi singkat, tanya jawab, dan berbagi catatan — bersifat anonim (lokal).</p>
+                    </div>
+                </div>
+
+                <div class="forum-form">
+                    <p>Gunakan tombol <strong>+</strong> di pojok kanan bawah untuk menulis pesan (Nama & Pesan akan
+                        muncul melalui popup).</p>
+                </div>
+
+                <div class="forum-thread" id="forumThread"></div>
+
+
+            </div>
+
+            <aside class="forum-right">
+                <h3>Petunjuk</h3>
+                <p>Forum ini bersifat anonim dan hanya tersimpan di perangkat (localStorage). Untuk diskusi nyata antar
+                    pengguna di banyak perangkat, diperlukan backend. Pesan akan tersinkron bila pengguna membuka
+                    halaman di tab lain (sama browser) lewat event storage.</p>
+
+                <h3>Aktivitas Terakhir</h3>
+                <p id="lastActivityForum">-</p>
+            </aside>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+    <script>
+        (function () {
+            function escapeHtml(str) {
+                if (!str) return '';
+                return String(str).replace(/[&<>"'`]/g, function (s) {
+                    return ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;',
+                        '`': '&#96;'
+                    })[s];
+                });
+            }
+
+            function currentAnon() {
+                let id = sessionStorage.getItem('anonId');
+                if (!id) {
+                    id = 'anon-' + Math.floor(Math.random() * 9000 + 1000);
+                    sessionStorage.setItem('anonId', id);
+                }
+                return id;
+            }
+
+            // Fallback helpers: define minimal `timeAgo`, `setLastActivity`, and
+            // `updateLastActivityUI` if main `script.js` didn't load.
+            // This avoids runtime errors that prevent posting messages.
+            if (typeof timeAgo !== 'function') {
+                var timeAgo = window.timeAgo = function (input) {
+                    try {
+                        var d = input ? new Date(input) : new Date();
+                        var now = new Date();
+                        var sec = Math.floor((now - d) / 1000);
+                        if (isNaN(sec)) return '';
+                        if (sec < 10) return 'baru saja';
+                        if (sec < 60) return sec + ' detik lalu';
+                        if (sec < 3600) return Math.floor(sec / 60) + ' menit lalu';
+                        if (sec < 86400) return Math.floor(sec / 3600) + ' jam lalu';
+                        return d.toLocaleString();
+                    } catch (e) { return ''; }
+                };
+            }
+
+            if (typeof setLastActivity !== 'function') {
+                var setLastActivity = window.setLastActivity = function (label) {
+                    try { localStorage.setItem('lastActivity', JSON.stringify({ label: label, time: new Date().toISOString() })); } catch (e) { }
+                };
+            }
+
+            if (typeof updateLastActivityUI !== 'function') {
+                var updateLastActivityUI = window.updateLastActivityUI = function () {
+                    try {
+                        var last = JSON.parse(localStorage.getItem('lastActivity') || 'null');
+                        var el = document.getElementById('lastActivityForum');
+                        if (last && el) el.textContent = last.label + ' • ' + (typeof timeAgo === 'function' ? timeAgo(new Date(last.time)) : new Date(last.time).toLocaleString());
+                    } catch (e) { }
+                };
+            }
+
+            // Record that user opened Forum and refresh the activity UI
+            try { document.addEventListener('DOMContentLoaded', function () { try { setLastActivity(getPageNameFromPath()); updateLastActivityUI(); } catch (e) { } }); } catch (e) { }
+
+            function loadMessages() {
+                return JSON.parse(localStorage.getItem('forumMessages') || '[]');
+            }
+
+            function saveMessages(msgs) {
+                localStorage.setItem('forumMessages', JSON.stringify(msgs));
+                // trigger storage event for same-origin tabs
+                window.dispatchEvent(new Event('storage'));
+            }
+
+            // Small toast notification for new messages
+            function showToast(text) {
+                try {
+                    let t = document.getElementById('toast');
+                    if (!t) {
+                        t = document.createElement('div');
+                        t.id = 'toast';
+                        t.className = 'toast';
+                        document.body.appendChild(t);
+                    }
+                    t.textContent = text;
+                    t.classList.add('show');
+                    setTimeout(() => { t.classList.remove('show'); }, 2800);
+                } catch (e) { console.error('toast error', e); }
+            }
+
+            function renderMessages() {
+                const thread = document.getElementById('forumThread');
+                if (!thread) return;
+                const msgs = loadMessages();
+                if (msgs.length === 0) {
+                    thread.innerHTML = '<p class="muted">Belum ada pesan. Jadilah yang pertama!</p>';
+                    return;
+                }
+
+                // Full thread (latest first)
+                thread.innerHTML = msgs.slice().reverse().map(m => `
+                    <div class="forum-message" data-id="${m.id}">
+                        <div class="msg-head">
+                            <div class="msg-meta"><strong>${escapeHtml(m.name)}</strong> • <span class="time">${timeAgo(new Date(m.time))}</span></div>
+                            <div class="msg-controls">
+                                <button class="btn tiny btn-reply" data-id="${m.id}">Reply</button>
+                                <button class="btn outline btn-react" data-id="${m.id}">👍 <span class="react-count">${(m.likedBy || []).length}</span></button>
+                                <div class="msg-menu-wrapper">
+                                    <button class="btn icon btn-menu" data-id="${m.id}" aria-haspopup="true" aria-expanded="false">⋯</button>
+                                    <div class="msg-menu" data-for="${m.id}" style="display:none;">
+                                        ${m.authorId === currentAnon() ? '<button class="btn-menu-delete" data-id="' + m.id + '">Hapus pesan</button>' : '<div class="muted">Tidak tersedia</div>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="msg-body">${escapeHtml(m.text)}</div>
+                        <div class="replies">
+                            ${(m.replies || []).map(r => `
+                                <div class="reply-item" data-reply-id="${r.id}">
+                                    <div class="reply-meta"><strong>${escapeHtml(r.name)}</strong> • <span class="time">${timeAgo(new Date(r.time))}</span></div>
+                                    <div class="reply-body">${escapeHtml(r.text)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="reply-form-container" data-for="${m.id}" style="display:none; margin-top:0.5rem">
+                            <input class="reply-input" placeholder="Balas pesan..." />
+                            <button class="btn tiny btn-send-reply" data-for="${m.id}">Kirim</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Auto-scroll to latest
+                try {
+                    thread.scrollTop = thread.scrollHeight;
+                } catch (e) { }
+            }
+
+            function postMessage(name, text) {
+                if (!text || !text.trim()) return;
+                const msgs = loadMessages();
+                const entry = {
+                    id: 'm' + Date.now() + '-' + Math.floor(Math.random() * 999),
+                    name: name && name.trim() ? name.trim() : ('Anon' + Math.floor(Math.random() * 9000 + 1000)),
+                    text: text.trim(),
+                    time: new Date().toISOString(),
+                    authorId: currentAnon()
+                };
+                msgs.push(entry);
+                saveMessages(msgs);
+                renderMessages();
+                // Notify user briefly and highlight the new message
+                try {
+                    showToast((entry.name || 'Anon') + ' • pesan terkirim');
+                    // highlight newly added message element
+                    setTimeout(() => {
+                        const el = document.querySelector('.forum-message[data-id="' + entry.id + '"]');
+                        if (el) {
+                            el.classList.add('message-new');
+                            setTimeout(() => el.classList.remove('message-new'), 1800);
+                        }
+                    }, 40);
+                } catch (e) { }
+            }
+
+            function clearForum() {
+                if (!confirm('Hapus semua pesan dari penyimpanan lokal di perangkat ini?')) return;
+                localStorage.removeItem('forumMessages');
+                renderMessages();
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // initialize
+                renderMessages();
+                // show last activity
+                updateLastActivityUI();
+                const last = JSON.parse(localStorage.getItem('lastActivity') || 'null');
+                const lastEl = document.getElementById('lastActivityForum');
+                if (last && lastEl) lastEl.textContent = `${last.label} • ${timeAgo(new Date(last.time))}`;
+
+                // Accept compose submissions from global popup
+                window.receiveCompose = function (payload) {
+                    try {
+                        const name = payload.name || '';
+                        const txt = payload.message || '';
+                        if (!txt.trim()) return;
+                        postMessage(name, txt);
+                        // set activity
+                        setLastActivity('Forum');
+                        updateLastActivityUI();
+                    } catch (e) { console.error('receiveCompose error', e); }
+                };
+
+                // Also accept compose posts from other tabs via localStorage key
+                window.addEventListener('storage', function (e) {
+                    if (!e.key) return;
+                    if (e.key === 'compose_post') {
+                        try { const p = JSON.parse(e.newValue || 'null'); if (p) window.receiveCompose(p); } catch (err) { }
+                    }
+                });
+
+                // delete handler (event delegation)
+                document.getElementById('forumThread').addEventListener('click', function (e) {
+                    // Toggle msg menu
+                    if (e.target.classList.contains('btn-menu')) {
+                        const id = e.target.getAttribute('data-id');
+                        const wrapper = e.target.closest('.forum-message');
+                        if (!wrapper) return;
+                        // toggle menu visibility
+                        const menu = wrapper.querySelector('.msg-menu');
+                        if (!menu) return;
+                        const isShown = menu.style.display !== 'none';
+                        // hide any other open menus
+                        document.querySelectorAll('.msg-menu').forEach(m => m.style.display = 'none');
+                        menu.style.display = isShown ? 'none' : 'block';
+                        return;
+                    }
+
+                    // delete (from menu)
+                    if (e.target.classList.contains('btn-menu-delete')) {
+                        const id = e.target.getAttribute('data-id');
+                        let msgs = loadMessages();
+                        msgs = msgs.filter(m => m.id !== id);
+                        saveMessages(msgs);
+                        renderMessages();
+                        return;
+                    }
+
+                    // reaction
+                    if (e.target.classList.contains('btn-react')) {
+                        const id = e.target.getAttribute('data-id');
+                        toggleReaction(id);
+                        return;
+                    }
+
+                    // reply toggle
+                    if (e.target.classList.contains('btn-reply')) {
+                        const id = e.target.getAttribute('data-id');
+                        const container = document.querySelector('.reply-form-container[data-for="' + id + '"]');
+                        if (container) {
+                            container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+                            const input = container.querySelector('.reply-input');
+                            if (input) input.focus();
+                        }
+                        return;
+                    }
+
+                    // send reply
+                    if (e.target.classList.contains('btn-send-reply')) {
+                        const forId = e.target.getAttribute('data-for');
+                        const container = document.querySelector('.reply-form-container[data-for="' + forId + '"]');
+                        if (!container) return;
+                        const input = container.querySelector('.reply-input');
+                        const text = (input && input.value) ? input.value.trim() : '';
+                        if (!text) { alert('Isi balasan terlebih dahulu.'); return; }
+                        const name = sessionStorage.getItem('anonName') || '';
+                        postReply(forId, name, text);
+                        input.value = '';
+                        container.style.display = 'none';
+                        return;
+                    }
+                });
+
+                // Close any open message menus when clicking outside
+                document.addEventListener('click', function (e) {
+                    const openMenus = document.querySelectorAll('.msg-menu');
+                    if (!openMenus || openMenus.length === 0) return;
+                    // if click inside a msg-menu or on a btn-menu, ignore
+                    if (e.target.closest && (e.target.closest('.msg-menu') || e.target.closest('.btn-menu'))) return;
+                    openMenus.forEach(m => m.style.display = 'none');
+                });
+
+                // Note: nickname input removed from UI; replies will use session-stored anonName if set.
+
+                // Save last activity when opening forum
+                setLastActivity('Forum');
+                updateLastActivityUI();
+            });
+
+            // Reaction toggle
+            function toggleReaction(messageId) {
+                const anon = currentAnon();
+                let msgs = loadMessages();
+                const idx = msgs.findIndex(m => m.id === messageId);
+                if (idx === -1) return;
+                const m = msgs[idx];
+                m.likedBy = m.likedBy || [];
+                const pos = m.likedBy.indexOf(anon);
+                if (pos === -1) m.likedBy.push(anon);
+                else m.likedBy.splice(pos, 1);
+                msgs[idx] = m;
+                saveMessages(msgs);
+                renderMessages();
+            }
+
+            // Show typing indicator when receiving localStorage events
+            function showTypingIndicator(payload) {
+                const el = document.getElementById('typingIndicator');
+                if (!el) return;
+                if (!payload) { el.textContent = ''; return; }
+                const now = Date.now();
+                if (now - payload.time > 3000) { el.textContent = ''; return; }
+                el.textContent = payload.name + ' sedang mengetik...';
+            }
+
+            // React to storage events for typing and messages
+            window.addEventListener('storage', function (e) {
+                if (!e.key) return;
+                if (e.key === 'forumMessages' || e.key === 'recentActivities' || e.key === 'lastActivity') {
+                    renderMessages();
+                    updateLastActivityUI();
+                }
+                if (e.key === 'forum_typing') {
+                    try { const p = JSON.parse(e.newValue || 'null'); showTypingIndicator(p); } catch (e) { }
+                }
+            });
+
+            // Poll typing indicator from localStorage on load (in case set by same tab)
+            setInterval(function () {
+                try { const p = JSON.parse(localStorage.getItem('forum_typing') || 'null'); showTypingIndicator(p); } catch (e) { }
+            }, 800);
+
+            // Post a reply to a message
+            function postReply(messageId, name, text) {
+                if (!text || !text.trim()) return;
+                let msgs = loadMessages();
+                const idx = msgs.findIndex(m => m.id === messageId);
+                if (idx === -1) return;
+                const reply = {
+                    id: 'r' + Date.now() + '-' + Math.floor(Math.random() * 999),
+                    name: name && name.trim() ? name.trim() : ('Anon' + Math.floor(Math.random() * 9000 + 1000)),
+                    text: text.trim(),
+                    time: new Date().toISOString()
+                };
+                msgs[idx].replies = msgs[idx].replies || [];
+                msgs[idx].replies.push(reply);
+                saveMessages(msgs);
+                renderMessages();
+            }
+            // Sync across tabs using storage event
+            window.addEventListener('storage', function (e) {
+                if (!e.key || e.key === 'forumMessages' || e.key === 'recentActivities' || e.key === 'lastActivity') {
+                    renderMessages();
+                    updateLastActivityUI();
+                }
+            });
+
+        })();
+    </script>
+    <!-- Floating compose button for forum -->
+    <div id="forumComposeWrapper">
+        <button id="forumComposeBtn" aria-label="Tulis pesan"
+            style="position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:28px;background:#06d6a0;color:#fff;border:none;font-size:28px;z-index:9998;box-shadow:0 8px 20px rgba(0,0,0,0.12);">+</button>
+
+        <div id="forumComposeModal"
+            style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999;">
+            <div style="background:#fff;padding:1rem;border-radius:10px;max-width:520px;width:100%;">
+                <button id="forumComposeClose"
+                    style="float:right;border:none;background:transparent;font-size:20px;">×</button>
+                <h3>Tulis Pesan</h3>
+                <div style="margin-top:.5rem;">
+                    <label style="display:block;font-size:13px;color:#333">Nama (opsional)</label>
+                    <input id="forumComposeName" placeholder="Nama Anda"
+                        style="width:100%;padding:.6rem;border-radius:6px;border:1px solid #e6edf6;margin-top:.4rem;" />
+                </div>
+                <div style="margin-top:.75rem;">
+                    <label style="display:block;font-size:13px;color:#333">Pesan</label>
+                    <textarea id="forumComposeMessage" rows="5" placeholder="Tulis pesan..."
+                        style="width:100%;padding:.6rem;border-radius:6px;border:1px solid #e6edf6;margin-top:.4rem;"></textarea>
+                </div>
+                <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.75rem;">
+                    <button id="forumComposeCancel"
+                        style="padding:.5rem 1rem;border-radius:6px;border:1px solid #ccd6ee;background:transparent;">Batal</button>
+                    <button id="forumComposeSend"
+                        style="padding:.5rem 1rem;border-radius:6px;background:#06d6a0;color:#fff;border:none;">Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            function openModal() {
+                const modal = document.getElementById('forumComposeModal');
+                if (modal) { modal.style.display = 'flex'; const inp = document.getElementById('forumComposeMessage'); if (inp) inp.focus(); }
+            }
+            function closeModal() { const modal = document.getElementById('forumComposeModal'); if (modal) modal.style.display = 'none'; }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const btn = document.getElementById('forumComposeBtn');
+                const close = document.getElementById('forumComposeClose');
+                const cancel = document.getElementById('forumComposeCancel');
+                const send = document.getElementById('forumComposeSend');
+
+                if (btn) btn.addEventListener('click', openModal);
+                if (close) close.addEventListener('click', closeModal);
+                if (cancel) cancel.addEventListener('click', closeModal);
+
+                if (send) {
+                    send.addEventListener('click', function () {
+                        const name = (document.getElementById('forumComposeName') || {}).value || '';
+                        const msg = (document.getElementById('forumComposeMessage') || {}).value || '';
+                        if (!msg.trim()) { alert('Isi pesan terlebih dahulu.'); return; }
+                        const payload = { name: name.trim(), message: msg.trim(), time: new Date().toISOString() };
+
+                        // Prefer calling page's receiveCompose if available
+                        try {
+                            if (window.receiveCompose && typeof window.receiveCompose === 'function') {
+                                window.receiveCompose(payload);
+                            } else {
+                                // fallback: write to localStorage key 'compose_post' to trigger other listeners
+                                try { localStorage.setItem('compose_post', JSON.stringify(payload)); } catch (e) { }
+                            }
+                        } catch (e) { console.error('compose send error', e); }
+
+                        closeModal();
+                        // clear inputs
+                        try { document.getElementById('forumComposeMessage').value = ''; document.getElementById('forumComposeName').value = ''; } catch (e) { }
+                    });
+                }
+            });
+        })();
+    </script>
+    <script src="../streak-manager.js"></script>
+    <script src="../history-manager.js"></script>
+</body>
+
+</html>

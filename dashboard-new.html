@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tanya Fisika</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Parallax & Animation Styles */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+            50% { transform: translateY(-20px) rotateZ(5deg); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 217, 61, 0.6)); }
+            50% { filter: drop-shadow(0 0 16px rgba(255, 217, 61, 0.9)); }
+        }
+        
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .chalk-svg .lightbulb-glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        .chalk-svg .floating-element {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .chalk-svg .floating-element:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        
+        .chalk-svg .floating-element:nth-child(3) {
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <!-- Full-screen educational wallpaper with physics/learning theme -->
+    <div class="chalk-wallpaper" aria-hidden="true">
+        <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" class="chalk-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <filter id="chalkBlur"><feGaussianBlur stdDeviation="0.6" /></filter>
+                <linearGradient id="blueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#a8d5ff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#c8e5ff;stop-opacity:1" />
+                </linearGradient>
+                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            
+            <!-- Light Blue Background with Gradient -->
+            <rect x="0" y="0" width="1400" height="900" fill="url(#blueGrad)" />
+            
+            <!-- Floating Background Circles - Parallax elements -->
+            <circle cx="100" cy="150" r="60" fill="#ffffff" opacity="0.08" />
+            <circle cx="1300" cy="250" r="80" fill="#4361ee" opacity="0.04" />
+            <circle cx="700" cy="50" r="45" fill="#f72585" opacity="0.05" />
+            <circle cx="150" cy="750" r="70" fill="#06d6a0" opacity="0.06" />
+            
+            <!-- Top Left: Advanced Physics Formula -->
+            <g class="floating-element">
+                <g class="formula-box" filter="url(#shadow)">
+                    <rect x="30" y="40" width="220" height="110" fill="rgba(255,255,255,0.85)" stroke="#2c3e50" stroke-width="2" opacity="0.6" rx="10"/>
+                    <text x="50" y="75" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#2c3e50">P = mg</text>
+                    <text x="50" y="105" font-family="Arial" font-size="12" fill="#2c3e50" opacity="0.7">Força = Massa × Aceleração</text>
+                    <line x1="35" y1="115" x2="245" y2="115" stroke="#4361ee" stroke-width="2" opacity="0.5"/>
+                </g>
+            </g>
+            
+            <!-- Top Right: Energy Formula -->
+            <g class="floating-element">
+                <g class="formula-box" filter="url(#shadow)">
+                    <rect x="1150" y="40" width="220" height="110" fill="rgba(255,255,255,0.85)" stroke="#2c3e50" stroke-width="2" opacity="0.6" rx="10"/>
+                    <text x="1170" y="75" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#2c3e50">E = mc²</text>
+                    <text x="1170" y="105" font-family="Arial" font-size="12" fill="#2c3e50" opacity="0.7">Energi = Massa × Kecepatan²</text>
+                    <line x1="1155" y1="115" x2="1365" y2="115" stroke="#f72585" stroke-width="2" opacity="0.5"/>
+                </g>
+                <!-- Lightbulb with glow -->
+                <g class="lightbulb-glow">
+                    <circle cx="1340" cy="160" r="18" fill="#ffd93d" opacity="0.9"/>
+                    <path d="M1340 180 Q1330 195 1335 210 Q1345 210 1350 195 Z" fill="#2c3e50" opacity="0.6"/>
+                    <rect x="1335" y="210" width="10" height="18" fill="#2c3e50" opacity="0.5"/>
+                </g>
+            </g>
+            
+            <!-- Left-Center: Magnet with detailed force lines -->
+            <g class="floating-element">
+                <g class="magnet-system" filter="url(#shadow)">
+                    <!-- Magnet boxes -->
+                    <g>
+                        <rect x="50" y="300" width="45" height="90" fill="rgba(231,76,60,0.1)" stroke="#e74c3c" stroke-width="3" opacity="0.8" rx="4"/>
+                        <text x="58" y="352" font-family="Arial" font-size="24" font-weight="bold" fill="#e74c3c" opacity="0.9">N</text>
+                    </g>
+                    <g>
+                        <rect x="130" y="300" width="45" height="90" fill="rgba(52,152,219,0.1)" stroke="#3498db" stroke-width="3" opacity="0.8" rx="4"/>
+                        <text x="140" y="352" font-family="Arial" font-size="24" font-weight="bold" fill="#3498db" opacity="0.9">S</text>
+                    </g>
+                    
+                    <!-- Force lines -->
+                    <path d="M 30 330 Q 45 320 50 330 Q 45 340 30 330" fill="#3498db" opacity="0.6"/>
+                    <path d="M 30 360 Q 45 350 50 360 Q 45 370 30 360" fill="#3498db" opacity="0.6"/>
+                    <path d="M 30 390 Q 45 380 50 390 Q 45 400 30 390" fill="#3498db" opacity="0.5"/>
+                    <path d="M 195 330 Q 210 320 225 330 Q 210 340 195 330" fill="#e74c3c" opacity="0.6"/>
+                    <path d="M 195 360 Q 210 350 225 360 Q 210 370 195 360" fill="#e74c3c" opacity="0.6"/>
+                    <path d="M 195 390 Q 210 380 225 390 Q 210 400 195 390" fill="#e74c3c" opacity="0.5"/>
+                    
+                    <!-- Attraction arrows -->
+                    <path d="M 40 345 L 140 345" stroke="#7209b7" stroke-width="2.5" opacity="0.5" stroke-dasharray="6,4" marker-end="url(#arrowPurple)"/>
+                </g>
+            </g>
+            
+            <!-- Center-Top: Atom/Molecule Structure -->
+            <g class="floating-element">
+                <g class="atom-structure" filter="url(#shadow)">
+                    <circle cx="700" cy="120" r="28" fill="none" stroke="#2c3e50" stroke-width="2.5" opacity="0.6"/>
+                    <circle cx="700" cy="85" r="12" fill="#4361ee" opacity="0.8"/>
+                    <circle cx="738" cy="135" r="12" fill="#4361ee" opacity="0.8"/>
+                    <circle cx="662" cy="135" r="12" fill="#4361ee" opacity="0.8"/>
+                    <circle cx="720" cy="160" r="12" fill="#4361ee" opacity="0.8"/>
+                    <circle cx="700" cy="120" r="7" fill="#e74c3c" opacity="0.9"/>
+                    <!-- Orbital lines -->
+                    <path d="M 678 85 Q 710 70 738 115 Q 710 150 662 135 Q 680 100 678 85" fill="none" stroke="#4361ee" stroke-width="1" opacity="0.3"/>
+                </g>
+            </g>
+            
+            <!-- Center: Prism with detailed light rays -->
+            <g class="floating-element">
+                <g class="prism-light" filter="url(#shadow)">
+                    <!-- Prism -->
+                    <polygon points="700,200 640,320 760,320" fill="rgba(243,156,18,0.08)" stroke="#f39c12" stroke-width="3" opacity="0.8"/>
+                    <text x="680" y="275" font-family="Arial" font-size="40" font-weight="bold" fill="#f39c12" opacity="0.7">λ</text>
+                    <!-- Light rays entering -->
+                    <line x1="600" y1="220" x2="640" y2="280" stroke="#ffd93d" stroke-width="3" opacity="0.7"/>
+                    <line x1="610" y1="260" x2="645" y2="310" stroke="#ffd93d" stroke-width="2" opacity="0.5"/>
+                    <!-- Light rays exiting -->
+                    <line x1="760" y1="220" x2="850" y2="220" stroke="#f39c12" stroke-width="3" opacity="0.7"/>
+                    <circle cx="870" cy="220" r="7" fill="#f39c12" opacity="0.7"/>
+                    <circle cx="895" cy="220" r="7" fill="#f39c12" opacity="0.6"/>
+                    <circle cx="920" cy="220" r="7" fill="#f39c12" opacity="0.5"/>
+                    <circle cx="945" cy="220" r="6" fill="#f39c12" opacity="0.4"/>
+                </g>
+            </g>
+            
+            <!-- Right side: Wave Pattern -->
+            <g class="floating-element">
+                <g class="wave-system" filter="url(#shadow)">
+                    <!-- Sine wave with multiple cycles -->
+                    <path d="M 1050 200 Q 1075 170 1100 200 T 1150 200 T 1200 200 T 1250 200" fill="none" stroke="#9b59b6" stroke-width="3" opacity="0.7"/>
+                    <!-- Decay wave -->
+                    <path d="M 1050 200 Q 1075 220 1100 200 T 1150 200 T 1200 200" fill="none" stroke="#9b59b6" stroke-width="2" opacity="0.4" stroke-dasharray="4,4"/>
+                    <text x="1090" y="250" font-family="Arial" font-size="18" font-weight="bold" fill="#2c3e50" opacity="0.7">f = 1/T</text>
+                    <text x="1090" y="275" font-family="Arial" font-size="12" fill="#2c3e50" opacity="0.5">Oscillation</text>
+                </g>
+            </g>
+            
+            <!-- Bottom Left Section: Thermometer with gradient -->
+            <g class="floating-element">
+                <g class="thermometer" filter="url(#shadow)">
+                    <rect x="40" y="680" width="35" height="140" fill="rgba(231,76,60,0.08)" stroke="#e74c3c" stroke-width="3" opacity="0.8" rx="6"/>
+                    <!-- Mercury level -->
+                    <rect x="48" y="710" width="19" height="85" fill="#e74c3c" opacity="0.6"/>
+                    <circle cx="57.5" cy="860" r="25" fill="rgba(231,76,60,0.1)" stroke="#e74c3c" stroke-width="3" opacity="0.8"/>
+                    <circle cx="57.5" cy="860" r="12" fill="#e74c3c" opacity="0.6"/>
+                    <!-- Scale marks -->
+                    <line x1="35" y1="700" x2="30" y2="700" stroke="#e74c3c" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="35" y1="750" x2="30" y2="750" stroke="#e74c3c" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="35" y1="800" x2="30" y2="800" stroke="#e74c3c" stroke-width="1.5" opacity="0.5"/>
+                    <text x="10" y="665" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50" opacity="0.8">Temperature</text>
+                    <text x="25" y="690" font-family="Arial" font-size="14" fill="#2c3e50" opacity="0.6">°C</text>
+                </g>
+            </g>
+            
+            <!-- Bottom Center: Force Diagram -->
+            <g class="floating-element">
+                <g class="force-diagram" filter="url(#shadow)">
+                    <polygon points="700,580 630,750 770,750" fill="rgba(44,62,80,0.05)" stroke="#2c3e50" stroke-width="2.5" opacity="0.7"/>
+                    <!-- Force vectors with arrows -->
+                    <defs>
+                        <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#e74c3c" opacity="0.7"/>
+                        </marker>
+                        <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#3498db" opacity="0.6"/>
+                        </marker>
+                    </defs>
+                    <line x1="700" y1="580" x2="700" y2="750" stroke="#e74c3c" stroke-width="3" opacity="0.7" marker-end="url(#arrowRed)"/>
+                    <line x1="700" y1="750" x2="630" y2="750" stroke="#3498db" stroke-width="2" opacity="0.6" marker-end="url(#arrowBlue)"/>
+                    <line x1="700" y1="750" x2="770" y2="750" stroke="#3498db" stroke-width="2" opacity="0.6" marker-end="url(#arrowBlue)"/>
+                    <text x="670" y="780" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50" opacity="0.7">Equilibrium</text>
+                    <text x="655" y="805" font-family="Arial" font-size="12" fill="#2c3e50" opacity="0.5">ΣF = 0</text>
+                </g>
+            </g>
+            
+            <!-- Bottom Right: Compass with detailed design -->
+            <g class="floating-element">
+                <g class="compass" filter="url(#shadow)">
+                    <circle cx="1230" cy="740" r="50" fill="rgba(255,255,255,0.3)" stroke="#27ae60" stroke-width="2.5" opacity="0.8"/>
+                    <circle cx="1230" cy="740" r="42" fill="none" stroke="#27ae60" stroke-width="1" opacity="0.4"/>
+                    <!-- Cardinal points marks -->
+                    <line x1="1230" y1="685" x2="1230" y2="665" stroke="#e74c3c" stroke-width="3.5" opacity="0.8"/>
+                    <line x1="1230" y1="815" x2="1230" y2="835" stroke="#27ae60" stroke-width="2" opacity="0.5"/>
+                    <line x1="1175" y1="740" x2="1155" y2="740" stroke="#27ae60" stroke-width="2" opacity="0.5"/>
+                    <line x1="1285" y1="740" x2="1305" y2="740" stroke="#27ae60" stroke-width="2" opacity="0.5"/>
+                    <!-- Center circle -->
+                    <circle cx="1230" cy="740" r="8" fill="#27ae60" opacity="0.7"/>
+                    <!-- Cardinal labels -->
+                    <text x="1258" y="695" font-family="Arial" font-size="14" font-weight="bold" fill="#e74c3c" opacity="0.8">N</text>
+                    <text x="1258" y="785" font-family="Arial" font-size="12" fill="#27ae60" opacity="0.6">S</text>
+                    <text x="1190" y="755" font-family="Arial" font-size="12" fill="#27ae60" opacity="0.6">W</text>
+                    <text x="1265" y="755" font-family="Arial" font-size="12" fill="#27ae60" opacity="0.6">E</text>
+                </g>
+            </g>
+            
+            <!-- Mid-left: Simple Electron Path -->
+            <g opacity="0.22">
+                <g class="electron-path" filter="url(#shadow)">
+                    <ellipse cx="130" cy="500" rx="40" ry="60" fill="none" stroke="#4361ee" stroke-width="2" opacity="0.6" stroke-dasharray="4,3"/>
+                    <circle cx="130" cy="440" r="5" fill="#e74c3c" opacity="0.8"/>
+                </g>
+            </g>
+            
+            <!-- Mid-right: Energy Levels -->
+            <g opacity="0.23">
+                <g class="energy-levels" filter="url(#shadow)">
+                    <line x1="1250" y1="420" x2="1330" y2="420" stroke="#7209b7" stroke-width="2" opacity="0.6"/>
+                    <line x1="1250" y1="460" x2="1330" y2="460" stroke="#7209b7" stroke-width="2" opacity="0.6"/>
+                    <line x1="1250" y1="500" x2="1330" y2="500" stroke="#7209b7" stroke-width="2" opacity="0.6"/>
+                    <!-- Arrows -->
+                    <path d="M1340 420 L1360 460" stroke="#f72585" stroke-width="2" opacity="0.5" marker-end="url(#arrowPink)" stroke-dasharray="3,3"/>
+                    <text x="1300" y="550" font-family="Arial" font-size="12" fill="#2c3e50" opacity="0.6">Energy</text>
+                </g>
+            </g>
+            
+            <!-- Scattered decoration elements -->
+            <g opacity="0.2" fill="#2c3e50">
+                <circle cx="200" cy="500" r="4"/>
+                <circle cx="450" cy="650" r="3.5"/>
+                <circle cx="950" cy="380" r="4"/>
+                <circle cx="1100" cy="550" r="3"/>
+                <circle cx="600" cy="350" r="3.5"/>
+                <circle cx="520" cy="820" r="3"/>
+                <circle cx="1350" cy="680" r="3.5"/>
+                <circle cx="150" cy="750" r="2.5"/>
+                <circle cx="1050" cy="800" r="3"/>
+                <circle cx="300" cy="150" r="2"/>
+            </g>
+            
+            <!-- Small text annotations scattered around -->
+            <g opacity="0.22" font-family="Arial" font-size="11" fill="#2c3e50" font-weight="500">
+                <text x="280" y="470" font-style="italic">Kinetic Energy (KE)</text>
+                <text x="1190" y="580" font-style="italic">Wave Frequency</text>
+                <text x="320" y="750" font-style="italic">Potential Energy</text>
+                <text x="950" y="650" font-style="italic">Motion & Force</text>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <div class="user-greeting">
+                <h1>Halo, <span class="user-name" id="userName">Siswa</span>! 👋 <span id="userRole" style="margin-left: 8px;"></span></h1>
+                <p class="user-xp">XP: <span id="xpCount"></span> • Level <span id="levelCount">3</span></p>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="streak-display">
+                <i class="fas fa-fire"></i>
+                <span>🔥 <span id="streakCount">7</span> hari</span>
+            </div>
+            <p id="lastActivityDisplay" class="last-activity">Aktivitas terakhir: <strong id="lastActivity">-</strong></p>
+            <div class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 6 Menu Grid -->
+    <section class="menu-grid-section">
+        <h2 class="section-title">Apa yang mau dipelajari hari ini?</h2>
+        
+        <div class="menu-grid">
+            <!-- Menu 1: KELAS -->
+            <a href="pages/kelas.html" class="menu-card kelas-card">
+                <div class="menu-icon">
+                    <i class="fas fa-school"></i>
+                </div>
+                <div class="menu-content">
+                    <h3>KELAS</h3>
+                    <p>Buka kelas untuk lihat tugas & kumpulkan jawaban</p>
+                    <div class="menu-stats">
+                        <span><i class="fas fa-upload"></i></span>
+                    </div>
+                </div>
+                <div class="menu-badge">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Menu 2: BANK SOAL -->
+            <a href="pages/materi.html" class="menu-card bank-soal-card">
+                <div class="menu-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="menu-content">
+                    <h3>BANK SOAL</h3>
+                    <p>Latihan soal & pembahasan untuk tiap topik</p>
+                    <div class="menu-stats">
+                        <span><i class="fas fa-file-alt"></i> Koleksi soal & pembahasan</span>
+                    </div>
+                </div>
+                <div class="menu-badge">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Menu 3: FORUM -->
+            <a href="pages/forum.html" class="menu-card forum-card">
+                <div class="menu-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="menu-content">
+                    <h3>FORUM</h3>
+                    <p>Diskusi & tanya jawab dengan sesama siswa</p>
+                    <div class="menu-stats">
+                        <span><i class="fas fa-users"></i></span>
+                    </div>
+                </div>
+                <div class="menu-badge">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Menu 4: MATERI -->
+            <a href="pages/materi.html" class="menu-card materi-card">
+                <div class="menu-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="menu-content">
+                    <h3>MATERI</h3>
+                    <p>Pelajari topik & akses modul pembelajaran</p>
+                    <div class="menu-stats">
+                        <span><i class="fas fa-folder-open"></i></span>
+                    </div>
+                </div>
+                <div class="menu-badge">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <h2 class="section-title">Akses Cepat</h2>
+        <div class="action-buttons">
+            <button class="action-btn">
+                <i class="fas fa-bolt"></i>
+                <span>Drill Soal</span>
+            </button>
+            <a href="pages/materi.html#video-pembelajaran" class="action-btn" aria-label="Video Pembelajaran">
+                <i class="fas fa-video"></i>
+                <span>Video Pembelajaran</span>
+            </a>
+            <button class="action-btn">
+                <i class="fas fa-question-circle"></i>
+                <span>Game</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="recent-activity">
+        <div class="activity-list">
+            <!-- Activity items injected here by script.js -->
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="pages/kelas.html" class="nav-item">
+            <i class="fas fa-school"></i>
+            <span>Kelas</span>
+        </a>
+        <a href="pages/daftar-pustaka.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Daftar Pustaka</span>
+        </a>
+        <a href="pages/info.html" class="nav-item">
+            <i class="fas fa-info-circle"></i>
+            <span>Informasi</span>
+        </a>
+        <a href="pages/profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    
+    <script>
+    // Fallback: ensure username is displayed even if `script.js` failed to run.
+    (function(){
+        try{
+            const name = sessionStorage.getItem('userName') || localStorage.getItem('userName') || '';
+            if(!name) return;
+            const display = name || 'Siswa';
+            const el = document.getElementById('userName');
+            if(el) el.textContent = display;
+        } catch(e) {}
+    })();
+    </script>
+</body>
+</html>

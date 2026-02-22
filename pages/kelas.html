@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelas - Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../physics-background.css">
+    <link rel="stylesheet" href="../physics-components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Physics Dark Blue Gradient Background */
+        body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f1b35 25%, #1a2a4a 50%, #0f3a5f 75%, #0a0f1e 100%) !important;
+            color: #e8f4f8 !important;
+            min-height: 100vh;
+        }
+
+        /* Glass Morphism Card Styling */
+        .card {
+            background: rgba(232, 244, 248, 0.05) !important;
+            border: 1px solid rgba(0, 217, 255, 0.15) !important;
+            border-radius: 16px !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 217, 255, 0.1) !important;
+            color: #e8f4f8 !important;
+            padding: 1.25rem !important;
+        }
+
+        .card h3 {
+            color: #00d9ff !important;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.2) !important;
+            margin-top: 0 !important;
+        }
+
+        .card p {
+            color: rgba(232, 244, 248, 0.8) !important;
+        }
+
+        .card:hover {
+            background: rgba(232, 244, 248, 0.08) !important;
+            box-shadow: 0 12px 40px 0 rgba(0, 217, 255, 0.2) !important;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+
+        /* Assignment Card Enhanced */
+        .assignment-card {
+            border-left: 4px solid #00d9ff !important;
+        }
+
+        .assignment-card.submission {
+            border-left-color: #06d6a0 !important;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: rgba(0, 217, 255, 0.1) !important;
+            border: 1px solid rgba(0, 217, 255, 0.2) !important;
+            border-radius: 8px !important;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00d9ff 0%, #2563eb 100%) !important;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.4) !important;
+        }
+
+        /* Header Styling */
+        .page-header {
+            background: rgba(232, 244, 248, 0.05) !important;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .page-header h1 {
+            color: #00d9ff !important;
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.3) !important;
+        }
+
+        .page-header .sub {
+            color: rgba(0, 217, 255, 0.7) !important;
+        }
+
+        /* Link Styling */
+        .link {
+            color: #00d9ff !important;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .link:hover {
+            background: rgba(0, 217, 255, 0.1);
+            text-shadow: 0 0 8px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Task Menu */
+        .task-menu-wrapper {
+            position: relative;
+        }
+
+        .task-menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            color: #00d9ff;
+            transition: all 0.2s;
+            border-radius: 4px;
+            text-shadow: 0 0 5px rgba(0, 217, 255, 0.3);
+        }
+
+        .task-menu-btn:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.6);
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .task-menu-item {
+            padding: 10px 12px !important;
+            border: none !important;
+            background: rgba(232, 244, 248, 0.05) !important;
+            text-align: left;
+            cursor: pointer;
+            color: #f72585;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: block;
+            width: 100%;
+            border: 1px solid rgba(247, 37, 133, 0.2) !important;
+        }
+
+        .task-menu-item:hover {
+            background: rgba(247, 37, 133, 0.15) !important;
+            box-shadow: 0 0 10px rgba(247, 37, 133, 0.2);
+        }
+
+        /* Floating Compose Button - Enhanced */
+        .floating-plus {
+            background: linear-gradient(135deg, #2563eb 0%, #00d9ff 100%) !important;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4) !important;
+            border: none !important;
+            color: #0a0f1e !important;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .floating-plus:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.6) !important;
+        }
+
+        .floating-plus:active {
+            transform: scale(0.95);
+        }
+
+        /* Compose Modal */
+        .compose-modal {
+            background: rgba(0, 0, 0, 0.6) !important;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .compose-modal-content {
+            background: rgba(15, 27, 53, 0.95) !important;
+            border: 1px solid rgba(0, 217, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3) !important;
+            animation: slideUp 0.3s ease;
+        }
+
+        .compose-modal-content h2 {
+            color: #00d9ff !important;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.2) !important;
+        }
+
+        .compose-label {
+            display: block;
+            margin-top: 0.8rem;
+            font-weight: 500;
+            color: rgba(232, 244, 248, 0.9) !important;
+        }
+
+        .compose-label input,
+        .compose-label textarea {
+            background: rgba(232, 244, 248, 0.05) !important;
+            border: 1px solid rgba(0, 217, 255, 0.2) !important;
+            border-radius: 8px !important;
+            color: #e8f4f8 !important;
+            padding: 0.6rem !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .compose-label input::placeholder,
+        .compose-label textarea::placeholder {
+            color: rgba(232, 244, 248, 0.5) !important;
+        }
+
+        .compose-label input:focus,
+        .compose-label textarea:focus {
+            outline: none;
+            border-color: rgba(0, 217, 255, 0.4) !important;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.2) !important;
+            background: rgba(232, 244, 248, 0.08) !important;
+        }
+
+        .compose-label input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #2563eb 0%, #00d9ff 100%) !important;
+            color: #0a0f1e !important;
+            padding: 0.4rem 0.8rem !important;
+            border: none !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-weight: 500 !important;
+            transition: all 0.2s;
+        }
+
+        .compose-label input[type="file"]::file-selector-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        /* Button Styling */
+        .btn {
+            border-radius: 8px !important;
+            border: none !important;
+            cursor: pointer !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .btn:not(.outline) {
+            background: linear-gradient(135deg, #2563eb 0%, #00d9ff 100%) !important;
+            color: #0a0f1e !important;
+            box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3) !important;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.4) !important;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn.outline {
+            background: rgba(0, 217, 255, 0.1) !important;
+            border: 1px solid rgba(0, 217, 255, 0.3) !important;
+            color: #00d9ff !important;
+        }
+
+        .btn.outline:hover {
+            background: rgba(0, 217, 255, 0.2) !important;
+            border-color: rgba(0, 217, 255, 0.5) !important;
+        }
+
+        .task-menu-item.delete {
+            color: #f72585 !important;
+            border-color: rgba(247, 37, 133, 0.2) !important;
+        }
+
+        .task-menu-item.delete:hover {
+            background: rgba(247, 37, 133, 0.15) !important;
+        }
+
+        /* Assignment Detail Modal */
+        #assignmentDetailModal {
+            background: rgba(0, 0, 0, 0.6) !important;
+        }
+
+        #assignmentDetailModal>div {
+            background: rgba(15, 27, 53, 0.95) !important;
+            border: 1px solid rgba(0, 217, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        #assignmentDetailModal h3,
+        #assignmentDetailModal h4 {
+            color: #00d9ff !important;
+        }
+
+        #assignmentDetailModal input,
+        #assignmentDetailModal textarea {
+            background: rgba(232, 244, 248, 0.05) !important;
+            border: 1px solid rgba(0, 217, 255, 0.2) !important;
+            color: #e8f4f8 !important;
+            border-radius: 6px !important;
+        }
+
+        #assignmentDetailModal textarea:focus,
+        #assignmentDetailModal input:focus {
+            outline: none;
+            border-color: rgba(0, 217, 255, 0.4) !important;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.15) !important;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #06d6a0 0%, #00d9ff 100%);
+            color: #0a0f1e;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4);
+            z-index: 9999;
+            animation: slideUp 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification-toast.error {
+            background: linear-gradient(135deg, #f72585 0%, #ff006e 100%);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 1rem !important;
+            }
+
+            .floating-plus {
+                width: 48px !important;
+                height: 48px !important;
+                bottom: 70px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="page" data-content-type="kelas">
+    <!-- Physics Dark Blue Gradient Background -->
+    <div id="app"></div>
+    <header class="page-header classroom-header">
+        <a href="#" onclick="window.history.back(); return false" class="back-link">← Kembali</a>
+        <div class="header-info">
+            <h1>FISIKAA WITH PAK SARNO</h1>
+            <p class="sub">FISIKAA!!</p>
+        </div>
+        <div class="header-actions">
+            <span id="userRole" style="margin-right: 12px; display: inline-block;"></span>
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </header>
+
+    <main class="page-content classroom-grid">
+        <aside class="sidebar">
+            <div class="card">
+                <h3>Informasi Kelas</h3>
+                <p>Belajar Fisika Bersama Pak Sarno Menyenangkan Tau</p>
+            </div>
+
+            <div class="card">
+                <h3>Progress</h3>
+                <p>Progress menyelesaikan tugas: <strong id="classProgress">0%</strong></p>
+                <div class="progress-bar small">
+                    <div id="classProgressFill" class="progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Quick Links</h3>
+                <a class="link" href="../pages/materi.html">Materi</a>
+                <a class="link" href="../pages/forum.html">Forum Kelas</a>
+            </div>
+        </aside>
+
+        <section class="assignments">
+            <div class="assignments-header">
+                <h2>Tugas & Pengumpulan</h2>
+                <p class="muted">Lihat tugas, unggah bukti, dan tandai selesai.</p>
+            </div>
+
+            <div class="assignment-list" id="assignmentList">
+                <!-- No assignments yet — teacher will create tasks later -->
+                <div class="card">
+                    <p class="muted">Belum ada tugas, tunggu Pak Sarno ngirim</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    </main>
+
+    <!-- Design enhancements (parallax / blobs) -->
+    <script src="../design.js"></script>
+    <!-- Physics Animations & Theme -->
+    <script src="../physics-animations.js"></script>
+    <!-- Notification System -->
+    <script src="../notification-config.js"></script>
+    <script src="../notification-service.js"></script>
+    <!-- Main App Script -->
+    <script src="../script.js"></script>
+    <script>
+        // Simple robust form initialization
+        console.log('[INIT] Kelas page script loaded');
+
+        // Wait a bit for DOM to stabilize
+        setTimeout(function () {
+            initializeTeacherFeatures();
+        }, 100);
+
+        function initializeTeacherFeatures() {
+            // Check role
+            const userRole = sessionStorage.getItem('userRole') || localStorage.getItem('userRole') || 'siswa';
+            console.log('[INIT] User role:', userRole);
+
+            if (userRole !== 'guru') {
+                console.log('[INIT] Not a guru, skipping');
+                return;
+            }
+
+            // Get elements
+            const btn = document.getElementById('composeBtn');
+            const modal = document.getElementById('composeModalClass');
+            const form = document.getElementById('composeFormClass');
+
+            console.log('[INIT] Elements:', { btn: !!btn, modal: !!modal, form: !!form });
+
+            if (!btn || !modal || !form) {
+                console.error('[INIT] Missing elements!');
+                return;
+            }
+
+            // Show button
+            btn.style.display = 'block';
+            console.log('[INIT] ✓ Button visible');
+
+            // Button click - open modal
+            btn.onclick = function (e) {
+                e.preventDefault();
+                console.log('[BTN] Clicked');
+
+                // Clear inputs
+                const titleEl = document.getElementById('taskTitleInput');
+                const descEl = document.getElementById('taskDescInput');
+                const dueEl = document.getElementById('taskDueInput');
+                const fileEl = document.getElementById('taskFileInput');
+
+                if (titleEl) titleEl.value = '';
+                if (descEl) descEl.value = '';
+                if (dueEl) dueEl.value = '';
+                if (fileEl) fileEl.value = '';
+
+                // Open modal
+                modal.style.display = 'flex';
+                if (titleEl) titleEl.focus();
+
+                console.log('[MODAL] Opened');
+            };
+
+            // Close button
+            const closeBtn = document.getElementById('closeCompose');
+            if (closeBtn) {
+                closeBtn.onclick = function (e) {
+                    e.preventDefault();
+                    modal.style.display = 'none';
+                    console.log('[MODAL] Closed by X');
+                };
+            }
+
+            // Cancel button
+            const cancelBtn = document.getElementById('cancelCompose');
+            if (cancelBtn) {
+                cancelBtn.onclick = function (e) {
+                    e.preventDefault();
+                    modal.style.display = 'none';
+                    console.log('[MODAL] Closed by Cancel');
+                };
+            }
+
+            // Close on background click
+            modal.onclick = function (e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    console.log('[MODAL] Closed by background');
+                }
+            };
+
+            // FORM SUBMISSION - This is the critical part
+            form.onsubmit = function (e) {
+                e.preventDefault();
+                console.log('[FORM] Submit event fired!');
+
+                const titleEl = document.getElementById('taskTitleInput');
+                const descEl = document.getElementById('taskDescInput');
+                const dueEl = document.getElementById('taskDueInput');
+                const fileEl = document.getElementById('taskFileInput');
+
+                const title = (titleEl?.value?.trim()) || 'Tugas Baru';
+                const desc = (descEl?.value?.trim()) || '';
+                const due = dueEl?.value || '';
+                const taskId = 'task-' + Date.now();
+
+                console.log('[FORM] Data:', { title, desc, due, taskId });
+
+                // Save task
+                try {
+                    let tasks = {};
+                    try {
+                        tasks = JSON.parse(localStorage.getItem('classTasks') || '{}');
+                    } catch (e) {
+                        console.error('[FORM] Parse error:', e);
+                        tasks = {};
+                    }
+
+                    tasks[taskId] = {
+                        id: taskId,
+                        title: title,
+                        desc: desc,
+                        due: due
+                    };
+
+                    console.log('[FORM] Tasks object:', tasks);
+
+                    // Handle file if exists
+                    if (fileEl && fileEl.files && fileEl.files.length > 0) {
+                        const file = fileEl.files[0];
+                        console.log('[FORM] File detected:', file.name, file.size);
+
+                        const reader = new FileReader();
+                        reader.onload = function (evt) {
+                            console.log('[FILE] Read complete');
+                            try {
+                                let uploaded = {};
+                                try {
+                                    uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+                                } catch (e) {
+                                    uploaded = {};
+                                }
+
+                                uploaded[taskId] = {
+                                    name: file.name,
+                                    type: file.type,
+                                    data: evt.target.result
+                                };
+
+                                localStorage.setItem('uploadedFiles', JSON.stringify(uploaded));
+                                localStorage.setItem('classTasks', JSON.stringify(tasks));
+
+                                console.log('[FORM] ✓ Saved with file');
+                                finalizeSave();
+                            } catch (err) {
+                                console.error('[FILE] Save error:', err);
+                                alert('Error saving file: ' + err.message);
+                            }
+                        };
+
+                        reader.onerror = function () {
+                            console.error('[FILE] Read error');
+                            alert('Error reading file');
+                        };
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        // No file
+                        console.log('[FORM] No file');
+                        localStorage.setItem('classTasks', JSON.stringify(tasks));
+                        localStorage.setItem('completedTasks', localStorage.getItem('completedTasks') || '[]');
+                        console.log('[FORM] ✓ Saved without file');
+                        finalizeSave();
+                    }
+
+                    function finalizeSave() {
+                        console.log('[FORM] Finalizing...');
+
+                        // Get the task data we just saved
+                        const titleEl = document.getElementById('taskTitleInput');
+                        const dueEl = document.getElementById('taskDueInput');
+                        const taskId = 'task-' + Date.now();
+
+                        // Broadcast task to all students in class
+                        try {
+                            broadcastTaskToStudents({
+                                id: taskId,
+                                title: titleEl?.value?.trim() || 'Tugas Baru',
+                                due: dueEl?.value || ''
+                            });
+                        } catch (e) {
+                            console.log('[Broadcast] Error:', e);
+                        }
+
+                        // Trigger re-render
+                        if (window.__classTasks && window.__classTasks.render) {
+                            console.log('[FORM] Calling render');
+                            window.__classTasks.render();
+                        }
+
+                        if (window.updateClassProgress) {
+                            console.log('[FORM] Calling updateClassProgress');
+                            window.updateClassProgress();
+                        }
+
+                        // Close modal
+                        modal.style.display = 'none';
+                        console.log('[FORM] Modal closed');
+
+                        // Reload page to show new task
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    }
+
+                } catch (err) {
+                    console.error('[FORM] Fatal error:', err);
+                    alert('Error: ' + err.message);
+                }
+
+                return false;
+            };
+
+            console.log('[INIT] ✓ All handlers attached');
+        }
+
+        // Also try on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeTeacherFeatures);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Basic initialization
+            updateUserName();
+            setLastActivity(getPageNameFromPath());
+            updateLastActivityUI();
+
+            // Open class button: scroll and register activity
+            const openClassBtn = document.getElementById('openClass');
+            if (openClassBtn) {
+                openClassBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById('assignmentSection').scrollIntoView({ behavior: 'smooth' });
+                    setLastActivity('Kelas');
+                    updateLastActivityUI();
+                });
+            }
+
+            // Lesson start buttons (record resource-level activity)
+            document.querySelectorAll('.start-lesson').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('data-href');
+                    const label = this.getAttribute('data-label');
+                    const taskId = this.getAttribute('data-task') || null;
+                    try { setLastActivity(label, { resource_type: 'assignment', resource_id: taskId || href, metadata: { href: href } }); } catch (e) { }
+                    updateLastActivityUI();
+                    // small delay for UX
+                    if (href) setTimeout(() => window.location.href = href, 200);
+                });
+            });
+
+            // Lesson complete buttons
+            document.querySelectorAll('.complete-lesson').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const taskId = this.getAttribute('data-task');
+                    const label = this.getAttribute('data-label');
+                    if (typeof completeTask === 'function') {
+                        completeTask(taskId);
+                    }
+                    try { setLastActivity(label, { resource_type: 'assignment', resource_id: taskId }); } catch (e) { }
+                    updateLastActivityUI();
+                    this.disabled = true;
+                    this.textContent = 'Selesai';
+                });
+            });
+
+            // Upload form handling (moved inside DOMContentLoaded)
+            const uploadForm = document.getElementById('uploadForm');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const file = document.getElementById('assignmentFile').files[0];
+                    if (!file) {
+                        alert('Pilih file terlebih dahulu.');
+                        return;
+                    }
+                    // Simulasi sukses
+                    document.getElementById('uploadResult').style.display = 'block';
+                    this.reset();
+
+                    // Mark assignment as completed for progress tracking
+                    if (typeof completeTask === 'function') {
+                        completeTask('assignment-' + Date.now()); // Unique task ID
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Render tasks from `localStorage.classTasks`. Do NOT create sample tasks; keep list empty by default.
+        // Clear any previous tasks/submissions so teacher fills them manually.
+        (function () {
+            // Keep tasks persistent: do not clear `localStorage.classTasks` here.
+            const storageKey = 'classTasks';
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function getTasks() {
+                try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { return {}; }
+            }
+
+            function formatDate(iso) {
+                if (!iso) return '';
+                try { const d = new Date(iso); return d.toLocaleDateString(); } catch (e) { return iso; }
+            }
+
+            function renderTasks() {
+                const tasks = getTasks();
+                const list = document.getElementById('assignmentList');
+                if (!list) return;
+                list.innerHTML = '';
+                const userRole = sessionStorage.getItem('userRole') || localStorage.getItem('userRole') || 'siswa';
+                const ids = Object.keys(tasks);
+                if (ids.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'card';
+                    empty.innerHTML = '<p class="muted">Belum ada tugas. Guru dapat membuat tugas lewat tombol +.</p>';
+                    list.appendChild(empty);
+                    return;
+                }
+
+                // Sort by creation time descending (IDs contain timestamp)
+                ids.sort((a, b) => {
+                    try {
+                        const ta = parseInt((tasks[a].id || '').replace(/^task-/, '')) || 0;
+                        const tb = parseInt((tasks[b].id || '').replace(/^task-/, '')) || 0;
+                        return tb - ta;
+                    } catch (e) { return 0; }
+                });
+
+                const deleted = (function () { try { return JSON.parse(localStorage.getItem('deletedTasks') || '[]'); } catch (e) { return []; } })();
+                ids.forEach(id => {
+                    const t = tasks[id];
+                    if (!t) return;
+                    if (deleted.includes(t.id)) return; // skip tasks marked deleted
+                    const card = document.createElement('div');
+                    card.className = 'card assignment-card';
+                    card.setAttribute('data-task', t.id);
+                    let dueHtml = '';
+                    if (t.due) {
+                        const now = new Date();
+                        const dueDate = new Date(t.due + 'T23:59:59');
+                        const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+                        if (!isNaN(diffDays)) {
+                            dueHtml = '• Tenggat: ' + formatDate(t.due) + (diffDays >= 0 ? ' (' + diffDays + ' hari lagi)' : ' (telah lewat)');
+                        } else {
+                            dueHtml = '• Tenggat: ' + formatDate(t.due);
+                        }
+                    }
+
+                    // determine if completed
+                    const completedList = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+                    const isDone = completedList.indexOf(t.id) !== -1;
+
+                    // show attachment link if present
+                    let attachHtml = '';
+                    try {
+                        const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+                        if (uploaded && uploaded[t.id]) {
+                            const a = uploaded[t.id];
+                            attachHtml = `<div class="attachment" style="margin-top:.5rem"><a href="${a.data}" download="${a.name}" target="_blank">📎 ${a.name}</a></div>`;
+                        }
+                    } catch (e) { }
+
+                    // show student's submission status if available (session-based studentId)
+                    let submissionHtml = '';
+                    try {
+                        const studentId = sessionStorage.getItem('studentId') || null;
+                        if (studentId) {
+                            const subs = JSON.parse(localStorage.getItem('submissions') || '{}');
+                            const arr = subs[t.id] || [];
+                            const me = arr.find(s => s.studentId === studentId);
+                            if (me) { submissionHtml = `<div class="muted" style="margin-top:.5rem">Anda: Dikirim • ${new Date(me.time).toLocaleDateString()}</div>`; }
+                        }
+                    } catch (e) { }
+
+                    card.innerHTML = `
+                    <div class="assignment-main">
+                        <h3>${t.title}</h3>
+                        <p class="muted">${t.desc} ${dueHtml}</p>
+                        ${attachHtml}
+                        ${submissionHtml}
+                    </div>
+                    <div class="assignment-actions">
+                        <button class="btn start-lesson" data-task="${t.id}" data-label="${t.title}">Buka</button>
+                        <button class="btn ${isDone ? 'outline' : ''} btn-complete" data-task="${t.id}" ${isDone ? 'disabled' : ''}>${isDone ? 'Selesai' : 'Tandai Selesai'}</button>
+                        ${userRole === 'guru' ? `<div class="task-menu-wrapper">
+                            <button class="task-menu-btn" data-task="${t.id}" aria-label="Menu">⋯</button>
+                            <div class="task-menu-dropdown" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #e0e0e0;border-radius:6px;min-width:150px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;margin-top:4px;">
+                                <button class="task-menu-item delete-task" data-task="${t.id}" style="width:100%;padding:10px 12px;border:none;background:none;text-align:left;cursor:pointer;color:#e63946;font-size:14px;border-radius:6px;transition:background 0.2s;display:block;">Hapus Tugas</button>
+                            </div>
+                        </div>` : ''}
+                    </div>
+                `;
+                    list.appendChild(card);
+                });
+            }
+
+            // initial render from persisted storage
+            renderTasks();
+
+            // expose simple API for other scripts
+            window.__classTasks = {
+                get: getTasks,
+                render: renderTasks
+            };
+
+            // Add event delegation for task menu and delete functionality
+            setTimeout(() => {
+                document.addEventListener('click', function (e) {
+                    const taskMenuBtn = e.target.closest('.task-menu-btn');
+                    if (taskMenuBtn) {
+                        e.stopPropagation();
+                        const dropdown = taskMenuBtn.nextElementSibling;
+                        if (dropdown) {
+                            const isVisible = dropdown.style.display !== 'none';
+                            // Close all other menus
+                            document.querySelectorAll('.task-menu-dropdown').forEach(menu => {
+                                menu.style.display = 'none';
+                            });
+                            // Toggle current menu
+                            dropdown.style.display = isVisible ? 'none' : 'block';
+                        }
+                        return;
+                    }
+
+                    const deleteBtn = e.target.closest('.delete-task');
+                    if (deleteBtn) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const taskId = deleteBtn.getAttribute('data-task');
+                        if (taskId && confirm('Yakin ingin menghapus tugas ini?')) {
+                            deleteTask(taskId);
+                        }
+                        return;
+                    }
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('.task-menu-wrapper')) {
+                        document.querySelectorAll('.task-menu-dropdown').forEach(menu => {
+                            menu.style.display = 'none';
+                        });
+                    }
+                });
+            }, 0);
+
+            function deleteTask(taskId) {
+                try {
+                    const tasks = getTasks();
+                    const deleted = (() => { try { return JSON.parse(localStorage.getItem('deletedTasks') || '[]'); } catch (e) { return []; } })();
+
+                    // Add to deleted tasks list
+                    if (!deleted.includes(taskId)) {
+                        deleted.push(taskId);
+                        localStorage.setItem('deletedTasks', JSON.stringify(deleted));
+                    }
+
+                    // Also remove from completedTasks if exists
+                    try {
+                        const completed = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+                        const idx = completed.indexOf(taskId);
+                        if (idx !== -1) {
+                            completed.splice(idx, 1);
+                            localStorage.setItem('completedTasks', JSON.stringify(completed));
+                        }
+                    } catch (e) { }
+
+                    // Re-render
+                    if (typeof renderTasks === 'function') {
+                        renderTasks();
+                    }
+
+                    // Update progress
+                    if (typeof updateClassProgress === 'function') {
+                        updateClassProgress();
+                    }
+
+                    alert('Tugas berhasil dihapus.');
+                } catch (err) {
+                    console.error('Error deleting task:', err);
+                    alert('Gagal menghapus tugas.');
+                }
+            }
+
+            window.deleteTask = deleteTask;
+        })();
+    </script>
+
+    <!-- Fallback: floating compose button + modal for Kelas (teacher assign) -->
+    <div id="composeWrapperFallback">
+        <button id="composeBtn" class="floating-plus" aria-label="Kirim tugas"
+            style="position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:28px;background:#4361ee;color:#fff;border:none;font-size:28px;z-index:9998;box-shadow:0 8px 20px rgba(0,0,0,0.12);display:none;">+</button>
+
+        <div id="composeModalClass" class="compose-modal" aria-hidden="true"
+            style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);z-index:9999;">
+            <div class="compose-modal-content"
+                style="background:#fff;padding:2rem;border-radius:10px;max-width:500px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+                    <h3 style="margin:0;color:#333;">📝 Buat Tugas Baru</h3>
+                    <button class="close-compose" id="closeCompose" aria-label="Tutup"
+                        style="border:none;background:transparent;font-size:24px;cursor:pointer;color:#999;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">×</button>
+                </div>
+                <form id="composeFormClass" style="display:flex;flex-direction:column;">
+                    <label class="compose-label">
+                        <span style="display:block;margin-bottom:0.4rem;">📌 Judul Tugas</span>
+                        <input id="taskTitleInput" type="text" placeholder="Contoh: Latihan Hukum Newton 3" required
+                            style="width:100%;padding:.6rem;border-radius:6px;border:1px solid #e6edf6;font-size:15px;">
+                    </label>
+
+                    <label class="compose-label" style="margin-top:1rem;">
+                        <span style="display:block;margin-bottom:0.4rem;">📝 Deskripsi Tugas</span>
+                        <textarea id="taskDescInput" rows="4" placeholder="Jelaskan instruksi singkat untuk siswa"
+                            style="width:100%;padding:.6rem;border-radius:6px;border:1px solid #e6edf6;font-size:15px;resize:vertical;"></textarea>
+                    </label>
+
+                    <label class="compose-label" style="margin-top:1rem;">
+                        <span style="display:block;margin-bottom:0.4rem;">📅 Batas Waktu Pengumpulan</span>
+                        <input id="taskDueInput" type="date"
+                            style="width:100%;padding:.6rem;border-radius:6px;border:1px solid #e6edf6;font-size:15px;cursor:pointer;" />
+                    </label>
+
+                    <label class="compose-label" style="margin-top:1rem;">
+                        <span style="display:block;margin-bottom:0.4rem;">📎 Lampirkan File (opsional)</span>
+                        <input id="taskFileInput" type="file"
+                            style="width:100%;padding:.4rem;border-radius:6px;border:1px solid #e6edf6;font-size:14px;" />
+                        <small style="color:#999;margin-top:0.4rem;display:block;">Format: PDF, DOC, JPG, PNG (Max
+                            5MB)</small>
+                    </label>
+
+                    <div
+                        style="display:flex;gap:.8rem;justify-content:flex-end;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e6edf6;">
+                        <button type="button" id="cancelCompose" class="btn outline"
+                            style="padding:.6rem 1.2rem;border-radius:6px;border:1px solid #ccd6ee;background:transparent;color:#333;">Batal</button>
+                        <button type="submit" class="btn"
+                            style="padding:.6rem 1.2rem;border-radius:6px;background:#4361ee;color:#fff;border:none;font-weight:600;">✓
+                            Buat Tugas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Legacy handler - can be removed
+        console.log('[LEGACY] Handler loaded (if needed as fallback)');
+    </script>
+    })();
+    </script>
+
+    <!-- NOTIFICATION BUSINESS LOGIC FOR TASKS -->
+    <script>
+        // ===== NOTIFICATION BUSINESS LOGIC =====
+        // Teacher creates task → All students get notified (real-time via server when possible)
+        // Student submits task → Only teacher gets notified (student sees a toast only)
+
+        let notificationService = null;
+
+        // Helpers
+        function getCurrentUserId() { return sessionStorage.getItem('userId') || localStorage.getItem('userId') || ('user_' + Date.now()); }
+        function getCurrentUserRole() { return sessionStorage.getItem('userRole') || localStorage.getItem('userRole') || 'siswa'; }
+        function getCurrentClassId() { return localStorage.getItem('classId') || 'physics_101'; }
+
+        // Load socket.io client dynamically if not present (attempt real-time)
+        function loadSocketIoIfNeeded() {
+            return new Promise((resolve) => {
+                if (typeof io !== 'undefined') return resolve();
+                const src = 'https://cdn.socket.io/4.5.4/socket.io.min.js';
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = () => { console.log('[SocketIO] loaded'); resolve(); };
+                s.onerror = () => { console.warn('[SocketIO] failed to load, continuing with fallback'); resolve(); };
+                document.head.appendChild(s);
+            });
+        }
+
+        // Initialize notification service for task flows
+        async function initializeTaskNotifications() {
+            try {
+                const userId = getCurrentUserId();
+                const role = getCurrentUserRole();
+                const classId = getCurrentClassId();
+
+                await loadSocketIoIfNeeded();
+
+                notificationService = typeof initializeNotificationService !== 'undefined'
+                    ? initializeNotificationService({
+                        userId: userId,
+                        useWebSocket: true,
+                        socketUrl: (typeof NotificationConfig !== 'undefined' && NotificationConfig.websocket && NotificationConfig.websocket.url) ? NotificationConfig.websocket.url : 'http://localhost:3000',
+                        useFirebase: false,
+                        soundEnabled: true,
+                        badgeEnabled: true
+                    })
+                    : null;
+
+                console.log('[Task Notifications] Ready', { userId, role, classId });
+
+                // Persist teacher id so student can try to find teacher target (useful for serverless testing in same browser)
+                if (role === 'guru') {
+                    try { localStorage.setItem('classTeacher_' + classId, userId); } catch (e) { }
+                }
+
+                // For students: set a baseline so old notifications are not shown — only show notifications sent after this load
+                if (role === 'siswa') {
+                    try { sessionStorage.setItem('notif_baseline_ts', String(Date.now())); } catch (e) { }
+                }
+
+                // Subscribe to service events (update UI hooks)
+                if (notificationService && typeof notificationService.subscribe === 'function') {
+                    notificationService.subscribe(({ event, data }) => {
+                        if (event === 'notification:received') {
+                            try { if (typeof window.updateNotificationUI === 'function') window.updateNotificationUI(data); } catch (e) { }
+                        }
+                    });
+                }
+
+                // Storage fallback listener (cross-tab within same origin)
+                window.addEventListener('storage', function (e) {
+                    try {
+                        if (!e.key || !e.newValue) return;
+                        if (e.key === 'broadcast_notification') {
+                            const obj = JSON.parse(e.newValue);
+                            const notif = obj.notification;
+                            const classId = notif?.data?.classId;
+                            if (!classId) return;
+                            const myClass = getCurrentClassId();
+                            const myRole = getCurrentUserRole();
+                            // deliver to students in same class (or teacher if desired)
+                            if (myClass === classId && myRole === 'siswa') {
+                                if (notificationService && typeof notificationService.addNotification === 'function') notificationService.addNotification(notif);
+                                else { const arr = JSON.parse(localStorage.getItem('notifications') || '[]'); arr.unshift(notif); localStorage.setItem('notifications', JSON.stringify(arr)); }
+                            }
+                        }
+                        if (e.key === 'direct_notification') {
+                            const obj = JSON.parse(e.newValue);
+                            const target = obj.target;
+                            const notif = obj.notification;
+                            const myId = getCurrentUserId();
+                            if (target && myId && target === myId) {
+                                if (notificationService && typeof notificationService.addNotification === 'function') notificationService.addNotification(notif);
+                                else { const arr = JSON.parse(localStorage.getItem('notifications') || '[]'); arr.unshift(notif); localStorage.setItem('notifications', JSON.stringify(arr)); }
+                            }
+                        }
+                    } catch (err) { console.error('storage listener error', err); }
+                });
+
+            } catch (e) {
+                console.warn('[Task Notifications] init fallback', e);
+            }
+        }
+
+        // When teacher creates task → broadcast to all students
+        async function broadcastTaskToStudents(taskData) {
+            const className = 'Fisika';
+            const teacherName = localStorage.getItem('userName') || 'Guru';
+            const classId = getCurrentClassId();
+            const uid = getCurrentUserId();
+
+            const notification = {
+                id: 'task_' + (taskData.id || Date.now()),
+                type: 'assignment_created',
+                title: `📝 Tugas Baru - ${className}`,
+                body: `${teacherName} memberikan: "${taskData.title}"${taskData.due ? ` - Deadline: ${new Date(taskData.due).toLocaleDateString('id-ID')}` : ''}`,
+                timestamp: new Date().toISOString(),
+                read: false,
+                priority: 'high',
+                data: {
+                    classId: classId,
+                    assignmentId: taskData.id,
+                    taskTitle: taskData.title,
+                    deadline: taskData.due
+                },
+                actionLink: './kelas.html'
+            };
+
+            // Try server delivery (preferred)
+            try {
+                if (notificationService && typeof notificationService.sendNotification === 'function') {
+                    // target 'class:<classId>' tells server to broadcast to class members
+                    await notificationService.sendNotification(notification, `class:${classId}`);
+                } else {
+                    // Fallback: use cross-tab localStorage event (works within same-origin/browser)
+                    try { localStorage.setItem('broadcast_notification', JSON.stringify({ notification, meta: { from: uid, ts: Date.now() } })); } catch (e) { }
+                }
+            } catch (err) {
+                console.warn('broadcast send failed, fallback to localStorage', err);
+                try { localStorage.setItem('broadcast_notification', JSON.stringify({ notification, meta: { from: uid, ts: Date.now() } })); } catch (e) { }
+            }
+
+            // Teacher can keep a copy locally
+            if (notificationService && typeof notificationService.addNotification === 'function') {
+                try { notificationService.addNotification(notification); } catch (e) { }
+            }
+
+            showNotificationToast('✓ Tugas dikirim ke semua siswa', 'success');
+        }
+
+        // When student submits → notify teacher (server route) and show toast to student
+        async function notifyTeacherOfSubmission(submissionData) {
+            const studentName = localStorage.getItem('userName') || 'Siswa';
+            const isLate = submissionData.deadline && new Date() > new Date(submissionData.deadline);
+            const classId = getCurrentClassId();
+            const uid = getCurrentUserId();
+
+            const notification = {
+                id: 'submission_' + Date.now(),
+                type: isLate ? 'assignment_submitted_late' : 'assignment_submitted',
+                title: isLate ? '⚠️ Pengumpulan Terlambat' : '📤 Tugas Dikumpulkan',
+                body: `${studentName}: "${submissionData.taskTitle}"${isLate ? ' - TERLAMBAT' : ''}`,
+                timestamp: new Date().toISOString(),
+                read: false,
+                priority: isLate ? 'high' : 'normal',
+                data: {
+                    classId: classId,
+                    studentName: studentName,
+                    taskTitle: submissionData.taskTitle,
+                    isLate: isLate
+                },
+                actionLink: './kelas.html'
+            };
+
+            // Determine teacher target. Prefer server-mapped teacher id; use stored classTeacher_<id> if available (useful for same-browser testing)
+            const teacherStored = localStorage.getItem('classTeacher_' + classId);
+            const teacherTarget = (submissionData.teacherId || teacherStored || `teacher:${classId}`);
+
+            try {
+                if (notificationService && typeof notificationService.sendNotification === 'function') {
+                    await notificationService.sendNotification(notification, teacherTarget);
+                } else {
+                    try { localStorage.setItem('direct_notification', JSON.stringify({ target: teacherTarget, notification, meta: { from: uid, ts: Date.now() } })); } catch (e) { }
+                }
+            } catch (err) {
+                console.warn('direct notify failed, fallback to localStorage', err);
+                try { localStorage.setItem('direct_notification', JSON.stringify({ target: teacherTarget, notification, meta: { from: uid, ts: Date.now() } })); } catch (e) { }
+            }
+
+            // Do NOT add submission notification to student's local notification center (student sees only toast)
+            showNotificationToast('✓ Tugas berhasil dikumpulkan', 'success');
+        }
+
+        // Toast for user feedback (not in notification center)
+        function showNotificationToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const isError = type === 'error';
+            toast.innerHTML = `
+                <i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}" style="margin-right: 0.5rem;"></i>
+                <strong>${message}</strong>
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 1rem;
+                background: ${isError ? 'linear-gradient(135deg, #f72585 0%, #ff006e 100%)' : 'linear-gradient(135deg, #06d6a0 0%, #00d9ff 100%)'};
+                color: #0a0f1e;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4);
+                z-index: 9999;
+                animation: slideUp 0.3s ease;
+                font-family: 'Poppins', sans-serif;
+                max-width: 300px;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Wrap original finalizeSave to trigger notifications
+        const originalFinalizeKey = 'finalizeSave_original';
+        window.addEventListener('DOMContentLoaded', initializeTaskNotifications);
+    </script>
+
+    <!-- Assignment detail modal -->
+    <div id="assignmentDetailModal"
+        style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:10000;">
+        <div style="background:#fff;padding:1rem;border-radius:10px;max-width:640px;width:100%;">
+            <button id="assignmentDetailClose"
+                style="float:right;border:none;background:transparent;font-size:20px;">×</button>
+            <h3 id="assignmentDetailTitle">Judul</h3>
+            <p id="assignmentDetailDesc" style="white-space:pre-wrap;color:#222;margin-top:.5rem">Deskripsi tugas</p>
+            <p id="assignmentDetailDue" class="muted" style="margin-top:.6rem">Tenggat: -</p>
+            <div id="assignmentAttachmentContainer"></div>
+
+            <hr style="margin:12px 0;">
+            <h4>Pengumpulan Tugas (Siswa)</h4>
+            <div id="submissionPreview" style="margin-top:.4rem;color:#222"></div>
+            <form id="submissionForm" style="margin-top:.5rem">
+                <label style="display:block;font-size:13px;color:#333">Nama (opsional)</label>
+                <input id="submissionName" placeholder="Nama siswa"
+                    style="width:100%;padding:.5rem;border-radius:6px;border:1px solid #e6edf6;margin-top:.3rem;" />
+                <label style="display:block;font-size:13px;color:#333;margin-top:.5rem">File Bukti (opsional)</label>
+                <input id="submissionFileInput" type="file" style="width:100%;margin-top:.3rem;" />
+                <label style="display:block;font-size:13px;color:#333;margin-top:.5rem">Catatan / Jawaban</label>
+                <textarea id="submissionText" rows="4" placeholder="Tulis jawaban atau catatan..."
+                    style="width:100%;padding:.5rem;border-radius:6px;border:1px solid #e6edf6;margin-top:.3rem;"></textarea>
+                <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.6rem;">
+                    <button type="button" id="submissionCancel" class="btn outline"
+                        style="padding:.45rem .9rem;border-radius:6px;border:1px solid #ccd6ee;background:transparent;">Batal</button>
+                    <button type="submit" id="submissionSendBtn" class="btn"
+                        style="padding:.45rem .9rem;border-radius:6px;background:#4361ee;color:#fff;border:none;">Kirim
+                        Pengumpulan</button>
+                </div>
+            </form>
+
+            <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.75rem;">
+                <button id="assignmentMarkComplete" class="btn"
+                    style="padding:.5rem 1rem;border-radius:6px;background:#06d6a0;color:#fff;border:none;">Tandai
+                    Selesai</button>
+                <button id="assignmentDetailClose2" class="btn outline"
+                    style="padding:.5rem 1rem;border-radius:6px;border:1px solid #ccd6ee;background:transparent;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            function updateClassProgress() {
+                try {
+                    const tasks = JSON.parse(localStorage.getItem('classTasks') || '{}');
+                    const deleted = JSON.parse(localStorage.getItem('deletedTasks') || '[]');
+                    const validTasks = Object.keys(tasks).filter(id => !deleted.includes(tasks[id].id));
+                    const total = validTasks.length;
+                    const completed = JSON.parse(localStorage.getItem('completedTasks') || '[]').filter(id => !deleted.includes(id)).length;
+                    const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+                    const lbl = document.getElementById('classProgress');
+                    const fill = document.getElementById('classProgressFill');
+                    if (lbl) lbl.textContent = percent + '%';
+                    if (fill) fill.style.width = percent + '%';
+                } catch (e) { }
+            }
+
+            window.updateClassProgress = updateClassProgress;
+
+            function openAssignmentModal(taskId) {
+                try {
+                    const tasks = JSON.parse(localStorage.getItem('classTasks') || '{}');
+                    const t = tasks[taskId];
+                    if (!t) return alert('Tugas tidak ditemukan.');
+                    document.getElementById('assignmentDetailTitle').textContent = t.title || 'Tugas';
+                    document.getElementById('assignmentDetailDesc').textContent = t.desc || '';
+                    document.getElementById('assignmentDetailDue').textContent = t.due ? ('Tenggat: ' + (new Date(t.due)).toLocaleDateString()) : 'Tenggat: -';
+                    // show attachment if exists
+                    try {
+                        const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+                        const containerId = 'assignmentAttachment';
+                        let container = document.getElementById(containerId);
+                        if (!container) {
+                            container = document.createElement('div');
+                            container.id = containerId;
+                            container.style.marginTop = '.6rem';
+                            document.getElementById('assignmentDetailDue').after(container);
+                        }
+                        if (uploaded && uploaded[t.id]) {
+                            const a = uploaded[t.id];
+                            container.innerHTML = `<a href="${a.data}" download="${a.name}" target="_blank">📎 ${a.name}</a>`;
+                        } else {
+                            container.innerHTML = '';
+                        }
+                    } catch (e) { }
+                    document.getElementById('assignmentDetailModal').style.display = 'flex';
+                    document.getElementById('assignmentMarkComplete').setAttribute('data-task', taskId);
+                    try { if (typeof populateSubmissionSection === 'function') populateSubmissionSection(taskId); } catch (e) { }
+                } catch (e) { console.error('openAssignmentModal', e); }
+            }
+
+            // Student helpers and submission handling
+            function currentStudentId() {
+                try {
+                    let id = sessionStorage.getItem('studentId');
+                    if (!id) { id = 'student-' + Math.floor(Math.random() * 900000 + 1000); sessionStorage.setItem('studentId', id); }
+                    return id;
+                } catch (e) { return 'student-unknown'; }
+            }
+
+            function getSubmissions() { try { return JSON.parse(localStorage.getItem('submissions') || '{}'); } catch (e) { return {}; } }
+            function saveSubmissionObj(obj) {
+                try { localStorage.setItem('submissions', JSON.stringify(obj)); } catch (e) { }
+            }
+
+            function findMySubmission(taskId) {
+                try {
+                    const subs = getSubmissions(); const arr = subs[taskId] || []; const me = currentStudentId(); return arr.find(s => s.studentId === me) || null;
+                } catch (e) { return null; }
+            }
+
+            function populateSubmissionSection(taskId) {
+                try {
+                    const my = findMySubmission(taskId);
+                    const preview = document.getElementById('submissionPreview');
+                    const nameEl = document.getElementById('submissionName');
+                    const textEl = document.getElementById('submissionText');
+                    if (my) {
+                        preview.innerHTML = `<div class="card"><strong>Dikirim oleh Anda</strong> • ${new Date(my.time).toLocaleString()}<div style="margin-top:.4rem">${my.text ? '<div>' + escapeHtml(my.text) + '</div>' : ''}${my.file ? '<div style="margin-top:.4rem"><a href="' + my.file.data + '" download="' + my.file.name + '">📎 ' + my.file.name + '</a></div>' : ''}</div></div>`;
+                        if (nameEl) nameEl.value = my.name || '';
+                        if (textEl) textEl.value = my.text || '';
+                    } else {
+                        preview.innerHTML = '<div class="muted">Belum ada pengumpulan untuk tugas ini.</div>';
+                        if (nameEl) nameEl.value = (sessionStorage.getItem('studentName') || '');
+                        if (textEl) textEl.value = '';
+                    }
+                } catch (e) { console.error('populateSubmissionSection', e); }
+            }
+
+            function closeAssignmentModal() { document.getElementById('assignmentDetailModal').style.display = 'none'; }
+
+            function completeTask(taskId) {
+                try {
+                    const arr = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+                    if (arr.indexOf(taskId) === -1) arr.push(taskId);
+                    localStorage.setItem('completedTasks', JSON.stringify(arr));
+                    // update UI
+                    if (window.__classTasks && typeof window.__classTasks.render === 'function') window.__classTasks.render();
+                    updateClassProgress();
+                } catch (e) { console.error('completeTask', e); }
+            }
+
+            // delegate start-lesson and complete buttons
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.classList && e.target.classList.contains('start-lesson')) {
+                    const taskId = e.target.getAttribute('data-task');
+                    if (taskId) openAssignmentModal(taskId);
+                }
+                if (e.target && e.target.classList && e.target.classList.contains('btn-complete')) {
+                    const taskId = e.target.getAttribute('data-task');
+                    if (!taskId) return;
+                    completeTask(taskId);
+                    // small feedback
+                    try { e.target.disabled = true; e.target.textContent = 'Selesai'; } catch (e) { }
+                }
+            });
+
+            // modal controls
+            document.getElementById('assignmentDetailClose').addEventListener('click', closeAssignmentModal);
+            document.getElementById('assignmentDetailClose2').addEventListener('click', closeAssignmentModal);
+            document.getElementById('assignmentMarkComplete').addEventListener('click', function () { const id = this.getAttribute('data-task'); if (id) { completeTask(id); closeAssignmentModal(); alert('Tugas ditandai selesai.'); } });
+
+            // Submission form handlers (student -> teacher)
+            (function () {
+                const form = document.getElementById('submissionForm');
+                const cancel = document.getElementById('submissionCancel');
+                if (cancel) cancel.addEventListener('click', function (e) { e.preventDefault(); const t = document.getElementById('submissionText'); const f = document.getElementById('submissionFileInput'); if (t) t.value = ''; if (f) f.value = ''; });
+
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        try {
+                            const taskId = document.getElementById('assignmentMarkComplete').getAttribute('data-task');
+                            if (!taskId) return alert('Tidak ada tugas terpilih.');
+                            const name = (document.getElementById('submissionName') || {}).value || '';
+                            const text = (document.getElementById('submissionText') || {}).value || '';
+                            const fileEl = document.getElementById('submissionFileInput');
+                            const studentId = currentStudentId();
+
+                            function finalizeSave(fileObj) {
+                                const subs = getSubmissions(); subs[taskId] = subs[taskId] || [];
+                                const entry = { id: 's' + Date.now() + '-' + Math.floor(Math.random() * 999), studentId: studentId, name: name, text: text, file: fileObj || null, time: new Date().toISOString() };
+                                const idx = subs[taskId].findIndex(s => s.studentId === studentId);
+                                if (idx !== -1) subs[taskId][idx] = entry; else subs[taskId].push(entry);
+                                saveSubmissionObj(subs);
+                                // mark complete for student
+                                try { const arr = JSON.parse(localStorage.getItem('completedTasks') || '[]'); if (arr.indexOf(taskId) === -1) { arr.push(taskId); localStorage.setItem('completedTasks', JSON.stringify(arr)); } } catch (e) { }
+                                // also copy file to uploadedFiles for teacher view
+                                if (fileObj && fileObj.data) { try { const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}'); uploaded[taskId + '::' + studentId] = { name: fileObj.name, type: fileObj.type, data: fileObj.data }; localStorage.setItem('uploadedFiles', JSON.stringify(uploaded)); } catch (e) { } }
+                                if (window.__classTasks && typeof window.__classTasks.render === 'function') window.__classTasks.render();
+                                updateClassProgress();
+                                populateSubmissionSection(taskId);
+                                alert('Pengumpulan berhasil disimpan.');
+
+                                // Notify teacher of this submission (real-time if possible)
+                                try {
+                                    const tasksObj = JSON.parse(localStorage.getItem('classTasks') || '{}');
+                                    const taskMeta = tasksObj[taskId] || {};
+                                    notifyTeacherOfSubmission({ taskId: taskId, taskTitle: taskMeta.title || '', deadline: taskMeta.due || '' });
+                                } catch (e) {
+                                    console.warn('Failed to notify teacher:', e);
+                                }
+                            }
+
+                            if (fileEl && fileEl.files && fileEl.files.length > 0) {
+                                const f = fileEl.files[0];
+                                const reader = new FileReader();
+                                reader.onload = function (ev) { finalizeSave({ name: f.name, type: f.type, data: ev.target.result }); };
+                                reader.onerror = function () { finalizeSave(null); };
+                                reader.readAsDataURL(f);
+                            } else { finalizeSave(null); }
+                        } catch (err) { console.error('submit error', err); alert('Gagal mengirim pengumpulan.'); }
+                    });
+                }
+            })();
+
+            // initialize progress on load
+            try { updateClassProgress(); } catch (e) { }
+        })();
+    </script>
+    <script src="../streak-manager.js"></script>
+    <script src="../history-manager.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "Tanya Fisika",
+  "short_name": "Tanya Fisika",
+  "description": "Belajar Fisika SMA jadi Menyenangkan",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f0f8ff",
+  "theme_color": "#4361ee",
+  "orientation": "portrait-primary"
+}

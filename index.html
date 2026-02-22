@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0e27">
+    <meta name="description" content="Belajar Fisika SMA jadi Menyenangkan">
+    <link rel="manifest" href="manifest.json">
+    <title>Tanya Fisika - Belajar Fisika Menyenangkan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===================================
+           INDEX PAGE — PHYSICS COSMOS THEME
+           =================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body.index-page {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e27;
+            color: #e8eaf6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* — Animated starfield background — */
+        .cosmos-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cosmos-bg canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* — Subtle grid overlay — */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* — Floating formula decorations — */
+        .formula-float {
+            position: fixed;
+            z-index: 1;
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 500;
+            opacity: 0;
+            animation: floatFormula 20s ease-in-out infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .formula-float.f1 {
+            top: 12%;
+            left: 8%;
+            font-size: 1.1rem;
+            color: rgba(129, 140, 248, 0.15);
+            animation-delay: 0s;
+        }
+
+        .formula-float.f2 {
+            top: 72%;
+            left: 5%;
+            font-size: 0.95rem;
+            color: rgba(52, 211, 153, 0.12);
+            animation-delay: 4s;
+        }
+
+        .formula-float.f3 {
+            top: 20%;
+            right: 6%;
+            font-size: 1rem;
+            color: rgba(251, 191, 36, 0.12);
+            animation-delay: 8s;
+        }
+
+        .formula-float.f4 {
+            top: 80%;
+            right: 10%;
+            font-size: 0.9rem;
+            color: rgba(244, 114, 182, 0.12);
+            animation-delay: 12s;
+        }
+
+        .formula-float.f5 {
+            top: 45%;
+            left: 3%;
+            font-size: 1.05rem;
+            color: rgba(96, 165, 250, 0.13);
+            animation-delay: 6s;
+        }
+
+        .formula-float.f6 {
+            top: 55%;
+            right: 4%;
+            font-size: 0.85rem;
+            color: rgba(167, 139, 250, 0.12);
+            animation-delay: 10s;
+        }
+
+        @keyframes floatFormula {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(0px);
+            }
+
+            15%,
+            85% {
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-18px);
+            }
+        }
+
+        /* — Orbital rings decoration — */
+        .orbital-ring {
+            position: fixed;
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            animation: orbitSpin 40s linear infinite;
+        }
+
+        .orbital-ring.r1 {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            right: -150px;
+        }
+
+        .orbital-ring.r2 {
+            width: 350px;
+            height: 350px;
+            bottom: -80px;
+            left: -100px;
+            animation-duration: 30s;
+            animation-direction: reverse;
+            border-color: rgba(52, 211, 153, 0.06);
+        }
+
+        .orbital-ring.r3 {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 50s;
+            border-color: rgba(251, 191, 36, 0.05);
+        }
+
+        @keyframes orbitSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .orbital-ring.r3 {
+            animation-name: orbitSpin3;
+        }
+
+        @keyframes orbitSpin3 {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* — Glowing dot on orbital ring — */
+        .orbital-ring::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(129, 140, 248, 0.5);
+            border-radius: 50%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 12px rgba(129, 140, 248, 0.4);
+        }
+
+        .orbital-ring.r2::after {
+            background: rgba(52, 211, 153, 0.5);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+        }
+
+        .orbital-ring.r3::after {
+            background: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+            width: 4px;
+            height: 4px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .index-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 24px;
+            max-width: 560px;
+            width: 100%;
+        }
+
+        /* — Atom logo — */
+        .atom-logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 28px;
+            position: relative;
+        }
+
+        .atom-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle, #818cf8 0%, #6366f1 60%, #4f46e5 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.2);
+            animation: corePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes corePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(99, 102, 241, 0.7), 0 0 80px rgba(99, 102, 241, 0.3);
+            }
+        }
+
+        .atom-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1.5px solid rgba(129, 140, 248, 0.3);
+            border-radius: 50%;
+            animation: atomOrbit 4s linear infinite;
+        }
+
+        .atom-orbit:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            margin: -30px 0 0 -30px;
+        }
+
+        .atom-orbit:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            margin: -40px 0 0 -40px;
+            animation-duration: 6s;
+            animation-direction: reverse;
+            transform: rotate(60deg);
+            border-color: rgba(52, 211, 153, 0.25);
+        }
+
+        .atom-orbit:nth-child(4) {
+            width: 96px;
+            height: 96px;
+            margin: -48px 0 0 -48px;
+            animation-duration: 8s;
+            transform: rotate(-30deg);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .atom-orbit::after {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .atom-orbit:nth-child(2)::after {
+            background: #818cf8;
+            box-shadow: 0 0 8px #818cf8;
+        }
+
+        .atom-orbit:nth-child(3)::after {
+            background: #34d399;
+            box-shadow: 0 0 8px #34d399;
+            width: 6px;
+            height: 6px;
+        }
+
+        .atom-orbit:nth-child(4)::after {
+            background: #fbbf24;
+            box-shadow: 0 0 8px #fbbf24;
+            width: 5px;
+            height: 5px;
+        }
+
+        @keyframes atomOrbit {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* — Title — */
+        .index-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .title-tanya {
+            color: #818cf8;
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .title-fisika {
+            background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 40%, #818cf8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .index-tagline {
+            font-size: 1.05rem;
+            color: rgba(196, 204, 230, 0.7);
+            font-weight: 300;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .index-tagline em {
+            color: #a5b4fc;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* — Feature pills — */
+        .feature-pills {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(129, 140, 248, 0.08);
+            border: 1px solid rgba(129, 140, 248, 0.15);
+            border-radius: 40px;
+            font-size: 0.82rem;
+            color: rgba(196, 204, 230, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .pill:hover {
+            background: rgba(129, 140, 248, 0.15);
+            border-color: rgba(129, 140, 248, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .pill i {
+            font-size: 0.75rem;
+            color: #818cf8;
+        }
+
+        .pill:nth-child(2) i {
+            color: #34d399;
+        }
+
+        .pill:nth-child(3) i {
+            color: #fbbf24;
+        }
+
+        .pill:nth-child(4) i {
+            color: #f472b6;
+        }
+
+        /* — Start button — */
+        .cta-wrapper {
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #6366f1 100%);
+            background-size: 200% 200%;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 56px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 4px 20px rgba(99, 102, 241, 0.35),
+                0 0 0 0 rgba(99, 102, 241, 0);
+            animation: gradientShift 4s ease infinite;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 56px;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 8px 32px rgba(99, 102, 241, 0.45),
+                0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px) scale(0.99);
+        }
+
+        .cta-button .arrow-icon {
+            display: inline-flex;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .cta-hint {
+            font-size: 0.78rem;
+            color: rgba(196, 204, 230, 0.35);
+            margin-top: 14px;
+        }
+
+        /* — Bottom equation strip — */
+        .equation-strip {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            padding: 20px 0;
+            border-top: 1px solid rgba(99, 102, 241, 0.08);
+        }
+
+        .equation-item {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            color: rgba(129, 140, 248, 0.3);
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .equation-item:hover {
+            color: rgba(129, 140, 248, 0.6);
+        }
+
+        /* — Responsive — */
+        @media (max-width: 600px) {
+            .index-title {
+                font-size: 2.3rem;
+            }
+
+            .title-tanya {
+                font-size: 1rem;
+            }
+
+            .index-tagline {
+                font-size: 0.95rem;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 0.95rem;
+            }
+
+            .feature-pills {
+                gap: 8px;
+            }
+
+            .pill {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .equation-strip {
+                gap: 20px;
+            }
+
+            .equation-item {
+                font-size: 0.75rem;
+            }
+
+            .orbital-ring.r1 {
+                width: 300px;
+                height: 300px;
+            }
+
+            .orbital-ring.r2 {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        /* — Loading transition — */
+        body.index-page.loaded .index-container {
+            animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes containerReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .index-container {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body class="index-page">
+
+    <!-- Animated starfield -->
+    <div class="cosmos-bg">
+        <canvas id="starfield"></canvas>
+    </div>
+
+    <!-- Subtle grid -->
+    <div class="grid-overlay"></div>
+
+    <!-- Floating formulas -->
+    <div class="formula-float f1">E = mc²</div>
+    <div class="formula-float f2">F = ma</div>
+    <div class="formula-float f3">λ = h/p</div>
+    <div class="formula-float f4">PV = nRT</div>
+    <div class="formula-float f5">E = ½mv²</div>
+    <div class="formula-float f6">W = F·d</div>
+
+    <!-- Orbital rings -->
+    <div class="orbital-ring r1"></div>
+    <div class="orbital-ring r2"></div>
+    <div class="orbital-ring r3"></div>
+
+    <!-- Main Content -->
+    <div class="index-container">
+        <!-- Animated atom logo -->
+        <div class="atom-logo">
+            <div class="atom-core"></div>
+            <div class="atom-orbit"></div>
+            <div class="atom-orbit"></div>
+            <div class="atom-orbit"></div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="index-title">
+            <span class="title-tanya">Tanya</span>
+            <span class="title-fisika">Fisika</span>
+        </h1>
+
+        <p class="index-tagline">
+            Belajar Fisika SMA jadi <em>menyenangkan</em> —<br>
+            materi interaktif, game edukasi &amp; AI tutor.
+        </p>
+
+        <!-- Feature pills -->
+        <div class="feature-pills">
+            <span class="pill"><i class="fas fa-book-open"></i> Kurikulum SMA</span>
+            <span class="pill"><i class="fas fa-gamepad"></i> Game Edukasi</span>
+            <span class="pill"><i class="fas fa-video"></i> Video Animasi</span>
+
+        </div>
+
+        <!-- CTA Button -->
+        <div class="cta-wrapper">
+            <button class="cta-button" id="startButton">
+                <span>Mulai Belajar</span>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </button>
+            <p class="cta-hint">Klik untuk memulai petualangan fisika ✨</p>
+        </div>
+
+        <!-- Bottom equation strip -->
+        <div class="equation-strip">
+            <span class="equation-item">E = mc²</span>
+            <span class="equation-item">F = ma</span>
+            <span class="equation-item">½mv²</span>
+            <span class="equation-item">mgh</span>
+            <span class="equation-item">λ = h/p</span>
+        </div>
+    </div>
+
+    <!-- Starfield Script -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('starfield');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [], mouseX = 0, mouseY = 0;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Create stars
+            for (let i = 0; i < 180; i++) {
+                stars.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.5 + 0.3,
+                    a: Math.random() * 0.5 + 0.1,
+                    speed: Math.random() * 0.15 + 0.02,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+
+            // Subtle parallax on mouse
+            window.addEventListener('mousemove', e => {
+                mouseX = (e.clientX / w - 0.5) * 2;
+                mouseY = (e.clientY / h - 0.5) * 2;
+            });
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+
+                // Draw subtle nebula blobs
+                const gradient1 = ctx.createRadialGradient(w * 0.2, h * 0.3, 0, w * 0.2, h * 0.3, 300);
+                gradient1.addColorStop(0, 'rgba(99, 102, 241, 0.03)');
+                gradient1.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient1;
+                ctx.fillRect(0, 0, w, h);
+
+                const gradient2 = ctx.createRadialGradient(w * 0.8, h * 0.7, 0, w * 0.8, h * 0.7, 250);
+                gradient2.addColorStop(0, 'rgba(52, 211, 153, 0.02)');
+                gradient2.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient2;
+                ctx.fillRect(0, 0, w, h);
+
+                // Draw stars
+                stars.forEach(s => {
+                    s.twinkle += 0.015;
+                    const twinkleAlpha = 0.5 + Math.sin(s.twinkle) * 0.5;
+                    const alpha = s.a * twinkleAlpha;
+                    const px = s.x + mouseX * s.r * 3;
+                    const py = s.y + mouseY * s.r * 3;
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 210, 255, ${alpha})`;
+                    ctx.fill();
+
+                    // Subtle glow for brighter stars
+                    if (s.r > 1) {
+                        ctx.beginPath();
+                        ctx.arc(px, py, s.r * 3, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(129, 140, 248, ${alpha * 0.1})`;
+                        ctx.fill();
+                    }
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+
+    <!-- Main scripts -->
+    <script src="script.js"></script>
+
+    <script>
+        // Start button handler + page reveal
+        (function () {
+            // Reveal animation
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => document.body.classList.add('loaded'), 100);
+            });
+
+            const startButton = document.getElementById('startButton');
+            if (!startButton) return;
+            startButton.addEventListener('click', function () {
+                const logged = (localStorage.getItem('userLoggedIn') || sessionStorage.getItem('userLoggedIn'));
+                // Fade out
+                document.querySelector('.index-container').style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                document.querySelector('.index-container').style.opacity = '0';
+                document.querySelector('.index-container').style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (logged) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                }, 350);
+            });
+        })();
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
+</body>
+
+</html>

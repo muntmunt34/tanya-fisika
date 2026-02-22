@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukum Newton - Materi</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .formula-box {
+            background: #f0f7ff;
+            border-left: 4px solid #4361ee;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+
+        .definition-box {
+            background: #f9f5ff;
+            border-left: 4px solid #a78bfa;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .subsection {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .case-box {
+            background: #fafafa;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+
+<body data-content-type="materi">
+    <header class="page-header">
+        <a href="materi.html" class="back-link">← Kembali</a>
+        <div class="material-hero">
+            <div class="hero-left">
+                <div class="icon-circle">📐</div>
+            </div>
+            <div class="hero-right">
+                <h1>Hukum Newton</h1>
+                <p>Hukum I–III Newton: inersia, hubungan gaya &amp; percepatan, dan aksi-reaksi.</p>
+                <div class="hero-meta"><span class="tag-badge">Topik: Dinamika</span> <span class="tag-badge">Level:
+                        2</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <section class="material-detail">
+            <h2>Ringkasan Umum</h2>
+            <p>Hukum Newton adalah tiga prinsip fundamental yang menjelaskan hubungan antara gaya yang bekerja pada
+                benda dan gerak yang dihasilkan. Ketiga hukum ini (Hukum Inersia, Hukum Percepatan, dan Hukum
+                Aksi-Reaksi) membentuk fondasi dari mekanika klasik dan dapat menjelaskan hampir semua fenomena gerakan
+                dalam kehidupan sehari-hari.</p>
+
+            <div class="subsection">
+                <h3>1. Hukum I Newton (Hukum Inersia)</h3>
+
+                <div class="definition-box">
+                    <strong>Bunyi Hukum I Newton:</strong><br>
+                    "Jika resultan gaya yang bekerja pada suatu benda sama dengan nol, maka benda yang diam akan tetap
+                    diam, dan benda yang bergerak akan tetap bergerak dengan kecepatan konstan (kecepatan dan arah
+                    tetap)."
+                </div>
+
+                <h4>Penjelasan Mendalam</h4>
+                <p><strong>Inersia</strong> adalah kecenderungan benda untuk mempertahankan keadaan geraknya. Hukum I
+                    Newton menyatakan bahwa tanpa adanya gaya eksternal (gaya yang dipengaruhi oleh lingkungan), benda
+                    tidak akan mengubah keadaan geraknya.</p>
+
+                <p><strong>Dalam bentuk matematis:</strong></p>
+                <div class="formula-box">
+                    Jika $$\sum F = 0 \text{ (resultan gaya nol)}$$
+                    Maka: $$a = 0 \text{ (percepatan nol)}$$
+                    Artinya: $$v = \text{konstan}$$
+                </div>
+
+                <h4>Contoh Praktis</h4>
+                <ul>
+                    <li><strong>Benda diam tetap diam:</strong> Meja di ruangan tidak akan bergerak sendiri karena tidak
+                        ada gaya horizontal yang bekerja padanya. Gaya gravitasi seimbang dengan gaya normal dari
+                        lantai.</li>
+                    <li><strong>Benda bergerak tetap bergerak:</strong> Peluncur hoki puck di atas es yang halus (dengan
+                        gesekan minimal) akan terus meluncur dengan kecepatan konstan sampai ada gaya lain (misalnya
+                        pemain lain menabraknya).</li>
+                    <li><strong>Dalam kendaraan:</strong> Saat mobil berhenti mendadak, penumpang akan terdorong ke
+                        muka. Ini bukan karena ada gaya ke muka, tapi karena badan penumpang cenderung mempertahankan
+                        gerakan maju (inersia).</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>⚠️ Catatan Penting:</strong> Hukum I Newton berlaku dalam <strong>kerangka acuan
+                        inersial</strong> (reference frame yang tidak dipercepat). Dalam kerangka acuan non-inersial
+                    (seperti dalam mobil yang sedang mempercepat), mungkin perlu mempertimbangkan gaya-gaya semu (pseudo
+                    forces).
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>2. Hukum II Newton (Hukum Percepatan)</h3>
+
+                <div class="definition-box">
+                    <strong>Bunyi Hukum II Newton:</strong><br>
+                    "Percepatan yang dialami suatu benda sebanding lurus dengan gaya total (resultan gaya) yang bekerja
+                    padanya, dan berbanding terbalik dengan massa benda."
+                </div>
+
+                <h4>Persamaan Fundamental</h4>
+                <div class="formula-box">
+                    $$\sum F = m \cdot a$$
+                    <br>
+                    Atau dapat ditulis: $$a = \frac{\sum F}{m}$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$\sum F$ = resultan gaya (N = Newton)</li>
+                        <li>$m$ = massa benda (kg)</li>
+                        <li>$a$ = percepatan (m/s²)</li>
+                    </ul>
+                </div>
+
+                <h4>Implikasi Fisik</h4>
+                <p>Hukum II Newton menunjukkan hubungan linear antara gaya dan percepatan:</p>
+                <ul>
+                    <li><strong>Gaya lebih besar → percepatan lebih besar:</strong> Jika Anda mendorong benda dengan
+                        gaya dua kali lebih besar, percepatan akan dua kali lebih besar (dengan massa sama).</li>
+                    <li><strong>Massa lebih besar → percepatan lebih kecil:</strong> Untuk gaya yang sama, benda yang
+                        lebih berat (massa besar) akan mempercepat lebih lambat.</li>
+                </ul>
+
+                <h4>Konsep Momentum dan Impuls</h4>
+                <p>Hukum II Newton juga dapat dinyatakan dalam bentuk momentum:</p>
+
+                <div class="formula-box">
+                    <strong>Momentum:</strong> $$p = m \cdot v$$
+                    <br><br>
+                    <strong>Hukum II dalam bentuk momentum:</strong>
+                    $$F = \frac{dp}{dt}$$
+                    (Gaya adalah laju perubahan momentum)
+                </div>
+
+                <div class="definition-box">
+                    <strong>Impuls:</strong> Perubahan momentum akibat gaya yang bekerja dalam waktu tertentu.
+                    $$J = F \cdot \Delta t = \Delta p = m(v_f - v_i)$$
+                </div>
+
+                <h4>Contoh Perhitungan 1: Gaya pada Benda</h4>
+
+                <div class="example-box">
+                    <strong>Soal:</strong> Sebuah bola bermassa 2 kg didorong dengan gaya 10 N di atas lantai yang licin
+                    (tanpa gesekan). Berapa percepatan bola?
+                    <br><br>
+                    <strong>Penyelesaian:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>Diketahui: $m = 2$ kg, $F = 10$ N</li>
+                        <li>Gunakan: $\sum F = m \cdot a$</li>
+                        <li>$a = \frac{F}{m} = \frac{10}{2} = 5$ m/s²</li>
+                        <li><strong>Jawab:</strong> Percepatan bola adalah 5 m/s² ke arah gaya.</li>
+                    </ul>
+                </div>
+
+                <h4>Contoh Perhitungan 2: Gaya dengan Gesekan</h4>
+
+                <div class="example-box">
+                    <strong>Soal:</strong> Sebuah balok bermassa 5 kg didorong horizontal dengan gaya 25 N. Lantai
+                    memiliki koefisien gesekan kinetik $\mu_k = 0.2$. Hitung percepatan balok. (Gunakan $g = 10$ m/s²)
+                    <br><br>
+                    <strong>Penyelesaian:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>Langkah 1:</strong> Hitung gaya normal. Dalam arah vertikal: $N = mg = 5 \times 10 =
+                            50$ N</li>
+                        <li><strong>Langkah 2:</strong> Hitung gaya gesekan kinetik: $f_k = \mu_k \cdot N = 0.2 \times
+                            50 = 10$ N</li>
+                        <li><strong>Langkah 3:</strong> Hitung resultan gaya horizontal: $\sum F = F - f_k = 25 - 10 =
+                            15$ N</li>
+                        <li><strong>Langkah 4:</strong> Hitung percepatan: $a = \frac{\sum F}{m} = \frac{15}{5} = 3$
+                            m/s²</li>
+                        <li><strong>Jawab:</strong> Percepatan balok adalah 3 m/s²</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>3. Hukum III Newton (Hukum Aksi-Reaksi)</h3>
+
+                <div class="definition-box">
+                    <strong>Bunyi Hukum III Newton:</strong><br>
+                    "Jika benda A memberikan gaya pada benda B, maka benda B akan memberikan gaya pada benda A yang
+                    besarnya sama tetapi arahnya berlawanan."
+                </div>
+
+                <h4>Persamaan dan Konsep</h4>
+                <div class="formula-box">
+                    $$\vec{F}_{AB} = -\vec{F}_{BA}$$
+                    <br><br>
+                    Atau: $$F_{\text{aksi}} = F_{\text{reaksi}} \text{ (besar sama, arah berlawanan)}$$
+                </div>
+
+                <h4>Poin-Poin Penting</h4>
+                <ul>
+                    <li><strong>Pasangan gaya aksi-reaksi selalu bekerja pada benda yang berbeda</strong> - jangan
+                        sampai tertarik menganggap mereka sebagai gaya-gaya yang saling membatalkan satu sama lain dalam
+                        perhitungan!</li>
+                    <li><strong>Kedua gaya memiliki jenis yang sama</strong> - keduanya adalah gaya sentuh, gaya
+                        gravitasi, gaya normal, dsb.</li>
+                    <li><strong>Simultan</strong> - kedua gaya terjadi pada saat yang sama.</li>
+                </ul>
+
+                <h4>Contoh-Contoh Aksi-Reaksi</h4>
+
+                <div class="case-box">
+                    <strong>Kasus 1: Orang Berjalan</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>Aksi:</strong> Kaki orang mendorong lantai ke belakang dengan gaya $F$</li>
+                        <li><strong>Reaksi:</strong> Lantai mendorong kaki (dan tubuh) orang ke depan dengan gaya $F$
+                        </li>
+                        <li><strong>Hasil:</strong> Orang bergerak maju. Tanpa gaya reaksi dari lantai, orang tidak bisa
+                            maju!</li>
+                    </ul>
+                </div>
+
+                <div class="case-box">
+                    <strong>Kasus 2: Buku di Meja</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>Aksi:</strong> Buku menekan meja ke bawah (akibat gravitasi) dengan gaya $W = mg$
+                        </li>
+                        <li><strong>Reaksi:</strong> Meja mendorong buku ke atas dengan gaya normal $N = mg$</li>
+                        <li><strong>Hasil:</strong> Buku tetap diam di atas meja. Gaya aksi dan reaksi seimbang,
+                            sehingga net force = 0.</li>
+                    </ul>
+                </div>
+
+                <div class="case-box">
+                    <strong>Kasus 3: Roket Lepas Landas</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>Aksi:</strong> Roket mengeluarkan gas ke belakang dengan gaya besar</li>
+                        <li><strong>Reaksi:</strong> Gas mendorong roket ke depan (ke atas) dengan gaya yang sama besar
+                        </li>
+                        <li><strong>Hasil:</strong> Roket terdorong ke atas melawan gravitasi</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Kesalahpahaman Umum:</strong> Banyak siswa berpikir bahwa pada buku yang diam di meja,
+                    gaya berat dan gaya normal saling membatalkan. Ini tidak tepat secara terminologi! Gaya berat dan
+                    gaya normal BUKAN pasangan aksi-reaksi. Pasangan reaksi dari gaya berat adalah gaya yang diberikan
+                    buku kepada Bumi (menarik Bumi ke atas), dan pasangan reaksi dari gaya normal adalah gaya yang
+                    diberikan buku ke meja (menekan meja).
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>4. Gaya-Gaya Umum dalam Mekanika</h3>
+
+                <h4>4.1 Gaya Berat (Gravitasi)</h4>
+                <div class="formula-box">
+                    $$W = m \cdot g$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$W$ = gaya berat (N)</li>
+                        <li>$m$ = massa (kg)</li>
+                        <li>$g$ = percepatan gravitasi (≈ 9.8 m/s² atau ≈ 10 m/s²)</li>
+                    </ul>
+                </div>
+
+                <h4>4.2 Gaya Normal</h4>
+                <p><strong>Gaya normal</strong> adalah gaya yang dihasilkan oleh permukaan untuk menopang objek, selalu
+                    tegak lurus terhadap permukaan.</p>
+
+                <div class="example-box">
+                    <strong>Benda pada permukaan horizontal:</strong> $N = mg$
+                    <br><br>
+                    <strong>Benda pada bidang miring dengan sudut $\theta$:</strong> $N = mg \cos \theta$
+                </div>
+
+                <h4>4.3 Gaya Gesekan</h4>
+                <p><strong>Gaya gesekan</strong> adalah gaya yang menghambat gerak relatif antara dua permukaan yang
+                    saling bersentuhan.</p>
+
+                <div class="formula-box">
+                    <strong>Gesekan Statis (benda belum bergerak):</strong>
+                    $$f_s \leq \mu_s \cdot N$$
+                    <br><br>
+                    <strong>Gesekan Kinetis (benda bergerak):</strong>
+                    $$f_k = \mu_k \cdot N$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$\mu_s$ = koefisien gesekan statis (dimensionless, $\mu_s > \mu_k$)</li>
+                        <li>$\mu_k$ = koefisien gesekan kinetis</li>
+                        <li>$N$ = gaya normal</li>
+                    </ul>
+                </div>
+
+                <h4>4.4 Gaya Pegas (Hukum Hooke)</h4>
+                <div class="formula-box">
+                    $$F = -k \cdot x$$
+                    <br><br>
+                    <strong>Dimana:</strong>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>$F$ = gaya pemulih pegas (N)</li>
+                        <li>$k$ = konstanta pegas (N/m)</li>
+                        <li>$x$ = perpanjangan/kompresi dari posisi kesetimbangan (m)</li>
+                        <li>Tanda negatif menunjukkan arah gaya selalu berlawanan dengan perpanjangan</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh:</strong> Sebuah pegas dengan konstanta $k = 200$ N/m ditarik sejauh $x = 0.05$ m
+                    dari posisi kesetimbangan. Berapa gaya pemulih pegas?
+                    <br>
+                    $F = -k \cdot x = -200 \times 0.05 = -10$ N
+                    <br>
+                    (Gaya sebesar 10 N ke arah yang berlawanan dengan perpanjangan)
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>5. Soal Latihan</h3>
+
+                <ol>
+                    <li>
+                        <strong>Aplikasi Hukum II Newton:</strong><br>
+                        Sebuah kotak bermassa 5 kg berada di atas lantai horizontal dengan koefisien gesekan kinetik
+                        $\mu_k = 0.2$. Jika kotak didorong dengan gaya horizontal 20 N, tentukan:
+                        <ul style="margin-top: 8px;">
+                            <li>Gaya normal pada kotak</li>
+                            <li>Gaya gesekan kinetik</li>
+                            <li>Percepatan kotak</li>
+                        </ul>
+                        (Gunakan $g = 10$ m/s²)
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Hukum Newton dengan Pegas:</strong><br>
+                        Sebuah balok bermassa 2 kg dikaitkan ke pegas dengan konstanta $k = 200$ N/m di atas lantai
+                        licin (tanpa gesekan). Pegas ditarik 0.1 m dari kesetimbangan. Tentukan:
+                        <ul style="margin-top: 8px;">
+                            <li>Gaya pemulih pegas</li>
+                            <li>Percepatan balok saat pegas pada posisi tersebut</li>
+                        </ul>
+                    </li>
+
+                    <li style="margin-top: 16px;">
+                        <strong>Analisis Gaya Aksi-Reaksi:</strong><br>
+                        Dijelaskan bahwa seorang atlet bermassa 60 kg melompat vertikal. Saat melompat, otot kaki
+                        memberikan gaya total 900 N ke atas pada tubuh. Tentukan:
+                        <ul style="margin-top: 8px;">
+                            <li>Gaya berat atlet</li>
+                            <li>Resultan gaya vertikal pada atlet</li>
+                            <li>Percepatan vertikal atlet saat melompat</li>
+                        </ul>
+                        (Gunakan $g = 10$ m/s²)
+                    </li>
+                </ol>
+
+                <details style="margin-top: 16px; background: #f3f4f6; padding: 12px; border-radius: 6px;">
+                    <summary style="cursor: pointer; font-weight: 600;">📋 Jawaban Singkat (Klik untuk Buka)</summary>
+                    <div style="margin-top: 12px;">
+                        <h4>Nomor 1:</h4>
+                        <p>
+                            • Gaya normal: $N = mg = 5 \times 10 = 50$ N
+                            <br>
+                            • Gaya gesekan: $f_k = \mu_k N = 0.2 \times 50 = 10$ N
+                            <br>
+                            • Resultan gaya: $\sum F = 20 - 10 = 10$ N
+                            <br>
+                            • Percepatan: $a = \frac{\sum F}{m} = \frac{10}{5} = 2$ m/s²
+                        </p>
+
+                        <h4>Nomor 2:</h4>
+                        <p>
+                            • Gaya pemulih pegas: $F = -kx = -200 \times 0.1 = -20$ N (besar = 20 N)
+                            <br>
+                            • Percepatan: $a = \frac{F}{m} = \frac{-20}{2} = -10$ m/s² (arah menuju kesetimbangan)
+                        </p>
+
+                        <h4>Nomor 3:</h4>
+                        <p>
+                            • Gaya berat: $W = mg = 60 \times 10 = 600$ N (ke bawah)
+                            <br>
+                            • Resultan gaya: $\sum F = 900 - 600 = 300$ N (ke atas)
+                            <br>
+                            • Percepatan: $a = \frac{\sum F}{m} = \frac{300}{60} = 5$ m/s² (ke atas)
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <button class="modal-btn" id="markDoneHukumNewton" style="margin-top: 32px;">Tandai Selesai</button>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setLastActivity(getPageNameFromPath());
+            const btn = document.getElementById('markDoneHukumNewton');
+            if (btn) btn.addEventListener('click', function () {
+                completeTask('hukum-newton');
+                alert('Aktivitas "Hukum Newton" ditandai selesai.');
+            });
+        });
+    </script>
+    <script src="../streak-manager.js"></script>
+    <script src="../history-manager.js"></script>
+</body>
+
+</html>

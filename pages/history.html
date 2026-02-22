@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif !important;
+            background: #0a0e27 !important;
+            color: #e8eaf6 !important;
+            min-height: 100vh;
+        }
+
+        .chalk-wallpaper,
+        #app,
+        .physics-particle,
+        .physics-orb {
+            display: none !important;
+        }
+
+        /* Starfield */
+        .cosmos-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .cosmos-bg canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 5;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 0 24px;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            color: rgba(196, 204, 230, 0.6);
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .back-btn:hover {
+            background: rgba(99, 102, 241, 0.12);
+            color: #a5b4fc;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e0e7ff;
+        }
+
+        .clear-all-btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            color: #f43f5e;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s;
+        }
+
+        .clear-all-btn:hover {
+            background: rgba(244, 63, 94, 0.15);
+        }
+
+        /* Search & Filter */
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            padding: 0 16px;
+            margin-bottom: 12px;
+            transition: all 0.25s;
+        }
+
+        .search-bar:focus-within {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.06);
+        }
+
+        .search-bar i {
+            color: rgba(196, 204, 230, 0.3);
+            font-size: 0.85rem;
+            position: static !important;
+        }
+
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: #e8eaf6;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(196, 204, 230, 0.25);
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            padding: 7px 16px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.5);
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-pill:hover {
+            background: rgba(99, 102, 241, 0.08);
+            color: rgba(196, 204, 230, 0.7);
+        }
+
+        .filter-pill.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+        }
+
+        /* History list */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(99, 102, 241, 0.03);
+            border: 1px solid rgba(99, 102, 241, 0.06);
+            transition: all 0.25s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .history-item:hover {
+            background: rgba(99, 102, 241, 0.07);
+            border-color: rgba(99, 102, 241, 0.12);
+        }
+
+        .hi-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            font-size: 0.9rem;
+            position: static !important;
+        }
+
+        .hi-icon.t-materi {
+            background: rgba(244, 63, 94, 0.1);
+            color: #fb7185;
+        }
+
+        .hi-icon.t-kelas {
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+        }
+
+        .hi-icon.t-forum {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+
+        .hi-icon.t-bank_soal {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+        }
+
+        .hi-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hi-title {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hi-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .hi-badge {
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        .hi-badge.t-materi {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+        }
+
+        .hi-badge.t-kelas {
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+        }
+
+        .hi-badge.t-forum {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .hi-badge.t-bank_soal {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+        }
+
+        .hi-time {
+            font-size: 0.72rem;
+            color: rgba(196, 204, 230, 0.3);
+        }
+
+        .hi-delete {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: rgba(196, 204, 230, 0.2);
+            font-size: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.25s;
+        }
+
+        .hi-delete:hover {
+            background: rgba(244, 63, 94, 0.1);
+            color: #f43f5e;
+        }
+
+        /* Progress bar */
+        .hi-progress {
+            width: 100%;
+            height: 3px;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .hi-progress .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+            border-radius: 2px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(196, 204, 230, 0.3);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(196, 204, 230, 0.45);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.82rem;
+        }
+
+        /* Confirm modal */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-overlay.show {
+            display: flex;
+        }
+
+        .confirm-box {
+            background: #12163a;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 360px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .confirm-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #e0e7ff;
+            margin-bottom: 8px;
+        }
+
+        .confirm-box p {
+            font-size: 0.82rem;
+            color: rgba(196, 204, 230, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-actions button {
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: rgba(99, 102, 241, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            color: rgba(196, 204, 230, 0.6);
+        }
+
+        .btn-danger {
+            background: #f43f5e;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body data-content-type="">
+
+    <div class="cosmos-bg"><canvas id="starfield"></canvas></div>
+    <div class="grid-overlay"></div>
+
+    <div class="page-wrapper">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <a href="../dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <h1 class="page-title">History Terakhir</h1>
+            <button class="clear-all-btn" id="clearAllBtn"><i class="fas fa-trash-alt"></i> Bersihkan Semua</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Cari history...">
+            </div>
+            <div class="filter-pills" id="filterPills">
+                <button class="filter-pill active" data-type="">Semua</button>
+                <button class="filter-pill" data-type="materi">Materi</button>
+                <button class="filter-pill" data-type="kelas">Kelas</button>
+                <button class="filter-pill" data-type="bank_soal">Bank Soal</button>
+                <button class="filter-pill" data-type="forum">Forum</button>
+            </div>
+        </div>
+
+        <!-- History List -->
+        <div class="history-list" id="historyList"></div>
+
+    </div>
+
+    <!-- Clear Confirm Modal -->
+    <div class="confirm-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <h3>Bersihkan Semua History?</h3>
+            <p>Semua riwayat akses akan dihapus permanen. Aksi ini tidak bisa dibatalkan.</p>
+            <div class="confirm-actions">
+                <button class="btn-cancel" id="cancelClear">Batal</button>
+                <button class="btn-danger" id="confirmClear">Hapus Semua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Starfield -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('starfield');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [];
+            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+            for (let i = 0; i < 100; i++) {
+                stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2 + 0.2, a: Math.random() * 0.3 + 0.08, tw: Math.random() * Math.PI * 2 });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.tw += 0.008; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200,210,255,${s.a * (0.5 + Math.sin(s.tw) * 0.5)})`; ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+
+    <script src="../history-manager.js"></script>
+
+    <script>
+        (function () {
+            'use strict';
+            if (!window.HistoryManager) return;
+
+            var currentFilter = '';
+            var currentSearch = '';
+
+            function render() {
+                var container = document.getElementById('historyList');
+                if (!container) return;
+
+                var items = HistoryManager.getHistory(50, currentFilter || null);
+
+                // Apply search filter
+                if (currentSearch) {
+                    var q = currentSearch.toLowerCase();
+                    items = items.filter(function (item) {
+                        return (item.title || '').toLowerCase().indexOf(q) !== -1;
+                    });
+                }
+
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-clock-rotate-left"></i><h3>Tidak Ada History</h3><p>' +
+                        (currentSearch ? 'Tidak ada hasil untuk "' + currentSearch + '"' : 'Mulai belajar untuk melihat riwayat akses kamu!') +
+                        '</p></div>';
+                    return;
+                }
+
+                container.innerHTML = items.map(function (item) {
+                    var icon = item.icon || HistoryManager.iconForType(item.contentType);
+                    var label = HistoryManager.labelForType(item.contentType);
+                    var time = HistoryManager.timeAgo(item.accessedAt);
+                    var tClass = 't-' + (item.contentType || 'materi');
+                    var progress = '';
+                    if (item.progress !== null && item.progress !== undefined) {
+                        progress = '<div class="hi-progress"><div class="bar" style="width:' + item.progress + '%"></div></div>';
+                    }
+                    return '<div class="history-item" data-id="' + item.id + '">' +
+                        '<a href="../' + item.urlPath + '" style="display:flex;align-items:center;gap:14px;flex:1;text-decoration:none;color:inherit;min-width:0;">' +
+                        '<div class="hi-icon ' + tClass + '"><i class="' + icon + '"></i></div>' +
+                        '<div class="hi-info"><div class="hi-title">' + item.title + '</div>' +
+                        '<div class="hi-meta"><span class="hi-badge ' + tClass + '">' + label + '</span><span class="hi-time">' + time + '</span></div>' +
+                        progress + '</div></a>' +
+                        '<button class="hi-delete" data-delete="' + item.id + '" title="Hapus"><i class="fas fa-times"></i></button></div>';
+                }).join('');
+
+                // Attach delete handlers
+                container.querySelectorAll('.hi-delete').forEach(function (btn) {
+                    btn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        var id = this.getAttribute('data-delete');
+                        HistoryManager.deleteItem(id);
+                        render();
+                    });
+                });
+            }
+
+            // Filter pills
+            document.getElementById('filterPills').addEventListener('click', function (e) {
+                var pill = e.target.closest('.filter-pill');
+                if (!pill) return;
+                currentFilter = pill.getAttribute('data-type') || '';
+                this.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });
+                pill.classList.add('active');
+                render();
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', function () {
+                currentSearch = this.value.trim();
+                render();
+            });
+
+            // Clear all
+            var modal = document.getElementById('confirmModal');
+            document.getElementById('clearAllBtn').addEventListener('click', function () {
+                modal.classList.add('show');
+            });
+            document.getElementById('cancelClear').addEventListener('click', function () {
+                modal.classList.remove('show');
+            });
+            document.getElementById('confirmClear').addEventListener('click', function () {
+                HistoryManager.clearAll();
+                modal.classList.remove('show');
+                render();
+            });
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) modal.classList.remove('show');
+            });
+
+            // Initial render
+            render();
+        })();
+    </script>
+</body>
+
+</html>

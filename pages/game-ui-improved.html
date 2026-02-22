@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quest – Pixel Edition v2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            background: #0a0f1e;
+            color: #e8f4f8;
+            font-family: 'Press Start 2P', monospace;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw
+        }
+
+        /* PARALLAX BG */
+        .parallax-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none
+        }
+
+        .parallax-layer {
+            position: absolute;
+            inset: 0
+        }
+
+        #starCanvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1
+        }
+
+        .floating-equations {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            overflow: hidden
+        }
+
+        .float-eq {
+            position: absolute;
+            color: rgba(0, 240, 255, 0.08);
+            font-size: 10px;
+            animation: floatDrift linear infinite
+        }
+
+        @keyframes floatDrift {
+            0% {
+                transform: translateY(100vh) rotate(0deg)
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg)
+            }
+        }
+
+        .particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            pointer-events: none
+        }
+
+        /* SCREEN SYSTEM */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column
+        }
+
+        .screen.active {
+            display: flex;
+            animation: screenIn 0.4s ease
+        }
+
+        @keyframes screenIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes screenOut {
+            from {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0
+            }
+        }
+
+        /* FLASH EFFECTS */
+        .flash-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s
+        }
+
+        .flash-overlay.green {
+            background: rgba(74, 222, 128, 0.25);
+            opacity: 1
+        }
+
+        .flash-overlay.red {
+            background: rgba(239, 68, 68, 0.25);
+            opacity: 1
+        }
+
+        /* MAIN MENU */
+        .menu-header {
+            text-align: center;
+            padding: 30px 20px 10px
+        }
+
+        .logo-atom {
+            font-size: 50px;
+            margin-bottom: 10px;
+            animation: float 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4))
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-15px)
+            }
+        }
+
+        .game-title {
+            font-size: 24px;
+            color: #00f0ff;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+            margin-bottom: 6px;
+            letter-spacing: 2px
+        }
+
+        .game-subtitle {
+            font-size: 12px;
+            color: #4ade80;
+            margin-bottom: 4px
+        }
+
+        .game-version {
+            font-size: 8px;
+            color: rgba(230, 247, 255, 0.4)
+        }
+
+        /* COIN DISPLAY */
+        .coin-display {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 183, 71, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: #FFB347
+        }
+
+        .coin-display .coin-icon {
+            font-size: 14px;
+            animation: coinSpin 3s linear infinite
+        }
+
+        @keyframes coinSpin {
+
+            0%,
+            80% {
+                transform: rotateY(0)
+            }
+
+            90% {
+                transform: rotateY(180deg)
+            }
+
+            100% {
+                transform: rotateY(360deg)
+            }
+        }
+
+        .coin-bounce {
+            animation: coinBounce 0.5s ease
+        }
+
+        @keyframes coinBounce {
+            0% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.3)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        /* DAILY CHALLENGE BANNER */
+        .daily-banner {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(249, 115, 22, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 10px 20px;
+            font-size: 9px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .daily-banner:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2)
+        }
+
+        .daily-banner .db-icon {
+            font-size: 24px
+        }
+
+        .daily-banner .db-text {
+            flex: 1
+        }
+
+        .daily-banner .db-title {
+            color: #fbbf24;
+            margin-bottom: 3px
+        }
+
+        .daily-banner .db-desc {
+            color: rgba(230, 247, 255, 0.5);
+            font-size: 8px
+        }
+
+        .daily-banner .db-reward {
+            color: #4ade80;
+            font-size: 8px
+        }
+
+        /* MODE CARDS */
+        .mode-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px
+        }
+
+        .mode-card {
+            background: rgba(0, 240, 255, 0.08);
+            border: 2px solid #00d9ff;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s
+        }
+
+        .mode-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3)
+        }
+
+        .mode-card:hover::before {
+            opacity: 1
+        }
+
+        .mode-card.energy {
+            border-color: #4ADE80
+        }
+
+        .mode-card.sources {
+            border-color: #FFB347
+        }
+
+        .mode-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 8px currentColor)
+        }
+
+        .mode-label {
+            font-size: 12px;
+            color: #00f0ff;
+            margin-bottom: 8px
+        }
+
+        .mode-card.energy .mode-label {
+            color: #4ADE80
+        }
+
+        .mode-card.sources .mode-label {
+            color: #FFB347
+        }
+
+        .mode-description {
+            font-size: 9px;
+            color: rgba(230, 247, 255, 0.6);
+            margin-bottom: 12px;
+            min-height: 36px;
+            line-height: 1.5
+        }
+
+        .mode-progress {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid currentColor;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 9px
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 5px 0;
+            overflow: hidden;
+            border-radius: 3px
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f0ff, #00a8cc);
+            width: 0%;
+            transition: width 0.8s ease;
+            position: relative
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%)
+            }
+
+            100% {
+                transform: translateX(100%)
+            }
+        }
+
+        .mode-card.energy .progress-fill {
+            background: linear-gradient(90deg, #4ade80, #22c55e)
+        }
+
+        .mode-card.sources .progress-fill {
+            background: linear-gradient(90deg, #FFB347, #ff9500)
+        }
+
+        /* BOTTOM MENU */
+        .bottom-menu {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap
+        }
+
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            max-width: 900px;
+            margin: 10px auto;
+            padding: 0 20px;
+            width: 100%;
+            font-size: 10px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 20px
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0
+        }
+
+        .stat-label {
+            color: rgba(230, 247, 255, 0.6)
+        }
+
+        .stat-value {
+            color: #4ade80;
+            font-weight: bold
+        }
+
+        /* BUTTONS */
+        .btn {
+            font-family: 'Press Start 2P', monospace;
+            background: linear-gradient(135deg, #00d9ff, #0099cc);
+            color: #0a0f1e;
+            border: none;
+            border-bottom: 4px solid #007799;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.15s;
+            border-radius: 6px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(255, 255, 255, 0.15), transparent);
+            pointer-events: none
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.3);
+            filter: brightness(1.1)
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #4ADE80, #22c55e);
+            border-color: #16a34a
+        }
+
+        .btn.secondary:hover {
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.3)
+        }
+
+        .btn.tertiary {
+            background: linear-gradient(135deg, #FFB347, #ff9500);
+            border-color: #cc7000;
+            color: #0a0f1e
+        }
+
+        .btn.tertiary:hover {
+            box-shadow: 0 6px 20px rgba(255, 179, 71, 0.3)
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed
+        }
+
+        /* LEVEL SELECT */
+        #levelSelectScreen {
+            flex-direction: column;
+            padding: 40px;
+            background: transparent
+        }
+
+        .level-select-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            max-width: 900px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .level-select-title {
+            font-size: 20px;
+            color: #00f0ff
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .level-box {
+            aspect-ratio: 1;
+            background: rgba(0, 240, 255, 0.12);
+            border: 3px solid #00d9ff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            border-radius: 8px
+        }
+
+        .level-box:hover:not(.locked) {
+            background: rgba(0, 240, 255, 0.25);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4)
+        }
+
+        .level-box.selected {
+            background: rgba(0, 240, 255, 0.3);
+            border-color: #4ade80;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.4)
+        }
+
+        .level-box.locked {
+            background: rgba(80, 80, 80, 0.1);
+            border-color: #555;
+            cursor: not-allowed;
+            opacity: 0.4
+        }
+
+        .level-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00d9ff
+        }
+
+        .level-stars {
+            font-size: 14px;
+            margin-top: 4px
+        }
+
+        .level-info {
+            background: rgba(0, 240, 255, 0.08);
+            border: 2px solid #00d9ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .level-info-title {
+            font-size: 14px;
+            color: #4ade80;
+            margin-bottom: 8px
+        }
+
+        .level-info-desc {
+            font-size: 10px;
+            color: rgba(230, 247, 255, 0.7);
+            line-height: 1.6
+        }
+
+        /* GAMEPLAY */
+        #gameplayScreen {
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            border: 2px solid #00d9ff;
+            border-radius: 8px
+        }
+
+        .game-title-bar {
+            font-size: 12px;
+            color: #00f0ff
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 11px
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .game-area {
+            background: rgba(0, 0, 0, 0.5);
+            border: 3px solid #00d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 16/10;
+            background: #061427;
+            border: 2px solid #00a8cc;
+            border-radius: 4px;
+            position: relative
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges
+        }
+
+        /* CHARACTER BUBBLE */
+        .char-bubble {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00d9ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 8px;
+            color: #b0d4e8;
+            max-width: 200px;
+            z-index: 5;
+            display: none
+        }
+
+        .char-bubble.show {
+            display: block;
+            animation: bubblePop 0.3s ease
+        }
+
+        @keyframes bubblePop {
+            from {
+                transform: scale(0.8);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        /* COMBO COUNTER */
+        .combo-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 9px;
+            color: #fbbf24;
+            z-index: 5;
+            display: none
+        }
+
+        .combo-display.show {
+            display: block;
+            animation: comboPulse 0.5s ease
+        }
+
+        @keyframes comboPulse {
+            0% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.2)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        .controls-area {
+            background: rgba(0, 240, 255, 0.06);
+            border: 2px solid rgba(0, 240, 255, 0.15);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 15px
+        }
+
+        .question-text {
+            font-size: 11px;
+            color: #b0d4e8;
+            margin-bottom: 12px;
+            min-height: 30px;
+            line-height: 1.5
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px;
+            background: #0a1f2e;
+            border: 2px solid #00d9ff;
+            color: #00f0ff;
+            font-size: 11px;
+            font-family: 'Press Start 2P', monospace;
+            border-radius: 4px;
+            transition: all 0.2s
+        }
+
+        .input-group input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border-color: #4ade80
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .button-group .btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px 16px;
+            font-size: 10px
+        }
+
+        .hint-text {
+            background: rgba(74, 222, 128, 0.08);
+            border-left: 3px solid #4ade80;
+            padding: 10px;
+            margin-top: 12px;
+            font-size: 9px;
+            color: rgba(230, 247, 255, 0.7);
+            border-radius: 4px
+        }
+
+        /* RESULT SCREEN */
+        #resultScreen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px
+        }
+
+        .result-container {
+            background: rgba(0, 240, 255, 0.1);
+            border: 3px solid #4ade80;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 500px;
+            width: 95%
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #4ade80;
+            margin-bottom: 15px
+        }
+
+        .stars-display {
+            font-size: 60px;
+            margin: 15px 0;
+            animation: starsIn 0.6s ease
+        }
+
+        @keyframes starsIn {
+            from {
+                transform: scale(0.3);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        .result-stats {
+            margin: 20px 0;
+            font-size: 11px
+        }
+
+        .result-stat-item {
+            margin: 10px 0;
+            color: rgba(230, 247, 255, 0.85)
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        .result-buttons .btn {
+            flex: 1;
+            min-width: 130px
+        }
+
+        /* XP BAR ANIMATION */
+        .xp-gain-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 250;
+            font-size: 20px;
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+            animation: xpFloat 1.5s ease forwards;
+            pointer-events: none
+        }
+
+        @keyframes xpFloat {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5)
+            }
+
+            50% {
+                transform: translate(-50%, -70%) scale(1.2)
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -90%) scale(0.8)
+            }
+        }
+
+        /* PROFILE */
+        #profileScreen {
+            flex-direction: column;
+            padding: 30px;
+            overflow-y: auto
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: rgba(0, 240, 255, 0.08);
+            padding: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .avatar-box {
+            font-size: 60px;
+            text-align: center;
+            min-width: 80px;
+            cursor: pointer;
+            transition: transform 0.3s
+        }
+
+        .avatar-box:hover {
+            transform: scale(1.1)
+        }
+
+        .profile-info {
+            flex: 1
+        }
+
+        .profile-name {
+            font-size: 16px;
+            color: #00f0ff;
+            margin-bottom: 8px
+        }
+
+        .profile-stat {
+            font-size: 10px;
+            color: rgba(230, 247, 255, 0.7);
+            margin: 6px 0
+        }
+
+        .xp-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #00d9ff;
+            height: 12px;
+            margin: 8px 0;
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f0ff, #4ade80);
+            width: 0%;
+            transition: width 0.8s ease;
+            position: relative
+        }
+
+        .xp-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite
+        }
+
+        .progress-section {
+            margin-bottom: 25px;
+            max-width: 800px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .progress-title {
+            font-size: 14px;
+            color: #4ade80;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4ade80
+        }
+
+        .progress-mode {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #00d9ff
+        }
+
+        .progress-mode.mode2 {
+            border-left-color: #4ade80
+        }
+
+        .progress-mode.mode3 {
+            border-left-color: #FFB347
+        }
+
+        .mode-progress-text {
+            font-size: 10px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .achievement {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            font-size: 9px;
+            transition: all 0.3s
+        }
+
+        .achievement.unlocked {
+            background: rgba(74, 222, 128, 0.12);
+            border-color: #4ade80;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.1)
+        }
+
+        .achievement.locked {
+            opacity: 0.4
+        }
+
+        .achievement:hover {
+            transform: scale(1.05)
+        }
+
+        /* FORMULA COLLECTION */
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px
+        }
+
+        .formula-card {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 9px;
+            transition: all 0.3s
+        }
+
+        .formula-card.unlocked {
+            border-color: #4ade80;
+            background: rgba(74, 222, 128, 0.05)
+        }
+
+        .formula-card.locked {
+            opacity: 0.3;
+            filter: blur(2px)
+        }
+
+        .formula-card .f-name {
+            color: #4ade80;
+            margin-bottom: 4px;
+            font-size: 10px
+        }
+
+        .formula-card .f-formula {
+            color: #00f0ff;
+            margin-bottom: 4px;
+            font-size: 11px
+        }
+
+        .formula-card .f-desc {
+            color: rgba(230, 247, 255, 0.5)
+        }
+
+        /* SKIN SHOP */
+        .skin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px
+        }
+
+        .skin-card {
+            background: rgba(0, 240, 255, 0.06);
+            border: 2px solid rgba(0, 240, 255, 0.15);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s
+        }
+
+        .skin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2)
+        }
+
+        .skin-card.active {
+            border-color: #4ade80;
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.2)
+        }
+
+        .skin-card.can-buy {
+            border-color: #fbbf24
+        }
+
+        .skin-card .skin-icon {
+            font-size: 36px;
+            margin-bottom: 6px
+        }
+
+        .skin-card .skin-name {
+            font-size: 8px;
+            color: #00f0ff;
+            margin-bottom: 4px
+        }
+
+        .skin-card .skin-cost {
+            font-size: 8px;
+            color: #FFB347
+        }
+
+        /* LEADERBOARD */
+        #leaderboardScreen {
+            flex-direction: column;
+            padding: 30px;
+            overflow-y: auto
+        }
+
+        .leaderboard-container {
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 240, 255, 0.15);
+            border: 2px solid #00d9ff;
+            padding: 12px;
+            text-align: left;
+            font-size: 10px
+        }
+
+        .leaderboard-table td {
+            border: 1px solid rgba(0, 240, 255, 0.08);
+            padding: 10px 12px;
+            font-size: 10px
+        }
+
+        .leaderboard-row {
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.2s
+        }
+
+        .leaderboard-row:hover {
+            background: rgba(0, 240, 255, 0.08)
+        }
+
+        .leaderboard-row.current {
+            background: rgba(74, 222, 128, 0.15);
+            border-color: #4ade80
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #FFB347
+        }
+
+        .medal {
+            font-size: 16px;
+            margin-right: 6px
+        }
+
+        /* SETTINGS */
+        #settingScreen {
+            flex-direction: column;
+            padding: 30px;
+            overflow-y: auto
+        }
+
+        .setting-container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%
+        }
+
+        .setting-section {
+            background: rgba(0, 240, 255, 0.06);
+            border: 2px solid rgba(0, 240, 255, 0.15);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px
+        }
+
+        .setting-section-title {
+            font-size: 12px;
+            color: #4ade80;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4ade80
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 26px;
+            background: #0a1f2e;
+            border: 2px solid #00d9ff;
+            border-radius: 13px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s
+        }
+
+        .toggle-switch.active {
+            background: #4ade80;
+            border-color: #4ade80
+        }
+
+        .toggle-knob {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.2s
+        }
+
+        .toggle-switch.active .toggle-knob {
+            left: 20px
+        }
+
+        /* SPIN WHEEL MODAL */
+        .spin-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center
+        }
+
+        .spin-overlay.show {
+            display: flex
+        }
+
+        .spin-container {
+            background: linear-gradient(145deg, #12163a, #0f1230);
+            border: 2px solid rgba(0, 240, 255, 0.15);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%
+        }
+
+        .spin-title {
+            font-size: 14px;
+            color: #fbbf24;
+            margin-bottom: 15px
+        }
+
+        .spin-wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #00d9ff;
+            margin: 0 auto 20px;
+            position: relative;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            background: conic-gradient(#f43f5e 0deg 60deg, #fbbf24 60deg 120deg, #4ade80 120deg 180deg, #00d9ff 180deg 240deg, #a78bfa 240deg 300deg, #FFB347 300deg 360deg)
+        }
+
+        .spin-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            z-index: 5
+        }
+
+        .spin-result {
+            font-size: 11px;
+            color: #4ade80;
+            margin: 10px 0;
+            min-height: 20px
+        }
+
+        /* ACHIEVEMENT TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 400;
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.9), rgba(34, 197, 94, 0.9));
+            border: 2px solid #4ade80;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 10px;
+            color: #0a0f1e;
+            display: none;
+            animation: toastIn 0.5s ease
+        }
+
+        .toast.show {
+            display: block
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(-50%) translateY(-50px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1
+            }
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            .mode-container {
+                grid-template-columns: 1fr
+            }
+
+            .level-grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .game-stats {
+                flex-direction: column;
+                gap: 8px
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center
+            }
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .mt-20 {
+            margin-top: 20px
+        }
+
+        .hidden {
+            display: none !important
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PARALLAX BG -->
+    <div class="parallax-bg"><canvas id="starCanvas"></canvas>
+        <div class="floating-equations" id="floatEqs"></div>
+    </div>
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <div class="toast" id="toast"></div>
+    <div class="coin-display"><span class="coin-icon">🪙</span><span id="coinCount">0</span></div>
+
+    <!-- SPIN WHEEL -->
+    <div class="spin-overlay" id="spinOverlay">
+        <div class="spin-container">
+            <div class="spin-title">🎰 LOGIN BONUS!</div>
+            <div style="position:relative">
+                <div class="spin-pointer">▼</div>
+                <div class="spin-wheel" id="spinWheel"></div>
+            </div>
+            <div class="spin-result" id="spinResult"></div>
+            <button class="btn secondary" id="spinBtn" onclick="doSpin()">🎡 PUTAR!</button>
+        </div>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div id="mainMenu" class="screen active">
+        <div class="menu-header">
+            <div class="logo-atom">⚛️</div>
+            <div class="game-title">PHYSICS QUEST</div>
+            <div class="game-subtitle">– PIXEL EDITION v2.0 –</div>
+            <div class="game-version">Belajar Fisika dengan Seru & Nagih!</div>
+        </div>
+        <div class="text-center mt-20">
+            <button class="btn secondary" onclick="selectMode('measurement')"
+                style="min-width:280px;margin-bottom:20px;font-size:14px;padding:16px">🎮 MULAI PETUALANGAN</button>
+        </div>
+        <div id="dailyBanner" class="daily-banner" onclick="startDailyChallenge()"
+            style="max-width:500px;margin:10px auto">
+            <div class="db-icon">🏆</div>
+            <div class="db-text">
+                <div class="db-title">TANTANGAN HARIAN</div>
+                <div class="db-desc" id="dailyDesc">Loading...</div>
+                <div class="db-reward" id="dailyReward"></div>
+            </div>
+        </div>
+        <div style="max-width:900px;margin:0 auto;width:100%">
+            <div style="text-align:center;font-size:11px;color:#00f0ff;margin-bottom:15px">⭐ PILIH MODE PERMAINAN ⭐
+            </div>
+            <div class="mode-container">
+                <div class="mode-card" onclick="selectMode('measurement')">
+                    <div class="mode-icon">📏</div>
+                    <div class="mode-label">PENGUKURAN</div>
+                    <div class="mode-description">Pelajari alat ukur dan ketepatan. Mistar, jangka sorong, mikrometer.
+                    </div>
+                    <div class="mode-progress">
+                        <div style="margin-bottom:6px">Level: <span id="progressMeas">0</span>/6</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="fillMeas"></div>
+                        </div>
+                        <div style="margin-top:6px">⭐ <span id="starMeas">0</span>/18</div>
+                    </div>
+                </div>
+                <div class="mode-card energy" onclick="selectMode('energy')">
+                    <div class="mode-icon">⚙️</div>
+                    <div class="mode-label">USAHA & ENERGI</div>
+                    <div class="mode-description">Pahami usaha, energi kinetik, dan potensial melalui simulasi.</div>
+                    <div class="mode-progress">
+                        <div style="margin-bottom:6px">Level: <span id="progressEnergy">0</span>/6</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="fillEnergy"></div>
+                        </div>
+                        <div style="margin-top:6px">⭐ <span id="starEnergy">0</span>/18</div>
+                    </div>
+                </div>
+                <div class="mode-card sources" onclick="selectMode('sources')">
+                    <div class="mode-icon">⚡</div>
+                    <div class="mode-label">SUMBER ENERGI</div>
+                    <div class="mode-description">Kelola sumber energi untuk pembangkit listrik berkelanjutan.</div>
+                    <div class="mode-progress">
+                        <div style="margin-bottom:6px">Level: <span id="progressSources">0</span>/6</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="fillSources"></div>
+                        </div>
+                        <div style="margin-top:6px">⭐ <span id="starSources">0</span>/18</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-menu">
+            <button class="btn" onclick="goToProfile()">👤 PROFIL</button>
+            <button class="btn" onclick="goToShop()">🎨 SKINS</button>
+            <button class="btn" onclick="goToFormulas()">📖 RUMUS</button>
+            <button class="btn" onclick="goToLeaderboard()">🏆 RANKING</button>
+            <button class="btn" onclick="goToSetting()">⚙️ SETTING</button>
+        </div>
+        <div class="status-bar">
+            <div class="stat-item"><span class="stat-label">Siswa:</span><span class="stat-value"
+                    id="playerName">Nama</span></div>
+            <div class="stat-item"><span class="stat-label">Level:</span><span class="stat-value"
+                    id="playerLevel">1</span></div>
+            <div class="stat-item"><span class="stat-label">XP:</span><span class="stat-value"><span
+                        id="playerXP">0</span>/100</span></div>
+            <div class="stat-item"><span class="stat-label">⭐:</span><span class="stat-value" id="totalStars">0</span>
+            </div>
+            <div class="stat-item"><span class="stat-label">🔥 Combo:</span><span class="stat-value"
+                    id="comboCount">0</span></div>
+        </div>
+    </div>
+
+    <!-- LEVEL SELECT -->
+    <div id="levelSelectScreen" class="screen">
+        <div class="level-select-header"><button class="btn" onclick="goToMainMenu()">← HOME</button>
+            <div class="level-select-title" id="levelModeTitle">MODE</div>
+            <div style="min-width:80px"></div>
+        </div>
+        <div class="level-grid" id="levelGrid"></div>
+        <div class="level-info">
+            <div class="level-info-title" id="levelTitle">Pilih Level</div>
+            <div class="level-info-desc" id="levelDesc">Klik level untuk memilih.</div>
+        </div>
+        <div class="text-center"><button class="btn secondary" id="playLevelBtn" onclick="startGameplay()"
+                style="min-width:250px;display:none;margin-bottom:20px">▶️ MAINKAN LEVEL</button></div>
+    </div>
+
+    <!-- GAMEPLAY -->
+    <div id="gameplayScreen" class="screen">
+        <div class="game-header">
+            <button class="btn" style="min-width:70px;padding:10px 16px;font-size:10px" onclick="goToMainMenu()">←
+                HOME</button>
+            <div class="game-title-bar" id="gameTitle">LEVEL 1</div>
+            <div class="game-stats">
+                <div class="stat">⭐ <span id="gameStars">0</span></div>
+                <div class="stat">🪙 <span id="gameCoins">0</span></div>
+                <div class="stat">⏱️ <span id="gameTimer">03:00</span></div>
+            </div>
+        </div>
+        <div class="game-area">
+            <div class="canvas-container"><canvas id="gameCanvas" width="800" height="500"></canvas></div>
+            <div class="char-bubble" id="charBubble"></div>
+            <div class="combo-display" id="comboDisplay"></div>
+        </div>
+        <div class="controls-area">
+            <div class="question-text" id="questionText">Pertanyaan...</div>
+            <div class="input-group" id="inputGroup"></div>
+            <div class="button-group" id="buttonGroup"></div>
+            <div class="hint-text hidden" id="hintText">💡 Hint</div>
+        </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="resultScreen" class="screen">
+        <div class="result-container">
+            <div class="result-title">🎉 LEVEL SELESAI!</div>
+            <div class="stars-display" id="starsDisplay">⭐⭐⭐</div>
+            <div class="result-stats">
+                <div class="result-stat-item">Skor: <span id="finalScore">100</span>/100</div>
+                <div class="result-stat-item">Waktu: <span id="finalTime">02:15</span></div>
+                <div class="result-stat-item">Koin: +<span id="gainCoins">0</span> 🪙</div>
+                <div class="result-stat-item">XP: +<span id="gainXP">50</span></div>
+                <div class="result-stat-item" id="comboResult" style="color:#fbbf24"></div>
+            </div>
+            <div class="result-buttons">
+                <button class="btn secondary" onclick="retryLevel()">🔄 ULANG</button>
+                <button class="btn" id="nextLevelBtn" onclick="nextLevel()">⏭️ LANJUT</button>
+                <button class="btn tertiary" onclick="goToMainMenu()">🏠 MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="profileScreen" class="screen">
+        <div style="max-width:800px;width:100%;margin:0 auto">
+            <button class="btn" style="margin-bottom:20px" onclick="goToMainMenu()">← HOME</button>
+            <div class="profile-header">
+                <div class="avatar-box" id="profAvatar">👨‍🎓</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profName">Nama</div>
+                    <div class="profile-stat">Level: <span id="profLevel">1</span></div>
+                    <div class="profile-stat">XP: <span id="profXP">0</span>/100</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="profXPBar"></div>
+                    </div>
+                    <div class="profile-stat">Bintang: <span id="profStars">0</span> | Koin: <span
+                            id="profCoins">0</span> 🪙</div>
+                </div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-title">📊 PROGRESS MODE</div>
+                <div class="progress-mode">
+                    <div class="mode-progress-text"><span>📏 PENGUKURAN</span><span><span
+                                id="profMeas">0</span>/6</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="profMeasBar"
+                            style="background:linear-gradient(90deg,#00f0ff,#00a8cc)"></div>
+                    </div>
+                    <div style="font-size:8px;color:rgba(230,247,255,0.5);margin-top:4px">⭐ <span
+                            id="profMeasStars">0</span>/18</div>
+                </div>
+                <div class="progress-mode mode2">
+                    <div class="mode-progress-text"><span>⚙️ USAHA & ENERGI</span><span><span
+                                id="profEnergy">0</span>/6</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="profEnergyBar"
+                            style="background:linear-gradient(90deg,#4ade80,#22c55e)"></div>
+                    </div>
+                    <div style="font-size:8px;color:rgba(230,247,255,0.5);margin-top:4px">⭐ <span
+                            id="profEnergyStars">0</span>/18</div>
+                </div>
+                <div class="progress-mode mode3">
+                    <div class="mode-progress-text"><span>⚡ SUMBER ENERGI</span><span><span
+                                id="profSources">0</span>/6</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="profSourcesBar"
+                            style="background:linear-gradient(90deg,#FFB347,#ff9500)"></div>
+                    </div>
+                    <div style="font-size:8px;color:rgba(230,247,255,0.5);margin-top:4px">⭐ <span
+                            id="profSourcesStars">0</span>/18</div>
+                </div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-title">🏅 ACHIEVEMENTS</div>
+                <div class="achievement-grid" id="achievementGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULA COLLECTION -->
+    <div id="formulaScreen" class="screen">
+        <div style="max-width:800px;width:100%;margin:0 auto;padding:30px">
+            <button class="btn" style="margin-bottom:20px" onclick="goToMainMenu()">← HOME</button>
+            <h2 style="font-size:16px;color:#4ade80;margin-bottom:20px">📖 KOLEKSI RUMUS (<span
+                    id="formulaCount">0</span>/<span id="formulaTotal">0</span>)</h2>
+            <div class="formula-grid" id="formulaGrid"></div>
+        </div>
+    </div>
+
+    <!-- SKIN SHOP -->
+    <div id="shopScreen" class="screen">
+        <div style="max-width:700px;width:100%;margin:0 auto;padding:30px">
+            <button class="btn" style="margin-bottom:20px" onclick="goToMainMenu()">← HOME</button>
+            <h2 style="font-size:16px;color:#fbbf24;margin-bottom:6px">🎨 TOKO SKIN</h2>
+            <p style="font-size:9px;color:rgba(230,247,255,0.4);margin-bottom:20px">Beli skin pakai ⭐ bintang. Skin
+                aktif: <span id="activeSkinName" style="color:#4ade80">Ilmuwan</span></p>
+            <div class="skin-grid" id="skinGrid"></div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="leaderboardScreen" class="screen">
+        <div style="max-width:700px;width:100%;margin:0 auto;padding:30px">
+            <button class="btn" style="margin-bottom:20px" onclick="goToMainMenu()">← HOME</button>
+            <h2 style="text-align:center;margin-bottom:20px;color:#FFB347;font-size:16px">🏆 LEADERBOARD</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Nama</th>
+                        <th>⭐</th>
+                        <th>Lvl</th>
+                    </tr>
+                </thead>
+                <tbody id="lbBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settingScreen" class="screen">
+        <div style="max-width:500px;width:100%;margin:0 auto;padding:30px">
+            <button class="btn" style="margin-bottom:20px" onclick="goToMainMenu()">← HOME</button>
+            <div class="setting-section">
+                <div class="setting-section-title">🔊 SUARA</div>
+                <div class="setting-item"><span>Efek Suara</span>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-section">
+                <div class="setting-section-title">👁️ TAMPILAN</div>
+                <div class="setting-item"><span>Parallax BG</span>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <div class="setting-item"><span>Partikel</span>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-section">
+                <div class="setting-section-title">⚙️ LAINNYA</div>
+                <button class="btn" style="width:100%;margin-bottom:10px"
+                    onclick="if(confirm('Reset semua progress?')){localStorage.removeItem('physicsQuestGame');location.reload()}">🔄
+                    RESET</button>
+                <button class="btn tertiary" style="width:100%" onclick="window.location.href='../dashboard.html'">🚪
+                    KELUAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS PLACEHOLDER -->
+    <script>
+        // ===== GAME STATE =====
+        const game = {
+            playerName: 'Siswa', playerLevel: 1, playerXP: 0, coins: 0, combo: 0, bestCombo: 0,
+            currentMode: null, currentLevel: 1, score: 0, stars: 0, timeLeft: 180, timerInterval: null, attempts: 0, hintsUsed: 0,
+            activeSkin: 'scientist',
+            modes: {
+                measurement: {
+                    levels: 0, stars: 0, name: 'PENGUKURAN',
+                    levelName: ['Panjang Dasar', 'Jangka Sorong', 'Mikrometer', 'Neraca Lengan', 'Campuran Alat', 'Boss: Lab Kacau'],
+                    desc: ['Ukur panjang benda dengan mistar', 'Baca skala ganda jangka sorong', 'Ukur ketebalan dengan mikrometer presisi', 'Timbang benda dengan neraca lengan', 'Pilih alat tepat untuk berbagai benda', 'Selesaikan tantangan pengukuran lab'],
+                    answers: [15, 4, 5, 10, 8, 20]
+                },
+                energy: {
+                    levels: 0, stars: 0, name: 'USAHA & ENERGI',
+                    levelName: ['Usaha Dasar', 'Bidang Miring', 'Energi Kinetik', 'Energi Potensial', 'Roller Coaster', 'Boss: Tantangan Ekstrem'],
+                    desc: ['Hitung usaha W = F × s', 'Hitung usaha bidang miring cos θ', 'Hitung Ek = ½mv²', 'Hitung Ep = mgh', 'Desain roller coaster energi terbatas', 'Tantangan energi paling kompleks'],
+                    answers: [50, 86, 50, 100, 30, 150],
+                    formulas: ['W=F×s=10×5', 'W=F×s×cos30°=10×10×0.866', 'Ek=½×10×10²', 'Ep=10×10×1', 'Tinggi roller coaster', 'Kombinasi rumus']
+                },
+                sources: {
+                    levels: 0, stars: 0, name: 'SUMBER ENERGI',
+                    levelName: ['Panel Surya', 'Kincir Angin', 'Bendungan', 'Panas Bumi', 'Campuran Energi', 'Boss: Kota Futuristik'],
+                    desc: ['Bangun panel surya area cerah', 'Bangun kincir angin area berangin', 'Bangun bendungan', 'Bangun pembangkit panas bumi', 'Kombinasi sumber energi', 'Kota 100% terbarukan'],
+                    answers: [5, 3, 2, 4, 10, 15], requirements: [100, 150, 200, 120, 250, 300]
+                }
+            }
+        };
+
+        // SKINS
+        const SKINS = [
+            { id: 'scientist', name: 'Ilmuwan', icon: '👨‍🔬', cost: 0, owned: true },
+            { id: 'astronaut', name: 'Astronot', icon: '👨‍🚀', cost: 20 },
+            { id: 'engineer', name: 'Insinyur', icon: '👨‍🏭', cost: 30 },
+            { id: 'professor', name: 'Profesor', icon: '👨‍🏫', cost: 50 },
+            { id: 'alien', name: 'Alien', icon: '👽', cost: 100 }
+        ];
+
+        // ACHIEVEMENTS
+        const ACHIEVEMENTS = [
+            { id: 'first_level', name: 'Pemula', icon: '🌟', desc: 'Selesaikan 1 level', check: () => getTotalLevels() >= 1 },
+            { id: 'meas_master', name: 'Pengukur Andal', icon: '📏', desc: 'Selesaikan Mode 1', check: () => game.modes.measurement.levels >= 6 },
+            { id: 'energy_master', name: 'Ahli Energi', icon: '⚙️', desc: 'Selesaikan Mode 2', check: () => game.modes.energy.levels >= 6 },
+            { id: 'source_master', name: 'Penjaga Bumi', icon: '⚡', desc: 'Selesaikan Mode 3', check: () => game.modes.sources.levels >= 6 },
+            { id: 'all_master', name: 'Master Fisika', icon: '🏆', desc: 'Semua mode selesai', check: () => getTotalLevels() >= 18 },
+            { id: 'perfect10', name: 'Perfect 10', icon: '🎯', desc: '10 benar berturut', check: () => game.bestCombo >= 10 },
+            { id: 'speed', name: 'Kilat', icon: '⚡', desc: 'Selesai <30 detik', check: () => (game._lastTime && game._lastTime < 30) },
+            { id: 'no_hint', name: 'Tanpa Hint', icon: '🧠', desc: 'Selesai tanpa hint', check: () => (game._lastHints === 0 && game._lastWin) },
+            { id: 'star20', name: 'Kolektor', icon: '⭐', desc: 'Kumpulkan 20 bintang', check: () => getTotalStars() >= 20 },
+            { id: 'star40', name: 'Bintang Emas', icon: '💫', desc: 'Kumpulkan 40 bintang', check: () => getTotalStars() >= 40 },
+            { id: 'coins100', name: 'Kaya Raya', icon: '🪙', desc: 'Kumpulkan 100 koin', check: () => game.coins >= 100 },
+            { id: 'combo5', name: 'Combo King', icon: '🔥', desc: 'Combo 5x', check: () => game.bestCombo >= 5 }
+        ];
+
+        // FORMULAS
+        const FORMULAS = [
+            { id: 'w_fs', name: 'Usaha', formula: 'W = F × s', desc: 'Usaha = Gaya × Jarak', mode: 'energy', level: 1 },
+            { id: 'w_fscos', name: 'Usaha Miring', formula: 'W = F×s×cos θ', desc: 'Usaha pada bidang miring', mode: 'energy', level: 2 },
+            { id: 'ek', name: 'Energi Kinetik', formula: 'Ek = ½mv²', desc: 'Energi benda bergerak', mode: 'energy', level: 3 },
+            { id: 'ep', name: 'Energi Potensial', formula: 'Ep = mgh', desc: 'Energi ketinggian', mode: 'energy', level: 4 },
+            { id: 'em', name: 'Energi Mekanik', formula: 'Em = Ek + Ep', desc: 'Kekekalan energi', mode: 'energy', level: 5 },
+            { id: 'p_wt', name: 'Daya', formula: 'P = W / t', desc: 'Daya = Usaha / Waktu', mode: 'energy', level: 6 },
+            { id: 'ruler', name: 'Mistar', formula: 'd = skala', desc: 'Ketelitian 0.5mm', mode: 'measurement', level: 1 },
+            { id: 'caliper', name: 'Jangka Sorong', formula: 'd = SU + (n×0.02)', desc: 'Ketelitian 0.02mm', mode: 'measurement', level: 2 },
+            { id: 'micro', name: 'Mikrometer', formula: 'd = SU + (n×0.01)', desc: 'Ketelitian 0.01mm', mode: 'measurement', level: 3 },
+            { id: 'balance', name: 'Neraca', formula: 'm₁g = m₂g', desc: 'Keseimbangan massa', mode: 'measurement', level: 4 },
+            { id: 'solar', name: 'Panel Surya', formula: 'P = η × A × I', desc: 'Daya panel surya', mode: 'sources', level: 1 },
+            { id: 'wind', name: 'Kincir Angin', formula: 'P = ½ρAv³', desc: 'Daya angin', mode: 'sources', level: 2 }
+        ];
+
+        // ===== PERSISTENCE =====
+        function loadGame() { const s = localStorage.getItem('physicsQuestGame'); if (s) { const d = JSON.parse(s); Object.assign(game, d) } }
+        function saveGame() { const d = { playerName: game.playerName, playerLevel: game.playerLevel, playerXP: game.playerXP, coins: game.coins, combo: game.combo, bestCombo: game.bestCombo, activeSkin: game.activeSkin, modes: game.modes, achievements: game._achievements || [], ownedSkins: game._ownedSkins || ['scientist'], unlockedFormulas: game._unlockedFormulas || [], lastLoginDate: game._lastLoginDate, lastDailyDate: game._lastDailyDate }; localStorage.setItem('physicsQuestGame', JSON.stringify(d)) }
+        function getTotalStars() { return game.modes.measurement.stars + game.modes.energy.stars + game.modes.sources.stars }
+        function getTotalLevels() { return game.modes.measurement.levels + game.modes.energy.levels + game.modes.sources.levels }
+
+        // Load username from session
+        try { game.playerName = sessionStorage.getItem('userName') || localStorage.getItem('userName') || 'Siswa' } catch (e) { }
+        loadGame();
+        if (!game._achievements) game._achievements = [];
+        if (!game._ownedSkins) game._ownedSkins = ['scientist'];
+        if (!game._unlockedFormulas) game._unlockedFormulas = [];
+
+        // ===== PARALLAX STARFIELD =====
+        (function () {
+            const c = document.getElementById('starCanvas'), ctx = c.getContext('2d');
+            let stars = [];
+            function resize() { c.width = window.innerWidth; c.height = window.innerHeight; stars = []; for (let i = 0; i < 150; i++)stars.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: Math.random() * 1.5 + 0.3, speed: Math.random() * 0.3 + 0.05, alpha: Math.random() * 0.8 + 0.2 }) }
+            resize(); window.addEventListener('resize', resize);
+            function draw() { ctx.clearRect(0, 0, c.width, c.height); stars.forEach(s => { s.y -= s.speed; if (s.y < 0) { s.y = c.height; s.x = Math.random() * c.width } ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(200,220,255,${s.alpha * (0.5 + 0.5 * Math.sin(Date.now() * 0.002 + s.x))})`; ctx.fill() }); requestAnimationFrame(draw) }
+            draw();
+            // Floating equations
+            const eqs = ['E=mc²', 'F=ma', 'W=Fs', 'Ek=½mv²', 'Ep=mgh', 'P=W/t', 'v=s/t', 'a=Δv/Δt'];
+            const container = document.getElementById('floatEqs');
+            eqs.forEach((eq, i) => { const el = document.createElement('div'); el.className = 'float-eq'; el.textContent = eq; el.style.left = Math.random() * 90 + '%'; el.style.animationDuration = (15 + Math.random() * 20) + 's'; el.style.animationDelay = (-Math.random() * 20) + 's'; el.style.fontSize = (8 + Math.random() * 6) + 'px'; container.appendChild(el) });
+        })();
+
+        // ===== PARTICLE SYSTEM =====
+        const particles = [];
+        const pCanvas = document.getElementById('particleCanvas');
+        const pCtx = pCanvas.getContext('2d');
+        function resizeP() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight }
+        resizeP(); window.addEventListener('resize', resizeP);
+        function spawnParticles(x, y, count, color, type) { for (let i = 0; i < count; i++)particles.push({ x, y, vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8 - 3, life: 1, decay: 0.015 + Math.random() * 0.01, size: Math.random() * 4 + 2, color, type: type || 'circle' }) }
+        function updateParticles() { pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height); for (let i = particles.length - 1; i >= 0; i--) { const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= p.decay; if (p.life <= 0) { particles.splice(i, 1); continue } pCtx.globalAlpha = p.life; pCtx.fillStyle = p.color; if (p.type === 'star') { pCtx.font = p.size * 3 + 'px serif'; pCtx.fillText('⭐', p.x, p.y) } else { pCtx.beginPath(); pCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2); pCtx.fill() } } pCtx.globalAlpha = 1; requestAnimationFrame(updateParticles) }
+        updateParticles();
+
+        function flashScreen(color) { const el = document.getElementById('flashOverlay'); el.className = 'flash-overlay ' + color; setTimeout(() => el.className = 'flash-overlay', 300) }
+
+        // ===== TOAST =====
+        function showToast(msg, dur) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show'; setTimeout(() => t.className = 'toast', dur || 2500) }
+
+        // ===== SCREEN NAV =====
+        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active') }
+        function goToMainMenu() { stopTimer(); showScreen('mainMenu'); updateMainMenuDisplay(); checkDailyLogin(); updateDailyBanner() }
+        function goToProfile() { updateProfileDisplay(); showScreen('profileScreen') }
+        function goToLeaderboard() { renderLeaderboard(); showScreen('leaderboardScreen') }
+        function goToSetting() { showScreen('settingScreen') }
+        function goToShop() { renderSkinShop(); showScreen('shopScreen') }
+        function goToFormulas() { renderFormulas(); showScreen('formulaScreen') }
+
+        // ===== MODE & LEVEL =====
+        function selectMode(mode) { game.currentMode = mode; game.currentLevel = 1; showLevelSelect() }
+        function showLevelSelect() { const m = game.currentMode, d = game.modes[m]; document.getElementById('levelModeTitle').textContent = d.name; const g = document.getElementById('levelGrid'); g.innerHTML = ''; for (let i = 1; i <= 6; i++) { const b = document.createElement('div'); b.className = 'level-box'; const lp = d.levels; b.innerHTML = `<div class="level-number">${i}</div><div class="level-stars">${i <= lp ? '⭐' : '☆'}</div>`; if (i > lp + 1) { b.classList.add('locked'); b.onclick = () => showToast('🔒 Selesaikan level sebelumnya!') } else b.onclick = () => selectLevel(i); g.appendChild(b) } selectLevel(1); showScreen('levelSelectScreen') }
+        function selectLevel(lv) { game.currentLevel = lv; document.querySelectorAll('.level-box').forEach((b, i) => { b.classList.toggle('selected', i + 1 === lv) }); const d = game.modes[game.currentMode]; document.getElementById('levelTitle').textContent = `Level ${lv} - ${d.levelName[lv - 1]}`; document.getElementById('levelDesc').textContent = d.desc[lv - 1]; document.getElementById('playLevelBtn').style.display = 'block' }
+
+        // ===== GAMEPLAY =====
+        function startGameplay() { game.score = 0; game.stars = 0; game.timeLeft = 180; game.attempts = 0; game.hintsUsed = 0; const d = game.modes[game.currentMode]; document.getElementById('gameTitle').textContent = `${d.name} - LEVEL ${game.currentLevel}`; setupGameplayCanvas(); setupControls(); showScreen('gameplayScreen'); startTimer(); showCharBubble(getCharGreeting()) }
+
+        function getCharGreeting() { const greetings = ['Ayo kita mulai! 💪', 'Kamu pasti bisa! 🌟', 'Fokus dan teliti ya! 🎯', 'Level ini seru! 🎮', 'Jangan lupa rumusnya! 📝']; return greetings[Math.floor(Math.random() * greetings.length)] }
+
+        function showCharBubble(msg) { const b = document.getElementById('charBubble'); b.textContent = getSkinIcon() + ' ' + msg; b.className = 'char-bubble show'; setTimeout(() => b.className = 'char-bubble', 3000) }
+
+        function getSkinIcon() { const s = SKINS.find(s => s.id === game.activeSkin); return s ? s.icon : '👨‍🔬' }
+
+        function setupGameplayCanvas() {
+            const canvas = document.getElementById('gameCanvas'), ctx = canvas.getContext('2d'), mode = game.currentMode, lv = game.currentLevel; ctx.fillStyle = '#061427'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Draw character
+            ctx.font = '40px serif'; ctx.fillText(getSkinIcon(), 20, canvas.height - 20);
+            if (mode === 'measurement') drawMeasurement(ctx, lv); else if (mode === 'energy') drawEnergy(ctx, lv); else drawSources(ctx, lv)
+        }
+
+        function drawMeasurement(ctx, lv) {
+            const data = [{ obj: 'Pensil', w: 15, u: 'cm' }, { obj: 'Jangka Sorong', w: 4, u: 'div' }, { obj: 'Kawat', w: 5, u: 'mm' }, { obj: 'Koin', w: 10, u: 'g' }, { obj: 'Campuran', w: 8, u: 'cm' }, { obj: 'BOSS: Kristal', w: 20, u: 'mm' }];
+            const d = data[lv - 1];
+            // ruler
+            ctx.strokeStyle = '#00d9ff'; ctx.lineWidth = 2; ctx.strokeRect(80, 80, 640, 35);
+            ctx.fillStyle = '#00d9ff'; ctx.font = '10px monospace'; ctx.textAlign = 'center';
+            for (let i = 0; i <= 30; i++) { const x = 80 + (i * 640 / 30); ctx.fillRect(x, 80, 1, i % 5 === 0 ? 35 : 20); if (i % 5 === 0) ctx.fillText(i, x, 130) }
+            // object
+            const w = Math.min((d.w / 30) * 640, 400);
+            ctx.fillStyle = 'rgba(255,179,71,0.8)'; ctx.fillRect(120, 170, w, 30);
+            ctx.strokeStyle = '#FFB347'; ctx.strokeRect(120, 170, w, 30);
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px "Press Start 2P"'; ctx.textAlign = 'center'; ctx.fillText(d.obj, 120 + w / 2, 190);
+            ctx.fillStyle = '#4ade80'; ctx.font = '11px monospace'; ctx.textAlign = 'left'; ctx.fillText('📍 Ukur dari 0 ke ujung benda', 100, 250);
+            ctx.fillStyle = 'rgba(0,240,255,0.3)'; ctx.font = '9px monospace'; ctx.fillText(`Jawaban dalam ${d.u}`, 100, 270)
+        }
+
+        function drawEnergy(ctx, lv) {
+            const data = [{ t: 'Dorong Kotak', f: 'W=F×s=10×5=50J', force: 10, dist: 5 }, { t: 'Bidang Miring 30°', f: 'W=F×s×cos30°≈86J', force: 10, dist: 10 }, { t: 'Energi Kinetik', f: 'Ek=½×10×10²=500→50', force: 10 }, { t: 'Energi Potensial', f: 'Ep=10×10×1=100J', force: 10 }, { t: 'Roller Coaster', f: 'Hitung energi awal vs akhir', force: 5 }, { t: 'BOSS: Hybrid', f: 'Gabungkan rumus', force: 15 }];
+            const d = data[lv - 1];
+            ctx.fillStyle = '#4ade80'; ctx.font = 'bold 14px "Press Start 2P"'; ctx.fillText(d.t, 60, 50);
+            ctx.fillStyle = '#00f0ff'; ctx.font = '11px monospace'; ctx.fillText(d.f, 60, 75);
+            if (lv <= 2) { ctx.fillStyle = '#FFB347'; ctx.fillRect(120, 180, 70, 70); ctx.fillStyle = '#fff'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.fillText('KOTAK', 155, 220); ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(200, 215); ctx.lineTo(380, 215); ctx.stroke(); ctx.fillStyle = '#4ade80'; ctx.font = '10px monospace'; ctx.fillText(d.dist + 'm', 290, 235); ctx.beginPath(); ctx.moveTo(380, 215); ctx.lineTo(370, 210); ctx.moveTo(380, 215); ctx.lineTo(370, 220); ctx.stroke() }
+            else if (lv === 3) { ctx.fillStyle = '#FFB347'; ctx.beginPath(); ctx.arc(160, 210, 35, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = '9px monospace'; ctx.fillText('v=10m/s', 160, 213); ctx.strokeStyle = '#4ade80'; ctx.beginPath(); ctx.moveTo(200, 210); ctx.lineTo(350, 210); ctx.stroke() }
+            else { ctx.fillStyle = '#00d9ff'; ctx.font = '12px monospace'; ctx.textAlign = 'left'; ctx.fillText('Gaya: ' + d.force + 'N', 60, 130) }
+            ctx.textAlign = 'left'
+        }
+
+        function drawSources(ctx, lv) {
+            const data = [{ n: 'Panel Surya', ic: '☀️', need: 100, per: 20 }, { n: 'Kincir Angin', ic: '💨', need: 150, per: 50 }, { n: 'Bendungan', ic: '💧', need: 200, per: 100 }, { n: 'Panas Bumi', ic: '🌋', need: 120, per: 30 }, { n: 'Campuran', ic: '⚡', need: 250, per: 25 }, { n: 'Kota Future', ic: '🏙️', need: 300, per: 20 }];
+            const d = data[lv - 1];
+            ctx.fillStyle = '#FFB347'; ctx.font = 'bold 14px "Press Start 2P"'; ctx.fillText(d.ic + ' ' + d.n, 60, 50);
+            ctx.fillStyle = '#4ade80'; ctx.font = '11px monospace'; ctx.fillText('Target: ' + d.need + ' MW | Per unit: ' + d.per + ' MW', 60, 80);
+            ctx.strokeStyle = 'rgba(0,217,255,0.3)';
+            for (let i = 0; i < 5; i++)for (let j = 0; j < 3; j++) { const x = 100 + i * 120, y = 110 + j * 90; ctx.strokeRect(x, y, 90, 70); ctx.font = '28px serif'; ctx.textAlign = 'center'; ctx.fillText(d.ic, x + 45, y + 50) }
+            ctx.textAlign = 'left'; ctx.fillStyle = '#b0d4e8'; ctx.font = '10px monospace'; ctx.fillText('💡 Hitung: ' + d.need + ' ÷ ' + d.per + ' = ?', 60, 400)
+        }
+
+        function setupControls() {
+            const ig = document.getElementById('inputGroup'), bg = document.getElementById('buttonGroup'), qt = document.getElementById('questionText'), ht = document.getElementById('hintText');
+            ig.innerHTML = ''; bg.innerHTML = ''; ht.classList.add('hidden');
+            const d = game.modes[game.currentMode], lv = game.currentLevel;
+            const modeLabels = { measurement: '📏', energy: '⚙️', sources: '⚡' };
+            qt.textContent = `${modeLabels[game.currentMode]} Level ${lv}: ${d.desc[lv - 1]}`;
+            const inp = document.createElement('input'); inp.type = 'number'; inp.id = 'answerInput';
+            inp.placeholder = game.currentMode === 'measurement' ? 'Jawaban' : 'Jawaban (angka)'; inp.step = 'any'; ig.appendChild(inp);
+            inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer() });
+            const ckBtn = document.createElement('button'); ckBtn.className = 'btn secondary'; ckBtn.textContent = '✓ CEK'; ckBtn.onclick = checkAnswer;
+            const hiBtn = document.createElement('button'); hiBtn.className = 'btn'; hiBtn.textContent = '💡 HINT (' + (2 - game.hintsUsed) + 'x)'; hiBtn.onclick = showHint; hiBtn.disabled = game.hintsUsed >= 2;
+            const rsBtn = document.createElement('button'); rsBtn.className = 'btn tertiary'; rsBtn.textContent = '🔄 RESET'; rsBtn.onclick = startGameplay;
+            bg.appendChild(ckBtn); bg.appendChild(hiBtn); bg.appendChild(rsBtn)
+        }
+
+        function checkAnswer() {
+            const inp = document.getElementById('answerInput'); if (!inp || !inp.value) { showToast('❌ Masukkan jawaban!'); return }
+            game.attempts++; const answer = parseFloat(inp.value); const correct = game.modes[game.currentMode].answers[game.currentLevel - 1];
+            const tol = game.currentMode === 'sources' ? 1 : correct * 0.12;
+            if (Math.abs(answer - correct) <= tol) {
+                // CORRECT!
+                game.combo++; if (game.combo > game.bestCombo) game.bestCombo = game.combo;
+                if (game.attempts === 1) { game.score = 100; game.stars = 3 } else if (game.attempts === 2) { game.score = 75; game.stars = 2 } else { game.score = 50; game.stars = 1 }
+                const mode = game.modes[game.currentMode]; const lp = mode.levels;
+                if (game.currentLevel > lp) mode.levels = game.currentLevel;
+                mode.stars += game.stars;
+                const coinGain = game.stars * 5 + (game.combo > 1 ? game.combo * 2 : 0); game.coins += coinGain;
+                const xpGain = game.stars * 10 + 10 + (game.combo > 1 ? game.combo * 5 : 0); game.playerXP += xpGain;
+                while (game.playerXP >= 100) { game.playerLevel++; game.playerXP -= 100 }
+                game._lastTime = 180 - game.timeLeft; game._lastHints = game.hintsUsed; game._lastWin = true;
+                // Unlock formula
+                unlockFormula(game.currentMode, game.currentLevel);
+                saveGame(); stopTimer();
+                // Effects
+                flashScreen('green');
+                const rect = document.getElementById('gameCanvas').getBoundingClientRect();
+                spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 25, '#fbbf24', 'star');
+                spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 15, '#4ade80', 'circle');
+                showCharBubble('🎉 BENAR! Hebat sekali!');
+                // Combo display
+                if (game.combo > 1) { const cd = document.getElementById('comboDisplay'); cd.textContent = '🔥 COMBO x' + game.combo; cd.className = 'combo-display show' }
+                // Show XP popup
+                const xpPop = document.createElement('div'); xpPop.className = 'xp-gain-popup'; xpPop.textContent = '+' + xpGain + ' XP'; document.body.appendChild(xpPop); setTimeout(() => xpPop.remove(), 1500);
+                // Check achievements
+                checkAchievements();
+                setTimeout(() => showResultScreen(coinGain, xpGain), 800);
+            } else {
+                // WRONG
+                game.combo = 0; game.attempts++; flashScreen('red');
+                spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 8, '#ef4444', 'circle');
+                showCharBubble('😢 Salah... Coba lagi!');
+                document.getElementById('comboDisplay').className = 'combo-display';
+                inp.value = ''; inp.focus(); showToast('❌ Jawaban salah!')
+            }
+        }
+
+        function showHint() {
+            game.hintsUsed++;
+            const hints = { measurement: ['Selaraskan dari 0. Jawaban: 15cm', 'Lihat garis terkecil. Jawaban: 4', 'Mikrometer rapat. Jawaban: 5mm', 'Geser pemberat. Jawaban: 10', 'Pilih alat sesuai. Jawaban: 8', 'Kristal presisi. Jawaban: 20mm'], energy: ['W=F×s=10×5=50J', 'W=F×s×cos30°≈86J', 'Ek=½×10×100=500→50', 'Ep=10×10×1=100J', 'Ketinggian roller. Jawaban: 30', 'Gabungkan rumus. Jawaban: 150'], sources: ['100÷20=5 panel', '150÷50=3 unit', '200÷100=2 unit', '120÷30=4 unit', '250÷25=10 unit', '300÷20=15 unit'] };
+            const h = document.getElementById('hintText'); h.textContent = '💡 ' + hints[game.currentMode][game.currentLevel - 1]; h.classList.remove('hidden'); showCharBubble('🤔 Ini hint-nya...')
+        }
+
+        function showResultScreen(coinGain, xpGain) {
+            const t = 180 - game.timeLeft, m = Math.floor(t / 60), s = t % 60;
+            document.getElementById('starsDisplay').textContent = '⭐'.repeat(game.stars) + '☆'.repeat(3 - game.stars);
+            document.getElementById('finalScore').textContent = game.score;
+            document.getElementById('finalTime').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            document.getElementById('gainCoins').textContent = coinGain || 0;
+            document.getElementById('gainXP').textContent = xpGain || 0;
+            const cr = document.getElementById('comboResult'); cr.textContent = game.combo > 1 ? '🔥 Combo x' + game.combo + '!' : '';
+            document.getElementById('nextLevelBtn').textContent = game.currentLevel >= 6 ? '✅ SELESAI' : '⏭️ LANJUT';
+            showScreen('resultScreen'); updateCoinDisplay()
+        }
+        function retryLevel() { startGameplay() }
+        function nextLevel() { if (game.currentLevel < 6) { game.currentLevel++; startGameplay() } else goToMainMenu() }
+
+        // ===== TIMER =====
+        function startTimer() { game.timerInterval = setInterval(() => { game.timeLeft--; const m = Math.floor(game.timeLeft / 60), s = game.timeLeft % 60; document.getElementById('gameTimer').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0'); if (game.timeLeft <= 30) document.getElementById('gameTimer').style.color = '#ef4444'; if (game.timeLeft <= 0) { stopTimer(); showToast('⏰ Waktu habis!'); game.combo = 0; goToMainMenu() } }, 1000); document.getElementById('gameTimer').style.color = '' }
+        function stopTimer() { if (game.timerInterval) clearInterval(game.timerInterval) }
+
+        // ===== COIN DISPLAY =====
+        function updateCoinDisplay() { const el = document.getElementById('coinCount'); el.textContent = game.coins; el.parentElement.classList.add('coin-bounce'); setTimeout(() => el.parentElement.classList.remove('coin-bounce'), 500) }
+
+        // ===== ACHIEVEMENTS =====
+        function checkAchievements() { ACHIEVEMENTS.forEach(a => { if (!game._achievements.includes(a.id) && a.check()) { game._achievements.push(a.id); showToast('🏅 Achievement: ' + a.name + '!', 3000); saveGame() } }) }
+        function renderAchievements() { const g = document.getElementById('achievementGrid'); g.innerHTML = ''; ACHIEVEMENTS.forEach(a => { const u = game._achievements.includes(a.id); g.innerHTML += `<div class="achievement ${u ? 'unlocked' : 'locked'}"><div style="font-size:28px;margin-bottom:4px">${a.icon}</div><div>${a.name}</div><div style="font-size:8px;margin-top:3px;color:${u ? '#4ade80' : 'rgba(230,247,255,0.4)'}">${u ? '✓ Unlocked' : a.desc}</div></div>` }) }
+
+        // ===== FORMULA COLLECTION =====
+        function unlockFormula(mode, level) { FORMULAS.forEach(f => { if (f.mode === mode && f.level <= level && !game._unlockedFormulas.includes(f.id)) { game._unlockedFormulas.push(f.id); showToast('📖 Rumus baru: ' + f.name) } }) }
+        function renderFormulas() { const g = document.getElementById('formulaGrid'); g.innerHTML = ''; document.getElementById('formulaCount').textContent = game._unlockedFormulas.length; document.getElementById('formulaTotal').textContent = FORMULAS.length; FORMULAS.forEach(f => { const u = game._unlockedFormulas.includes(f.id); g.innerHTML += `<div class="formula-card ${u ? 'unlocked' : 'locked'}"><div class="f-name">${u ? f.name : '???'}</div><div class="f-formula">${u ? f.formula : '? = ?'}</div><div class="f-desc">${u ? f.desc : 'Selesaikan level untuk membuka'}</div></div>` }) }
+
+        // ===== SKIN SHOP =====
+        function renderSkinShop() { const g = document.getElementById('skinGrid'); g.innerHTML = ''; const ts = getTotalStars(); document.getElementById('activeSkinName').textContent = SKINS.find(s => s.id === game.activeSkin).name; SKINS.forEach(s => { const owned = game._ownedSkins.includes(s.id); const active = game.activeSkin === s.id; const canBuy = !owned && ts >= s.cost; g.innerHTML += `<div class="skin-card ${active ? 'active' : canBuy ? 'can-buy' : ''}" onclick="handleSkin('${s.id}')"><div class="skin-icon">${s.icon}</div><div class="skin-name">${s.name}</div><div class="skin-cost">${owned ? (active ? '✅ Aktif' : 'Dimiliki') : '⭐ ' + s.cost}</div></div>` }) }
+        function handleSkin(id) { const s = SKINS.find(x => x.id === id); if (!s) return; if (game._ownedSkins.includes(id)) { game.activeSkin = id; saveGame(); renderSkinShop(); showToast('🎨 Skin ' + s.name + ' aktif!') } else if (getTotalStars() >= s.cost) { game._ownedSkins.push(id); game.activeSkin = id; saveGame(); renderSkinShop(); showToast('🎉 Skin ' + s.name + ' dibeli!') } else showToast('❌ Butuh ' + s.cost + ' ⭐ (punya: ' + getTotalStars() + ')') }
+
+        // ===== LEADERBOARD =====
+        function renderLeaderboard() {
+            const fakes = [{ n: 'Andi W.', s: 45, l: 8 }, { n: 'Budi H.', s: 42, l: 7 }, { n: 'Siti C.', s: 40, l: 7 }, { n: 'Rina M.', s: 38, l: 6 }, { n: 'Yoga K.', s: 35, l: 6 }, { n: 'Dewi P.', s: 32, l: 5 }, { n: 'Haris J.', s: 28, l: 5 }, { n: 'Lina S.', s: 25, l: 4 }, { n: 'Raka F.', s: 20, l: 3 }];
+            const me = { n: game.playerName + ' (Kamu)', s: getTotalStars(), l: game.playerLevel, isMe: true };
+            const all = [...fakes, me].sort((a, b) => b.s - a.s);
+            const medals = ['🥇', '🥈', '🥉'];
+            document.getElementById('lbBody').innerHTML = all.map((p, i) => `<tr class="leaderboard-row ${p.isMe ? 'current' : ''}"><td><span class="rank">${i + 1} ${i < 3 ? '<span class="medal">' + medals[i] + '</span>' : ''}</span></td><td>${p.isMe ? '<strong>' + p.n + '</strong>' : p.n}</td><td>${p.s}</td><td>${p.l}</td></tr>`).join('')
+        }
+
+        // ===== DAILY CHALLENGE =====
+        function getDailyChallenge() { const d = new Date(), seed = d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate(); const challenges = [{ desc: 'Selesaikan 1 level Pengukuran tanpa hint', reward: '50 🪙 + 20 XP', mode: 'measurement' }, { desc: 'Selesaikan 1 level Usaha & Energi <60 detik', reward: '80 🪙 + 30 XP', mode: 'energy' }, { desc: 'Jawab benar tanpa salah di level Sumber Energi', reward: '60 🪙 + 25 XP', mode: 'sources' }, { desc: 'Raih combo 3x berturut-turut', reward: '100 🪙', mode: null }, { desc: 'Selesaikan 2 level mana saja', reward: '70 🪙 + 40 XP', mode: null }]; return challenges[seed % challenges.length] }
+        function updateDailyBanner() { const c = getDailyChallenge(); const today = new Date().toDateString(); const done = game._lastDailyDate === today; document.getElementById('dailyDesc').textContent = done ? '✅ Sudah selesai hari ini!' : c.desc; document.getElementById('dailyReward').textContent = done ? '' : '🎁 Hadiah: ' + c.reward; if (done) document.getElementById('dailyBanner').style.opacity = '0.5' }
+        function startDailyChallenge() { const today = new Date().toDateString(); if (game._lastDailyDate === today) { showToast('✅ Tantangan hari ini sudah selesai!'); return } const c = getDailyChallenge(); if (c.mode) { selectMode(c.mode) } else { showToast('🏆 Mainkan level mana saja!') } }
+
+        // ===== SPIN WHEEL / LOGIN BONUS =====
+        function checkDailyLogin() { const today = new Date().toDateString(); if (game._lastLoginDate !== today) { game._lastLoginDate = today; saveGame(); setTimeout(() => { document.getElementById('spinOverlay').classList.add('show') }, 500) } }
+        function doSpin() {
+            const btn = document.getElementById('spinBtn'); btn.disabled = true; const angle = 1440 + Math.random() * 720; const wheel = document.getElementById('spinWheel'); wheel.style.transform = 'rotate(' + angle + 'deg)';
+            const rewards = [{ t: '10 🪙', fn: () => { game.coins += 10 } }, { t: '20 🪙', fn: () => { game.coins += 20 } }, { t: '30 🪙', fn: () => { game.coins += 30 } }, { t: '1 Hint Gratis', fn: () => { } }, { t: '50 XP', fn: () => { game.playerXP += 50; while (game.playerXP >= 100) { game.playerLevel++; game.playerXP -= 100 } } }, { t: 'JACKPOT 100 🪙!', fn: () => { game.coins += 100 } }];
+            const reward = rewards[Math.floor(Math.random() * rewards.length)];
+            setTimeout(() => { document.getElementById('spinResult').textContent = '🎉 ' + reward.t; reward.fn(); saveGame(); updateCoinDisplay(); setTimeout(() => { document.getElementById('spinOverlay').classList.remove('show'); btn.disabled = false; document.getElementById('spinResult').textContent = '' }, 2000) }, 3500)
+        }
+
+        // ===== DISPLAY UPDATES =====
+        function updateMainMenuDisplay() {
+            document.getElementById('playerName').textContent = game.playerName; document.getElementById('playerLevel').textContent = game.playerLevel; document.getElementById('playerXP').textContent = game.playerXP; document.getElementById('totalStars').textContent = getTotalStars(); document.getElementById('comboCount').textContent = game.bestCombo; updateCoinDisplay();
+            document.getElementById('progressMeas').textContent = game.modes.measurement.levels; document.getElementById('starMeas').textContent = game.modes.measurement.stars; document.getElementById('fillMeas').style.width = (game.modes.measurement.levels / 6 * 100) + '%';
+            document.getElementById('progressEnergy').textContent = game.modes.energy.levels; document.getElementById('starEnergy').textContent = game.modes.energy.stars; document.getElementById('fillEnergy').style.width = (game.modes.energy.levels / 6 * 100) + '%';
+            document.getElementById('progressSources').textContent = game.modes.sources.levels; document.getElementById('starSources').textContent = game.modes.sources.stars; document.getElementById('fillSources').style.width = (game.modes.sources.levels / 6 * 100) + '%'
+        }
+
+        function updateProfileDisplay() {
+            document.getElementById('profAvatar').textContent = getSkinIcon(); document.getElementById('profName').textContent = game.playerName; document.getElementById('profLevel').textContent = game.playerLevel; document.getElementById('profXP').textContent = game.playerXP; document.getElementById('profXPBar').style.width = game.playerXP + '%'; document.getElementById('profStars').textContent = getTotalStars(); document.getElementById('profCoins').textContent = game.coins;
+            document.getElementById('profMeas').textContent = game.modes.measurement.levels; document.getElementById('profMeasStars').textContent = game.modes.measurement.stars; document.getElementById('profMeasBar').style.width = (game.modes.measurement.levels / 6 * 100) + '%';
+            document.getElementById('profEnergy').textContent = game.modes.energy.levels; document.getElementById('profEnergyStars').textContent = game.modes.energy.stars; document.getElementById('profEnergyBar').style.width = (game.modes.energy.levels / 6 * 100) + '%';
+            document.getElementById('profSources').textContent = game.modes.sources.levels; document.getElementById('profSourcesStars').textContent = game.modes.sources.stars; document.getElementById('profSourcesBar').style.width = (game.modes.sources.levels / 6 * 100) + '%';
+            renderAchievements()
+        }
+        function toggleSetting(el) { el.classList.toggle('active') }
+
+        // INIT
+        updateMainMenuDisplay(); checkDailyLogin(); updateDailyBanner();
+    </script>
+</body>
+
+</html>

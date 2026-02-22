@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0e27">
+    <meta name="description" content="Login - Tanya Fisika">
+    <link rel="manifest" href="manifest.json">
+    <title>Login - Tanya Fisika</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body.login-page {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e27;
+            color: #e8eaf6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* — Starfield — */
+        .cosmos-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cosmos-bg canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .formula-float {
+            position: fixed;
+            z-index: 1;
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 500;
+            opacity: 0;
+            animation: floatFormula 22s ease-in-out infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .formula-float.f1 {
+            top: 8%;
+            left: 6%;
+            font-size: 0.95rem;
+            color: rgba(129, 140, 248, 0.12);
+            animation-delay: 0s;
+        }
+
+        .formula-float.f2 {
+            top: 82%;
+            left: 4%;
+            font-size: 0.85rem;
+            color: rgba(52, 211, 153, 0.1);
+            animation-delay: 6s;
+        }
+
+        .formula-float.f3 {
+            top: 12%;
+            right: 5%;
+            font-size: 0.9rem;
+            color: rgba(251, 191, 36, 0.1);
+            animation-delay: 12s;
+        }
+
+        .formula-float.f4 {
+            top: 78%;
+            right: 7%;
+            font-size: 0.8rem;
+            color: rgba(244, 114, 182, 0.1);
+            animation-delay: 18s;
+        }
+
+        @keyframes floatFormula {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+
+            15%,
+            85% {
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+
+        .orbital-ring {
+            position: fixed;
+            border: 1px solid rgba(99, 102, 241, 0.06);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            animation: orbitSpin 40s linear infinite;
+        }
+
+        .orbital-ring.r1 {
+            width: 420px;
+            height: 420px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .orbital-ring.r2 {
+            width: 280px;
+            height: 280px;
+            bottom: -50px;
+            right: -70px;
+            animation-duration: 30s;
+            animation-direction: reverse;
+            border-color: rgba(52, 211, 153, 0.05);
+        }
+
+        .orbital-ring::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: rgba(129, 140, 248, 0.35);
+            border-radius: 50%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(129, 140, 248, 0.3);
+        }
+
+        .orbital-ring.r2::after {
+            background: rgba(52, 211, 153, 0.35);
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+        }
+
+        @keyframes orbitSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== TWO-PANEL LAYOUT ===== */
+        .login-layout {
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 860px;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(15, 20, 50, 0.55);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 60px rgba(99, 102, 241, 0.04);
+        }
+
+        /* — Left: Branding — */
+        .brand-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 28px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(20, 25, 55, 0.3) 100%);
+            border-right: 1px solid rgba(99, 102, 241, 0.07);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .brand-atom {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .brand-atom .core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #818cf8, #6366f1);
+            border-radius: 50%;
+            box-shadow: 0 0 22px rgba(99, 102, 241, 0.5);
+            animation: bPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes bPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 22px rgba(99, 102, 241, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 32px rgba(99, 102, 241, 0.7);
+            }
+        }
+
+        .brand-atom .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1.2px solid rgba(129, 140, 248, 0.25);
+            border-radius: 50%;
+            animation: bOrbit 4s linear infinite;
+        }
+
+        .brand-atom .orbit:nth-child(2) {
+            width: 42px;
+            height: 42px;
+            margin: -21px 0 0 -21px;
+        }
+
+        .brand-atom .orbit:nth-child(3) {
+            width: 58px;
+            height: 58px;
+            margin: -29px 0 0 -29px;
+            animation-duration: 6s;
+            animation-direction: reverse;
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .brand-atom .orbit:nth-child(4) {
+            width: 72px;
+            height: 72px;
+            margin: -36px 0 0 -36px;
+            animation-duration: 8s;
+            border-color: rgba(251, 191, 36, 0.15);
+        }
+
+        .brand-atom .orbit::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .brand-atom .orbit:nth-child(2)::after {
+            background: #818cf8;
+            box-shadow: 0 0 5px #818cf8;
+        }
+
+        .brand-atom .orbit:nth-child(3)::after {
+            background: #34d399;
+            box-shadow: 0 0 5px #34d399;
+        }
+
+        .brand-atom .orbit:nth-child(4)::after {
+            background: #fbbf24;
+            box-shadow: 0 0 5px #fbbf24;
+        }
+
+        @keyframes bOrbit {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .brand-title {
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .brand-title .t1 {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #818cf8;
+        }
+
+        .brand-title .t2 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-tagline {
+            font-size: 0.85rem;
+            color: rgba(196, 204, 230, 0.55);
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 260px;
+        }
+
+        .brand-features {
+            list-style: none;
+            padding: 0;
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .brand-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: rgba(196, 204, 230, 0.5);
+        }
+
+        .brand-features li i {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 7px;
+            font-size: 0.65rem;
+            color: #818cf8;
+        }
+
+        .brand-features li:nth-child(2) i {
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.08);
+        }
+
+        .brand-features li:nth-child(3) i {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.08);
+        }
+
+        /* — Right: Auth — */
+        .auth-panel {
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        /* — Auth header — */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .auth-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #e0e7ff;
+            margin-bottom: 4px;
+        }
+
+        .auth-header p {
+            font-size: 0.82rem;
+            color: rgba(196, 204, 230, 0.4);
+        }
+
+        /* — Tabs — */
+        .tab-row {
+            display: flex !important;
+            width: 100% !important;
+            margin-bottom: 16px;
+            background: rgba(99, 102, 241, 0.06);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.4);
+            border-radius: 9px;
+            transition: all 0.3s ease;
+            position: static !important;
+        }
+
+        .tab-btn.active {
+            background: rgba(99, 102, 241, 0.18);
+            color: #a5b4fc;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: rgba(196, 204, 230, 0.65);
+        }
+
+        /* — Forms — */
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: rgba(196, 204, 230, 0.5);
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        body.login-page .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: rgba(99, 102, 241, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            padding: 0;
+            padding-left: 14px;
+            transition: all 0.25s ease;
+        }
+
+        body.login-page .input-wrapper:focus-within {
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.06);
+            background: rgba(99, 102, 241, 0.06);
+        }
+
+        body.login-page .input-wrapper i {
+            color: rgba(129, 140, 248, 0.3);
+            font-size: 0.82rem;
+            flex-shrink: 0;
+            width: 18px;
+            margin-right: 10px;
+            position: static !important;
+            display: inline-block !important;
+        }
+
+        body.login-page .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 14px 10px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: #e8eaf6;
+            min-width: 0;
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(196, 204, 230, 0.25);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(196, 204, 230, 0.45);
+            cursor: pointer;
+            font-size: 0.78rem;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: #6366f1;
+            width: 14px;
+            height: 14px;
+        }
+
+        .forgot-password {
+            color: #818cf8;
+            text-decoration: none;
+            font-size: 0.78rem;
+            transition: color 0.2s;
+        }
+
+        .forgot-password:hover {
+            color: #a5b4fc;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 13px 0;
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(99, 102, 241, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 18px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .divider span {
+            background: #0f1432;
+            padding: 0 12px;
+            position: relative;
+            font-size: 0.72rem;
+            color: rgba(196, 204, 230, 0.28);
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.03);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: rgba(196, 204, 230, 0.6);
+            transition: all 0.25s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.18);
+        }
+
+        .social-btn i {
+            font-size: 0.95rem;
+        }
+
+        .google-btn i {
+            color: #ea4335;
+        }
+
+        .facebook-btn i {
+            color: #1877f2;
+        }
+
+        .role-row {
+            display: flex;
+            gap: 16px;
+            padding: 8px 0;
+        }
+
+        .role-row label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: rgba(196, 204, 230, 0.6);
+        }
+
+        .role-row input[type="radio"] {
+            accent-color: #6366f1;
+        }
+
+        /* — Responsive — */
+        @media (max-width: 768px) {
+            .login-layout {
+                grid-template-columns: 1fr;
+                max-width: 440px;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .auth-panel {
+                padding: 28px 22px;
+            }
+        }
+
+        /* — Entrance — */
+        body.login-page.loaded .login-layout {
+            animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-layout {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body class="login-page">
+
+    <div class="cosmos-bg"><canvas id="starfield"></canvas></div>
+    <div class="grid-overlay"></div>
+
+    <div class="formula-float f1">E = mc²</div>
+    <div class="formula-float f2">F = ma</div>
+    <div class="formula-float f3">λ = h/p</div>
+    <div class="formula-float f4">½mv²</div>
+
+    <div class="orbital-ring r1"></div>
+    <div class="orbital-ring r2"></div>
+
+    <!-- Layout -->
+    <div class="login-layout">
+        <!-- Left: Brand -->
+        <div class="brand-panel">
+            <div class="brand-atom">
+                <div class="core"></div>
+                <div class="orbit"></div>
+                <div class="orbit"></div>
+                <div class="orbit"></div>
+            </div>
+            <h1 class="brand-title">
+                <span class="t1">Tanya</span>
+                <span class="t2">Fisika</span>
+            </h1>
+            <p class="brand-tagline">Belajar Fisika SMA jadi menyenangkan — materi interaktif, game edukasi & video
+                animasi.</p>
+            <ul class="brand-features">
+                <li><i class="fas fa-book-open"></i> Materi terstruktur & mudah dipahami</li>
+                <li><i class="fas fa-gamepad"></i> Game edukasi seru</li>
+                <li><i class="fas fa-video"></i> Video animasi interaktif</li>
+            </ul>
+        </div>
+
+        <!-- Right: Auth -->
+        <div class="auth-panel">
+            <div class="auth-header">
+                <h2>Selamat Datang!</h2>
+                <p>Masuk atau daftar untuk mulai belajar</p>
+            </div>
+
+            <div class="tab-row">
+                <button class="tab-btn active" data-tab="signin">Masuk</button>
+                <button class="tab-btn" data-tab="signup">Daftar</button>
+            </div>
+
+            <!-- Sign In -->
+            <form id="signinForm" class="login-form active">
+                <div class="input-group">
+                    <label for="signinEmail">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signinEmail" placeholder="contoh@domain.com" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="signinPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signinPassword" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Ingat saya</label>
+                    <a href="#" class="forgot-password">Lupa password?</a>
+                </div>
+                <button type="submit" class="login-btn">Masuk</button>
+                <div class="divider"><span>atau</span></div>
+                <div class="social-buttons">
+                    <button type="button" id="googleLogin" class="social-btn google-btn"><i class="fab fa-google"></i>
+                        Google</button>
+                    <button type="button" id="facebookLogin" class="social-btn facebook-btn"><i
+                            class="fab fa-facebook"></i> Facebook</button>
+                </div>
+            </form>
+
+            <!-- Sign Up -->
+            <form id="signupForm" class="login-form">
+                <div class="input-group">
+                    <label for="signupName">Nama Lengkap</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signupName" placeholder="Nama lengkap" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="signupEmail">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="contoh@domain.com" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="signupRole">Daftar Sebagai</label>
+                    <div class="role-row">
+                        <label><input type="radio" name="signupRole" id="roleStudent" value="siswa" checked required>
+                            Siswa</label>
+                        <label><input type="radio" name="signupRole" id="roleTeacher" value="guru" required>
+                            Guru</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="signupConfirmPassword">Konfirmasi Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupConfirmPassword" placeholder="Ulangi password" required>
+                    </div>
+                </div>
+                <label class="checkbox-label" style="margin-bottom: 16px;"><input type="checkbox" id="agreeTerms"> Saya
+                    setuju syarat & ketentuan</label>
+                <button type="submit" class="login-btn">Daftar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Starfield -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('starfield');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [];
+            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+            for (let i = 0; i < 140; i++) {
+                stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.3 + 0.3, a: Math.random() * 0.4 + 0.1, tw: Math.random() * Math.PI * 2 });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                const g = ctx.createRadialGradient(w * 0.3, h * 0.4, 0, w * 0.3, h * 0.4, 300);
+                g.addColorStop(0, 'rgba(99,102,241,0.02)'); g.addColorStop(1, 'transparent');
+                ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.tw += 0.01;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200,210,255,${s.a * (0.5 + Math.sin(s.tw) * 0.5)})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+
+    <script src="script.js"></script>
+
+    <!-- Tab switching + reveal -->
+    <script>
+        (function () {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(() => document.body.classList.add('loaded'), 80));
+            function initTabs() {
+                const tabBtns = document.querySelectorAll('.tab-btn');
+                if (!tabBtns.length) return;
+                const forms = document.querySelectorAll('.login-form');
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        tabBtns.forEach(b => b.classList.remove('active'));
+                        forms.forEach(f => f.classList.remove('active'));
+                        this.classList.add('active');
+                        const target = document.getElementById((this.dataset.tab || '') + 'Form');
+                        if (target) { target.classList.add('active'); const fi = target.querySelector('input'); if (fi) fi.focus(); }
+                    });
+                });
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTabs); else initTabs();
+        })();
+    </script>
+
+    <!-- Fallback auth -->
+    <script>
+        (function () {
+            if (window.updateUserName) return;
+            const form = document.getElementById('signinForm');
+            if (!form) return;
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = ((document.getElementById('signinEmail') && document.getElementById('signinEmail').value) || '').trim().toLowerCase();
+                const password = (document.getElementById('signinPassword') && document.getElementById('signinPassword').value) || '';
+                const remember = !!(document.getElementById('rememberMe') && document.getElementById('rememberMe').checked);
+                if (!email || !password) return alert('Harap isi email dan password!');
+                let users = {}; try { users = JSON.parse(localStorage.getItem('users') || '{}'); } catch (e) { }
+                const user = users[email];
+                if (!user) return alert('Akun tidak ditemukan. Silakan daftar terlebih dahulu.');
+                let hash; try {
+                    if (window.crypto && crypto.subtle && typeof crypto.subtle.digest === 'function') {
+                        const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+                        hash = Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    } else { let hh = 5381; for (let i = 0; i < password.length; i++) { hh = ((hh << 5) + hh) + password.charCodeAt(i); hh = hh & 0xffffffff; } hash = (hh >>> 0).toString(16).padStart(8, '0'); }
+                    if (hash !== user.passwordHash) return alert('Password salah.');
+                } catch (err) { return alert('Terjadi kesalahan verifikasi.'); }
+                const userName = user.name || (email.split('@')[0]) || 'Siswa';
+                try {
+                    const s = remember ? localStorage : sessionStorage;
+                    s.setItem('userLoggedIn', 'true'); s.setItem('userEmail', email); s.setItem('userName', userName); s.setItem('userRole', user.role || 'siswa');
+                    try { localStorage.setItem('fromLogin', 'true'); } catch (e) { }
+                } catch (err) { }
+                setTimeout(() => { window.location.href = 'index.html'; }, 150);
+            });
+            const signup = document.getElementById('signupForm');
+            if (signup) signup.addEventListener('submit', async function (ev) {
+                ev.preventDefault();
+                const name = (document.getElementById('signupName') && document.getElementById('signupName').value) || '';
+                const email = ((document.getElementById('signupEmail') && document.getElementById('signupEmail').value) || '').trim().toLowerCase();
+                const password = (document.getElementById('signupPassword') && document.getElementById('signupPassword').value) || '';
+                const confirm = (document.getElementById('signupConfirmPassword') && document.getElementById('signupConfirmPassword').value) || '';
+                const role = (document.querySelector('input[name="signupRole"]:checked') && document.querySelector('input[name="signupRole"]:checked').value) || 'siswa';
+                const agree = !!(document.getElementById('agreeTerms') && document.getElementById('agreeTerms').checked);
+                if (!name || !email || !password || !confirm) return alert('Harap isi semua field!');
+                if (password !== confirm) return alert('Password dan konfirmasi password tidak cocok!');
+                if (password.length < 6) return alert('Password minimal 6 karakter!');
+                if (!agree) return alert('Harap setujui syarat dan ketentuan!');
+                let pwHash; try {
+                    if (window.crypto && crypto.subtle && typeof crypto.subtle.digest === 'function') {
+                        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+                        pwHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    } else { let h = 5381; for (let i = 0; i < password.length; i++) { h = ((h << 5) + h) + password.charCodeAt(i); h = h & 0xffffffff; } pwHash = (h >>> 0).toString(16).padStart(8, '0'); }
+                } catch (err) { return alert('Terjadi kesalahan saat membuat akun.'); }
+                try {
+                    const users = JSON.parse(localStorage.getItem('users') || '{}');
+                    if (users[email]) return alert('Email sudah terdaftar. Silakan masuk.');
+                    users[email] = { name, email, passwordHash: pwHash, role, createdAt: new Date().toISOString() };
+                    localStorage.setItem('users', JSON.stringify(users));
+                    sessionStorage.setItem('userLoggedIn', 'true'); sessionStorage.setItem('userEmail', email);
+                    sessionStorage.setItem('userName', name); sessionStorage.setItem('userRole', role);
+                    sessionStorage.setItem('fromSignup', 'true'); try { localStorage.setItem('fromSignup', 'true'); } catch (e) { }
+                    alert('Pendaftaran berhasil! Mengarahkan ke aplikasi...');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 120);
+                } catch (err) { alert('Gagal menyimpan data akun.'); }
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        .profile-page {
+            padding: 1.5rem;
+            padding-bottom: 100px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.03), rgba(6, 214, 160, 0.03));
+            min-height: 100vh;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-role {
+            font-size: 0.9rem;
+            color: #718096;
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #4361ee;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4361ee;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+            color: #4361ee;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 0.95rem;
+        }
+
+        .setting-description {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-top: 0.25rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e0;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: #4361ee;
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .danger-zone {
+            background: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef476f;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .danger-btn {
+            background: #ef476f;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .danger-btn:hover {
+            background: #d73d61;
+        }
+
+        .info-message {
+            background: rgba(67, 97, 238, 0.1);
+            border-left: 4px solid #4361ee;
+            padding: 1rem;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .profile-page {
+                padding: 1rem;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="profile-page">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <button onclick="history.back()"
+                style="background: none; border: none; font-size: 1.5rem; color: #1a202c; cursor: pointer; padding: 0;">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 style="margin: 0; color: #1a202c; text-shadow: 0 1px 3px rgba(0,0,0,0.1);">Profil & Pengaturan</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div style="max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem;">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-name" id="profileName">Nama Pengguna</div>
+            <div class="profile-role" id="profileRole">Siswa</div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="profileXP">0</div>
+                    <div class="stat-label">XP</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="profileLevel">0</div>
+                    <div class="stat-label">Level</div>
+                </div>
+            </div>
+        </div>
+        <!-- Streak & Badge Section -->
+        <div class="section" id="streakSection"
+            style="background:linear-gradient(135deg,rgba(251,191,36,0.06),rgba(249,115,22,0.04));border:1px solid rgba(251,191,36,0.12);">
+            <div class="section-title" style="color:#fbbf24;">
+                <i class="fas fa-fire-flame-curved" style="color:#fb923c;"></i>
+                Streak & Badge
+            </div>
+            <div style="text-align:center;margin-bottom:1rem;">
+                <div id="profileFlame" style="font-size:2.5rem;margin-bottom:4px;">🔥</div>
+                <div id="profileStreakCount" style="font-size:2.2rem;font-weight:800;color:#1a202c;line-height:1;">0
+                </div>
+                <div style="font-size:0.85rem;color:#718096;">Hari Streak</div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-bottom:1rem;">
+                <div
+                    style="flex:1;padding:0.75rem;background:rgba(67,97,238,0.05);border-radius:8px;text-align:center;">
+                    <div id="profileCurrentStreak" style="font-size:1.4rem;font-weight:700;color:#4361ee;">0</div>
+                    <div style="font-size:0.7rem;color:#718096;text-transform:uppercase;">Sekarang</div>
+                </div>
+                <div
+                    style="flex:1;padding:0.75rem;background:rgba(67,97,238,0.05);border-radius:8px;text-align:center;">
+                    <div id="profileLongestStreak" style="font-size:1.4rem;font-weight:700;color:#4361ee;">0</div>
+                    <div style="font-size:0.7rem;color:#718096;text-transform:uppercase;">Rekor Terbaik</div>
+                </div>
+            </div>
+            <div id="profileMilestoneProgress" style="margin-bottom:1rem;"></div>
+            <div style="font-size:0.8rem;font-weight:600;color:#1a202c;margin-bottom:0.5rem;">Badge yang didapat</div>
+            <div id="profileBadgeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-user"></i>
+                Informasi Akun
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Nama Pengguna</div>
+                    <div class="setting-description" id="accountName">-</div>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Email</div>
+                    <div class="setting-description" id="accountEmail">-</div>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Bergabung </div>
+                    <div class="setting-description" id="accountJoinDate">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-bell"></i>
+                Pengaturan Notifikasi
+            </div>
+
+            <div class="info-message">
+                <i class="fas fa-info-circle"></i>
+                Kelola bagaimana dan kapan Anda menerima notifikasi.
+            </div>
+
+            <!-- Master Toggle -->
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Aktifkan Notifikasi</div>
+                    <div class="setting-description">Matikan untuk tidak menerima semua notifikasi</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifEnabled" checked onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <!-- Sound Toggle -->
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Suara Notifikasi</div>
+                    <div class="setting-description">Putar suara saat notifikasi tiba</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifSound" checked onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <!-- Task Notification Toggle -->
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Notifikasi Tugas Baru</div>
+                    <div class="setting-description">Notifikasi saat guru membuat tugas baru</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifTask" checked onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <!-- Submission Notification Toggle -->
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Notifikasi Pengumpulan</div>
+                    <div class="setting-description">Notifikasi saat siswa mengumpulkan tugas</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifSubmission" checked onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <!-- System Notification Toggle -->
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Notifikasi Sistem</div>
+                    <div class="setting-description">Pembaruan sistem dan pengumuman penting</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifSystem" checked onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-palette"></i>
+                Tampilan
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Mode Gelap</div>
+                    <div class="setting-description">Matikan lampu, nyalakan gelap</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkMode" onchange="updateDarkMode()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-lock"></i>
+                Privasi & Keamanan
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Profil Publik</div>
+                    <div class="setting-description">Izinkan orang lain melihat profil Anda</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="publicProfile" onchange="updateNotificationPref()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="section">
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="savePreferences()">
+                    <i class="fas fa-check"></i> Simpan Pengaturan
+                </button>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="danger-zone">
+                <div style="font-size: 0.9rem; font-weight: 600; color: #c53030; margin-bottom: 0.75rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Zona Berbahaya
+                </div>
+                <button class="danger-btn" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i> Hapus Semua Data
+                </button>
+                <button class="danger-btn" onclick="logout()" style="background: #666; margin-top: 0.5rem;">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="../dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="kelas.html" class="nav-item">
+            <i class="fas fa-school"></i>
+            <span>Kelas</span>
+        </a>
+        <a href="daftar-pustaka.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Daftar Pustaka</span>
+        </a>
+        <a href="notifikasi.html" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifikasi</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script>
+        // Load user information on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            loadUserInfo();
+            loadNotificationPreferences();
+            renderProfileStreak();
+        });
+
+        function loadUserInfo() {
+            const userName = sessionStorage.getItem('userName') || localStorage.getItem('userName') || 'Pengguna';
+            const userRole = sessionStorage.getItem('userRole') || localStorage.getItem('userRole') || 'siswa';
+            const userEmail = sessionStorage.getItem('userEmail') || localStorage.getItem('userEmail') || '-';
+
+            // Get XP and Level
+            const xpCount = parseInt(localStorage.getItem('xpCount') || '0');
+            const levelCount = parseInt(localStorage.getItem('levelCount') || '0');
+
+            // Update profile header
+            document.getElementById('profileName').textContent = userName;
+            document.getElementById('profileRole').textContent = userRole === 'guru' ? 'Guru' : 'Siswa';
+            document.getElementById('profileXP').textContent = xpCount.toLocaleString('id-ID');
+            document.getElementById('profileLevel').textContent = levelCount;
+
+            // Update account information
+            document.getElementById('accountName').textContent = userName;
+            document.getElementById('accountEmail').textContent = userEmail;
+
+            // Get join date
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const userEntry = users[userEmail.toLowerCase()];
+            if (userEntry && userEntry.createdAt) {
+                const joinDate = new Date(userEntry.createdAt);
+                document.getElementById('accountJoinDate').textContent = joinDate.toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+        }
+
+        function loadNotificationPreferences() {
+            const prefs = JSON.parse(localStorage.getItem('notificationPreferences') || '{}');
+
+            document.getElementById('notifEnabled').checked = prefs.enabled !== false;
+            document.getElementById('notifSound').checked = prefs.sound !== false;
+            document.getElementById('notifTask').checked = prefs.taskNotifications !== false;
+            document.getElementById('notifSubmission').checked = prefs.submissionNotifications !== false;
+            document.getElementById('notifSystem').checked = prefs.systemNotifications !== false;
+            document.getElementById('publicProfile').checked = prefs.publicProfile || false;
+        }
+
+        function updateNotificationPref() {
+            const prefs = {
+                enabled: document.getElementById('notifEnabled').checked,
+                sound: document.getElementById('notifSound').checked,
+                taskNotifications: document.getElementById('notifTask').checked,
+                submissionNotifications: document.getElementById('notifSubmission').checked,
+                systemNotifications: document.getElementById('notifSystem').checked,
+                publicProfile: document.getElementById('publicProfile').checked
+            };
+
+            localStorage.setItem('notificationPreferences', JSON.stringify(prefs));
+        }
+
+        function updateDarkMode() {
+            const isDark = document.getElementById('darkMode').checked;
+            if (isDark) {
+                document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.style.filter = 'none';
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        function savePreferences() {
+            updateNotificationPref();
+
+            // Show success message
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Pengaturan Tersimpan!';
+            btn.style.background = '#06d6a0';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function clearAllData() {
+            if (!confirm('Ini akan menghapus SEMUA data Anda termasuk notifikasi, aktivitas, dan preferensi. Tindakan ini tidak dapat dibatalkan. Lanjutkan?')) {
+                return;
+            }
+
+            if (!confirm('Anda yakin? Data akan hilang selamanya.')) {
+                return;
+            }
+
+            // Clear all localStorage data
+            localStorage.clear();
+            sessionStorage.clear();
+
+            alert('Semua data telah dihapus.');
+            window.location.href = '../login.html';
+        }
+
+        function logout() {
+            if (!confirm('Anda yakin ingin keluar?')) {
+                return;
+            }
+
+            // Clear session
+            sessionStorage.clear();
+            localStorage.removeItem('userLoggedIn');
+
+            window.location.href = '../login.html';
+        }
+    </script>
+
+    <script src="../streak-manager.js"></script>
+
+    <script>
+        function renderProfileStreak() {
+            if (!window.StreakManager) return;
+            var data = StreakManager.getData();
+            var streak = data.currentStreak || 0;
+            var level = StreakManager.getFlameLevel(streak);
+
+            var flame = document.getElementById('profileFlame');
+            if (flame) flame.style.fontSize = level === 'large' ? '3rem' : level === 'medium' ? '2.5rem' : '2rem';
+
+            var countEl = document.getElementById('profileStreakCount');
+            if (countEl) countEl.textContent = streak;
+            var curEl = document.getElementById('profileCurrentStreak');
+            if (curEl) curEl.textContent = streak;
+            var lonEl = document.getElementById('profileLongestStreak');
+            if (lonEl) lonEl.textContent = data.longestStreak || 0;
+
+            var msEl = document.getElementById('profileMilestoneProgress');
+            if (msEl) {
+                var next = StreakManager.getNextMilestone();
+                if (next) {
+                    msEl.innerHTML = '<div style="font-size:0.75rem;color:#718096;margin-bottom:4px;">Milestone: ' + next.milestone.icon + ' ' + next.milestone.badge + '</div>' +
+                        '<div style="width:100%;height:6px;background:rgba(67,97,238,0.1);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + next.progress + '%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:3px;"></div></div>' +
+                        '<div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#a0aec0;margin-top:3px;"><span>' + streak + '/' + next.milestone.day + '</span><span>+' + next.milestone.reward + ' XP</span></div>';
+                }
+            }
+
+            var gridEl = document.getElementById('profileBadgeGrid');
+            if (gridEl) {
+                var milestones = StreakManager.getMilestones();
+                gridEl.innerHTML = milestones.map(function (m) {
+                    var claimed = m.claimed;
+                    return '<div style="padding:0.6rem;border-radius:10px;text-align:center;' +
+                        (claimed ? 'background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);' : 'background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.04);opacity:0.45;') +
+                        '"><div style="font-size:1.3rem;">' + m.icon + '</div>' +
+                        '<div style="font-size:0.65rem;font-weight:600;color:' + (claimed ? '#d97706' : '#a0aec0') + ';margin-top:2px;">' + m.day + ' Hari</div>' +
+                        '<div style="font-size:0.58rem;color:#a0aec0;">' + m.badge + '</div></div>';
+                }).join('');
+            }
+        }
+    </script>
+</body>
+
+</html>

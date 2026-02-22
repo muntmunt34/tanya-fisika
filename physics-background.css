@@ -1,0 +1,547 @@
+/* ========================================
+   PHYSICS-THEMED DARK GRADIENT BACKGROUND
+   Educational Platform Design System
+   ======================================== */
+
+:root {
+    /* Dark Blue Gradient Palette */
+    --physics-navy: #0a0f1e;
+    --physics-dark-blue: #0f1b35;
+    --physics-blue: #1a2a4a;
+    --physics-electric-blue: #2563eb;
+    --physics-cyan: #00d9ff;
+    --physics-neon-cyan: #0ff;
+    --physics-soft-purple: #9d4edd;
+    --physics-neon-purple: #c77dff;
+    --physics-glow-white: #e8f4f8;
+    --physics-dark-text: #1a1a2e;
+    
+    /* Glow Effects */
+    --glow-cyan: 0 0 20px rgba(0, 217, 255, 0.5);
+    --glow-purple: 0 0 25px rgba(157, 78, 221, 0.4);
+    --glow-electric: 0 0 30px rgba(37, 99, 235, 0.3);
+    --glow-soft: 0 0 15px rgba(232, 244, 248, 0.2);
+    
+    /* Transitions */
+    --physics-transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --physics-transition-slow: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   BACKGROUND WITH DARK BLUE GRADIENT
+   ======================================== */
+
+.physics-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -100;
+    pointer-events: none;
+    background: linear-gradient(135deg, #0a0f1e 0%, #0f1b35 25%, #1a2a4a 50%, #0f3a5f 75%, #0a0f1e 100%);
+    overflow: hidden;
+}
+
+/* Base gradient layer */
+.physics-background::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse 80% 50% at 20% 50%, rgba(37, 99, 235, 0.08), transparent 50%),
+        radial-gradient(ellipse 80% 50% at 80% 80%, rgba(0, 217, 255, 0.06), transparent 50%),
+        radial-gradient(ellipse 100% 80% at 50% 0%, rgba(157, 78, 221, 0.04), transparent 70%);
+    animation: gradientShift 20s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background: 
+            radial-gradient(ellipse 80% 50% at 20% 50%, rgba(37, 99, 235, 0.08), transparent 50%),
+            radial-gradient(ellipse 80% 50% at 80% 80%, rgba(0, 217, 255, 0.06), transparent 50%),
+            radial-gradient(ellipse 100% 80% at 50% 0%, rgba(157, 78, 221, 0.04), transparent 70%);
+    }
+    50% {
+        background: 
+            radial-gradient(ellipse 80% 50% at 30% 60%, rgba(37, 99, 235, 0.12), transparent 50%),
+            radial-gradient(ellipse 80% 50% at 70% 70%, rgba(0, 217, 255, 0.08), transparent 50%),
+            radial-gradient(ellipse 100% 80% at 50% 20%, rgba(157, 78, 221, 0.06), transparent 70%);
+    }
+}
+
+/* ========================================
+   FLOATING PHYSICS PARTICLES
+   ======================================== */
+
+.physics-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Atomic structure particles */
+.particle.atom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(0, 217, 255, 0.6);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 217, 255, 0.3), transparent);
+    box-shadow: inset 0 0 12px rgba(0, 217, 255, 0.4), 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+.particle.atom::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #00d9ff;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px #00d9ff;
+}
+
+/* Electron orbits */
+.particle.electron {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid rgba(157, 78, 221, 0.5);
+    border-radius: 50%;
+    background: radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.2), transparent);
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+}
+
+.particle.electron::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #c77dff;
+    border-radius: 50%;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px #c77dff;
+}
+
+.particle.electron::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(199, 125, 255, 0.4);
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    animation: electronOrbit 4s linear infinite;
+}
+
+@keyframes electronOrbit {
+    0%, 100% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Wave particle */
+.particle.wave {
+    width: 40px;
+    height: 20px;
+    background: none;
+    border: none;
+}
+
+.particle.wave::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50"><path d="M0,25 Q12.5,15 25,25 T50,25 T75,25 T100,25" stroke="rgba(0,217,255,0.6)" stroke-width="2" fill="none"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    animation: waveFloat 3s ease-in-out infinite;
+}
+
+@keyframes waveFloat {
+    0%, 100% { transform: translateX(0) rotation(0deg); opacity: 0.7; }
+    50% { transform: translateX(10px) rotate(5deg); opacity: 0.5; }
+}
+
+/* Light particle / dust */
+.particle.light-dust {
+    width: 4px;
+    height: 4px;
+    background: rgba(232, 244, 248, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(232, 244, 248, 0.6);
+    animation: dustFloat 8s ease-in-out infinite;
+}
+
+@keyframes dustFloat {
+    0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+    25% { transform: translate(20px, -30px); opacity: 0.4; }
+    50% { transform: translate(-10px, -50px); opacity: 0.8; }
+    75% { transform: translate(-30px, -20px); opacity: 0.3; }
+}
+
+/* Gravity ripple */
+.particle.ripple {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba(37, 99, 235, 0.4);
+    border-radius: 50%;
+    animation: gravityRipple 4s ease-out forwards infinite;
+}
+
+@keyframes gravityRipple {
+    0% {
+        width: 50px;
+        height: 50px;
+        opacity: 0.8;
+        border-color: rgba(37, 99, 235, 0.8);
+    }
+    100% {
+        width: 150px;
+        height: 150px;
+        opacity: 0;
+        border-color: rgba(37, 99, 235, 0.1);
+    }
+}
+
+/* Quantum particle burst */
+.particle.quantum {
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.9), rgba(0, 217, 255, 0.2));
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.7);
+    animation: quantumBurst 2s ease-out infinite;
+}
+
+@keyframes quantumBurst {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Particle positions and animations */
+.p1 { top: 5%; left: 8%; animation: float1 20s ease-in-out infinite, bobbing 4s ease-in-out infinite; }
+.p2 { top: 15%; right: 12%; animation: float2 24s ease-in-out infinite, bobbing 5s ease-in-out infinite 1s; }
+.p3 { top: 40%; left: 15%; animation: float3 28s ease-in-out infinite, bobbing 6s ease-in-out infinite 2s; }
+.p4 { top: 50%; right: 8%; animation: float4 22s ease-in-out infinite, bobbing 5.5s ease-in-out infinite 0.5s; }
+.p5 { bottom: 20%; left: 10%; animation: float5 26s ease-in-out infinite, bobbing 4.5s ease-in-out infinite 1.5s; }
+.p6 { bottom: 15%; right: 15%; animation: float6 30s ease-in-out infinite, bobbing 5.5s ease-in-out infinite 2.5s; }
+
+@keyframes float1 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(40px) translateY(-30px); }
+    50% { transform: translateX(20px) translateY(-60px); }
+    75% { transform: translateX(-30px) translateY(-40px); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(-50px) translateY(-40px); }
+    50% { transform: translateX(-30px) translateY(-70px); }
+    75% { transform: translateX(30px) translateY(-50px); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(30px) translateY(-50px); }
+    50% { transform: translateX(50px) translateY(-80px); }
+    75% { transform: translateX(10px) translateY(-30px); }
+}
+
+@keyframes float4 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(-40px) translateY(-35px); }
+    50% { transform: translateX(-60px) translateY(-65px); }
+    75% { transform: translateX(-20px) translateY(-45px); }
+}
+
+@keyframes float5 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(50px) translateY(-45px); }
+    50% { transform: translateX(70px) translateY(-75px); }
+    75% { transform: translateX(30px) translateY(-35px); }
+}
+
+@keyframes float6 {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(-30px) translateY(-50px); }
+    50% { transform: translateX(-40px) translateY(-80px); }
+    75% { transform: translateX(10px) translateY(-40px); }
+}
+
+@keyframes bobbing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+}
+
+/* ========================================
+   SCIENTIFIC DIAGRAM OVERLAYS
+   ======================================== */
+
+.physics-diagram {
+    position: absolute;
+    opacity: 0.06;
+    pointer-events: none;
+}
+
+.physics-diagram.pendulum {
+    top: 15%;
+    left: 5%;
+    width: 120px;
+    height: 120px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="10" r="3" fill="white"/><line x1="50" y1="10" x2="50" y2="70" stroke="white" stroke-width="1"/><circle cx="50" cy="75" r="8" fill="white"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: pendulumSwing 4s ease-in-out infinite;
+    transform-origin: center top;
+}
+
+@keyframes pendulumSwing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-25deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(25deg); }
+}
+
+.physics-diagram.orbit {
+    top: 50%;
+    right: 5%;
+    width: 140px;
+    height: 140px;
+    border: 1px solid rgba(0, 217, 255, 0.15);
+    border-radius: 50%;
+    animation: orbitalRotation 8s linear infinite;
+}
+
+.physics-diagram.orbit::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 217, 255, 0.4);
+    border-radius: 50%;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes orbitalRotation {
+    0%, 100% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.physics-diagram.magnetic-field {
+    bottom: 15%;
+    left: 8%;
+    width: 100px;
+    height: 100px;
+    opacity: 0.04;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,50 Q50,30 80,50" stroke="white" stroke-width="1" fill="none"/><path d="M20,60 Q50,40 80,60" stroke="white" stroke-width="1" fill="none"/><path d="M20,70 Q50,50 80,70" stroke="white" stroke-width="1" fill="none"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: magneticPulse 6s ease-in-out infinite;
+}
+
+@keyframes magneticPulse {
+    0%, 100% { opacity: 0.03; }
+    50% { opacity: 0.08; }
+}
+
+.physics-diagram.force-vectors {
+    bottom: 20%;
+    right: 10%;
+    width: 110px;
+    height: 110px;
+    opacity: 0.05;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><line x1="50" y1="50" x2="80" y2="50" stroke="white" stroke-width="1"/><polygon points="80,50 75,45 75,55" fill="white"/><line x1="50" y1="50" x2="50" y2="20" stroke="white" stroke-width="1"/><polygon points="50,20 45,25 55,25" fill="white"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: vectorRotate 10s linear infinite;
+}
+
+@keyframes vectorRotate {
+    0%, 100% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   GLASS MORPHISM CARDS
+   ======================================== */
+
+.glass-card {
+    background: rgba(232, 244, 248, 0.05);
+    border: 1px solid rgba(0, 217, 255, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 217, 255, 0.1),
+        inset 0 1px 2px rgba(232, 244, 248, 0.1);
+    transition: var(--physics-transition);
+}
+
+.glass-card:hover {
+    background: rgba(232, 244, 248, 0.08);
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: 
+        0 12px 40px 0 rgba(0, 217, 255, 0.2),
+        inset 0 1px 2px rgba(232, 244, 248, 0.15);
+    transform: translateY(-4px);
+}
+
+.glass-card.accent {
+    border-color: rgba(157, 78, 221, 0.2);
+}
+
+.glass-card.accent:hover {
+    border-color: rgba(157, 78, 221, 0.4);
+    box-shadow: 
+        0 12px 40px 0 rgba(157, 78, 221, 0.15),
+        inset 0 1px 2px rgba(232, 244, 248, 0.15);
+}
+
+/* ========================================
+   NEON GLOW EFFECTS
+   ======================================== */
+
+.neon-text {
+    color: #00d9ff;
+    text-shadow: 
+        0 0 10px rgba(0, 217, 255, 0.8),
+        0 0 20px rgba(0, 217, 255, 0.5),
+        0 0 30px rgba(0, 217, 255, 0.3);
+}
+
+.neon-text.purple {
+    color: #c77dff;
+    text-shadow: 
+        0 0 10px rgba(199, 125, 255, 0.8),
+        0 0 20px rgba(199, 125, 255, 0.5),
+        0 0 30px rgba(199, 125, 255, 0.3);
+}
+
+.neon-text.white {
+    color: #e8f4f8;
+    text-shadow: 
+        0 0 10px rgba(232, 244, 248, 0.6),
+        0 0 20px rgba(0, 217, 255, 0.4),
+        0 0 30px rgba(157, 78, 221, 0.2);
+}
+
+.neon-icon {
+    filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.6))
+            drop-shadow(0 0 15px rgba(0, 217, 255, 0.3));
+    transition: var(--physics-transition);
+}
+
+.neon-icon.purple {
+    filter: drop-shadow(0 0 8px rgba(199, 125, 255, 0.6))
+            drop-shadow(0 0 15px rgba(199, 125, 255, 0.3));
+}
+
+.neon-icon:hover {
+    filter: drop-shadow(0 0 12px rgba(0, 217, 255, 0.9))
+            drop-shadow(0 0 25px rgba(0, 217, 255, 0.5));
+}
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================== */
+
+@media (max-width: 768px) {
+    .physics-diagram {
+        opacity: 0.03;
+    }
+    
+    .particle {
+        width: 16px !important;
+        height: 16px !important;
+    }
+    
+    .particle.wave {
+        width: 28px !important;
+        height: 14px !important;
+    }
+    
+    .particle.ripple {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .physics-diagram {
+        opacity: 0.02;
+    }
+    
+    .particle {
+        opacity: 0.4;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.physics-container {
+    position: relative;
+    z-index: 1;
+}
+
+.glow-animation {
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 217, 255, 0.8);
+    }
+}
+
+.breathing {
+    animation: breathingEffect 4s ease-in-out infinite;
+}
+
+@keyframes breathingEffect {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+/* Light emission effect */
+.light-emission {
+    position: relative;
+}
+
+.light-emission::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 20px rgba(0, 217, 255, 0.2);
+    pointer-events: none;
+}

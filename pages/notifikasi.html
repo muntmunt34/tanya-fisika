@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifikasi - Tanya Fisika</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../physics-background.css">
+    <link rel="stylesheet" href="../physics-components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg-1: #0A0F1E;
+            --bg-2: #1A2A4A;
+            --bg-3: #0E1A2B;
+            --accent-cyan: #00F0FF;
+            --accent-green: #4ADE80;
+            --glass-bg: rgba(255,255,255,0.05);
+        }
+
+        body.notification-page {
+            background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+            color: #e8f4f8;
+            overflow-x: hidden;
+        }
+
+        /* Parallax layers */
+        .parallax-layer { position: fixed; inset:0; pointer-events:none; z-index:0; }
+        .parallax-layer .content{ position:absolute; inset:0; background-repeat:no-repeat; background-position:center; background-size:cover; opacity:0.12; }
+        .layer-1 .content{ background-image: url('../assets/parallax-stars.svg'); animation:move1 60s linear infinite; opacity:0.14; }
+        .layer-2 .content{ background-image: url('../assets/parallax-formula.svg'); animation:move2 45s linear infinite; opacity:0.12; }
+        .layer-3 .content{ background-image: url('../assets/parallax-atom.svg'); animation:move3 30s linear infinite; opacity:0.16; }
+        @keyframes move1{ from{transform:translateY(0);} to{transform:translateY(-20%);} }
+        @keyframes move2{ from{transform:translateY(0);} to{transform:translateY(-30%);} }
+        @keyframes move3{ from{transform:translateY(0);} to{transform:translateY(-45%);} }
+
+        .notification-page {
+            padding: 1.5rem;
+            padding-bottom: 100px;
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 15px rgba(0,240,255,0.2);
+        }
+
+        .notification-header h1 {
+            font-size: 1.5rem;
+            color: #00d9ff;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        .mark-all-read {
+            background: linear-gradient(135deg, #2563eb 0%, #00d9ff 100%);
+            color: #0a0f1e;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+        }
+
+        .mark-all-read:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 217, 255, 0.5);
+        }
+
+        .notification-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            color: #e8f4f8;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: rgba(0, 217, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
+        }
+
+        .filter-btn.active {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: rgba(0, 217, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+        }
+
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative; z-index:5;
+        }
+
+        .notification-item {
+            background: rgba(255,255,255,0.03);
+            border-left: 6px solid transparent;
+            border-radius: 24px;
+            padding: 1.25rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 15px rgba(0,240,255,0.05);
+            transition: all 0.28s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow: hidden;
+        }
+
+        .notification-item.unread {
+            background: rgba(0, 240, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 240, 255, 0.15);
+        }
+
+        .notification-item.task {
+            border-left-color: #f72585;
+        }
+
+        .notification-item.assignment_submitted { border-left-color: var(--accent-green); }
+
+        .notification-item.assignment_graded,
+        .notification-item.grade_updated {
+            border-left-color: #ffd166;
+        }
+
+        .notification-item.forum_reply,
+        .notification-item.forum_mention {
+            border-left-color: #7209b7;
+        }
+
+        .notification-item.system {
+            border-left-color: #f39c12;
+        }
+
+        .notification-item.message {
+            border-left-color: #3a86ff;
+        }
+
+        .notification-item:hover {
+            box-shadow: 0 12px 40px 0 rgba(0, 217, 255, 0.2);
+            transform: translateY(-4px);
+            background: rgba(232, 244, 248, 0.08);
+        }
+
+        .notification-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: #00d9ff;
+            font-size: 1rem;
+            margin: 0;
+            text-shadow: 0 0 5px rgba(0, 217, 255, 0.2);
+        }
+
+        .notification-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(0, 217, 255, 0.15);
+            color: #00d9ff;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .notification-badge.task {
+            background: rgba(247, 37, 133, 0.15);
+            color: #f72585;
+            border-color: rgba(247, 37, 133, 0.3);
+        }
+
+        .notification-badge.assignment_submitted,
+        .notification-badge.submission {
+            background: rgba(6, 214, 160, 0.15);
+            color: #06d6a0;
+            border-color: rgba(6, 214, 160, 0.3);
+        }
+
+        .notification-badge.assignment_graded,
+        .notification-badge.grade_updated {
+            background: rgba(255, 209, 102, 0.15);
+            color: #ffd166;
+            border-color: rgba(255, 209, 102, 0.3);
+        }
+
+        .notification-badge.system {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .notification-content {
+            color: rgba(232, 244, 248, 0.8);
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(232, 244, 248, 0.6);
+        }
+
+        .notification-time {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .mark-read-btn {
+            background: none;
+            border: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00d9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.5);
+        }
+
+        .notification-item.read .mark-read-btn {
+            background: transparent;
+            border: 2px solid rgba(232, 244, 248, 0.3);
+            box-shadow: none;
+        }
+
+        .mark-read-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #f72585;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            color: #ff006e;
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 5px rgba(247, 37, 133, 0.5));
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(232, 244, 248, 0.6);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 217, 255, 0.3);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .notification-action {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .notification-action:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: rgba(0, 217, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+        }
+
+        /* Notification icon and unread dot */
+        .notif-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+            flex: 0 0 44px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+        }
+
+        .notif-icon.cyan { background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(0,240,255,0.02)); color: var(--accent-cyan); box-shadow: 0 8px 30px rgba(0,240,255,0.12), 0 0 20px rgba(0,240,255,0.14); }
+        .notif-icon.green { background: linear-gradient(135deg, rgba(74,222,128,0.08), rgba(74,222,128,0.02)); color: var(--accent-green); box-shadow: 0 8px 30px rgba(74,222,128,0.10), 0 0 18px rgba(6,214,160,0.12); }
+        .notif-icon.red { background: linear-gradient(135deg, rgba(247,37,133,0.06), rgba(247,37,133,0.02)); color: #ff6b6b; box-shadow: 0 8px 30px rgba(247,37,133,0.08), 0 0 18px rgba(247,37,133,0.12); }
+
+        .unread-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,240,255,0.5);
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .notification-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+
+        /* Empty atom illustration */
+        .empty-atom { width: 96px; height: 96px; margin: 0 auto 1rem; display:block; opacity:0.9; }
+
+        /* Real-time notification indicator */
+        .real-time-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00d9ff;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Status indicators */
+        .status-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .status-error {
+            border-color: #f72585 !important;
+        }
+
+        .status-synced::after {
+            content: '✓';
+            margin-left: 0.5rem;
+            color: #06d6a0;
+        }
+
+        @media (max-width: 640px) {
+            .notification-page {
+                padding: 1rem;
+            }
+
+            .notification-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+
+            .notification-filters {
+                gap: 0.25rem;
+            }
+
+            .filter-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="notification-page">
+    <!-- Physics Dark Blue Gradient Background -->
+    <div id="app"></div>
+    <!-- Parallax background layers -->
+    <div class="parallax-layer layer-1"><div class="content"></div></div>
+    <div class="parallax-layer layer-2"><div class="content"></div></div>
+    <div class="parallax-layer layer-3"><div class="content"></div></div>
+    <!-- Header -->
+    <header class="dashboard-header" style="position:relative; z-index:6;">
+        <div class="header-left" style="display:flex;align-items:center;gap:0.75rem;">
+            <button onclick="history.back()" style="background: none; border: none; font-size: 1.5rem; color: #e8f4f8; cursor: pointer; padding: 0;">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 style="margin: 0; color: #e8f4f8; text-shadow: 0 1px 3px rgba(0,0,0,0.2);">Notifikasi</h1>
+        </div>
+        <div style="position:absolute;right:18px;top:12px;display:flex;align-items:center;gap:12px;">
+            <div id="navbarBell" style="position:relative;cursor:pointer;color:var(--accent-cyan);font-size:18px;">
+                <i class="fas fa-bell"></i>
+                <span id="unreadBadgeCount" style="position:absolute;top:-8px;right:-10px;background:#ff3b30;color:#fff;border-radius:999px;padding:2px 6px;font-size:11px;display:none;box-shadow:0 4px 10px rgba(0,0,0,0.4);">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div style="max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem;">
+        <!-- Header with Mark All Read -->
+        <div class="notification-header" style="margin-bottom: 1.5rem;">
+            <h1>Notifikasi</h1>
+            <button class="mark-all-read" onclick="markAllAsRead()">
+                <i class="fas fa-check-double"></i> Tandai Semua Dibaca
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="notification-filters">
+            <button class="filter-btn active" onclick="filterNotifications('all')">Semua</button>
+            <button class="filter-btn" onclick="filterNotifications('unread')">Belum Dibaca</button>
+        </div>
+
+        <!-- Notification List -->
+        <div class="notification-list" id="notificationList">
+            <!-- Notifications will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="../dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="kelas.html" class="nav-item">
+            <i class="fas fa-school"></i>
+            <span>Kelas</span>
+        </a>
+        <a href="daftar-pustaka.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Daftar Pustaka</span>
+        </a>
+        <a href="notifikasi.html" class="nav-item active">
+            <i class="fas fa-bell"></i>
+            <span>Notifikasi</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <!-- Real-Time Notification System Scripts -->
+    <script src="../notification-config.js"></script>
+    <script src="../notification-service.js"></script>
+    <script src="../physics-animations.js"></script>
+    <script src="../script.js"></script>
+
+    <script>
+        let currentFilter = 'all';
+        let allNotifications = [];
+        let notificationService = null;
+        let unsubscribeNotifications = null;
+
+        // Initialize notifications system
+        async function initializeNotifications() {
+            // Initialize real-time notification service
+            notificationService = initializeNotificationService({
+                userId: localStorage.getItem('userId') || 'student_1',
+                useWebSocket: false,
+                useFirebase: false,
+                soundEnabled: true,
+                badgeEnabled: true
+            });
+
+            // Subscribe to notification events
+            if (notificationService) {
+                unsubscribeNotifications = notificationService.subscribe((event) => {
+                    console.log('📬 Notification event:', event);
+
+                    if (event.event === 'notification:received') {
+                        showNotificationAlert(event.data);
+                        updateUnreadBadge();
+                        displayNotifications();
+                    } else if (event.event === 'badge:updated') {
+                        console.log('📊 Badge updated:', event.data);
+                        updateUnreadBadge();
+                    }
+                });
+            }
+
+            // Load sample notifications
+            loadSampleNotifications();
+            updateUnreadBadge();
+            displayNotifications();
+        }
+
+        function updateUnreadBadge() {
+            const badge = document.getElementById('unreadBadgeCount');
+            const count = (allNotifications || []).filter(n => !n.read).length;
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'block' : 'none';
+            }
+        }
+
+        function loadSampleNotifications() {
+            // Do NOT inject sample notifications. Only load notifications that exist
+            // in the real notification service. If no service or no notifications,
+            // leave the list empty so the UI shows the empty state.
+            const allowed = ['assignment_created','assignment_submitted'];
+            if (notificationService) {
+                allNotifications = (notificationService.getNotifications() || []).filter(n => allowed.includes(n.type));
+            } else {
+                allNotifications = [];
+            }
+        }
+
+        function displayNotifications() {
+            const list = document.getElementById('notificationList');
+            const allowedTypes = ['assignment_created','assignment_submitted'];
+            const baseList = (allNotifications || []).filter(n => allowedTypes.includes(n.type));
+            let filtered = baseList;
+
+            // Apply filter
+            if (currentFilter === 'all') {
+                filtered = baseList;
+            } else if (currentFilter === 'unread') {
+                filtered = baseList.filter(n => !n.read);
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-atom" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="rgba(0,217,255,0.2)" stroke-width="2"><circle cx="32" cy="32" r="6" stroke-opacity="0.9"/><ellipse cx="32" cy="32" rx="18" ry="6" transform="rotate(45 32 32)"/><ellipse cx="32" cy="32" rx="18" ry="6" transform="rotate(-45 32 32)"/></g></svg>
+                        <p>${currentFilter === 'unread' ? 'Semua notifikasi sudah dibaca' : 'Belum ada notifikasi'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by timestamp descending
+            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            // Group by date
+            const grouped = groupByDate(filtered);
+
+            // Render grouped notifications
+            list.innerHTML = Object.entries(grouped)
+                .map(([dateLabel, notifs]) => `
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="color: rgba(0, 217, 255, 0.6); font-size: 0.85rem; font-weight: 600; padding: 0.5rem 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <i class="fas fa-calendar" style="margin-right: 0.3rem;"></i>${dateLabel}
+                        </div>
+                        ${notifs.map(notif => {
+                            // determine icon and classes
+                            if (notif.type === 'assignment_created') {
+                                const title = notif.title || `Tugas Baru: ${notif.data?.assignmentTitle || ''}`;
+                                const deadlineText = notif.deadline ? new Date(notif.deadline).toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) : '';
+                                return `
+                                    <div class="notification-item ${notif.read ? 'read' : 'unread'}" style="margin-top: 0.5rem;">
+                                        <div class="notification-row">
+                                            <div class="notif-icon cyan">📝</div>
+                                            <div style="flex:1;">
+                                                <div class="notification-header-row">
+                                                    <h3 class="notification-title">${title} ${!notif.read ? '<span class="unread-dot"></span>' : ''}</h3>
+                                                    <span class="notification-badge assignment_created">Tugas</span>
+                                                </div>
+                                                <p class="notification-content">Guru membuat tugas '${notif.data?.assignmentTitle || notif.body || ''}' di kelas ${notif.data?.className || ''}</p>
+                                                ${notif.deadline ? `<p style="font-size:0.9rem;color:#ffd166;margin-bottom:0.5rem;"><i class=\"fas fa-calendar\"></i> Deadline: ${deadlineText}</p>` : ''}
+                                                <div class="notification-meta">
+                                                    <span class="notification-time"><i class="fas fa-clock"></i> ${formatTime(notif.timestamp)}</span>
+                                                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                        <button class="mark-read-btn" onclick="toggleRead('${notif.id}')" title="Mark as ${notif.read ? 'unread' : 'read'}"></button>
+                                                    </div>
+                                                </div>
+                                                ${notif.actionLink ? `<a href="${notif.actionLink}" class="notification-action">→ Lihat Detail</a>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            } else if (notif.type === 'assignment_submitted') {
+                                // determine late or on-time
+                                const deadline = notif.deadline ? new Date(notif.deadline) : null;
+                                const submitted = notif.submittedAt ? new Date(notif.submittedAt) : new Date(notif.timestamp);
+                                let lateBadge = '';
+                                let iconClass = 'green';
+                                if (deadline && submitted > deadline) {
+                                    const daysLate = Math.floor((submitted - deadline) / (1000*60*60*24));
+                                    lateBadge = `<span style=\"background: rgba(247,37,133,0.12); color:#f72585; padding:0.2rem 0.5rem; border-radius:8px; font-weight:700; font-size:0.75rem; margin-left:0.5rem;\">Terlambat ${daysLate} hari</span>`;
+                                    iconClass = 'red';
+                                }
+                                return `
+                                    <div class="notification-item ${notif.read ? 'read' : 'unread'}" style="margin-top: 0.5rem;">
+                                        <div class="notification-row">
+                                            <div class="notif-icon ${iconClass}">📤</div>
+                                            <div style="flex:1;">
+                                                <div class="notification-header-row">
+                                                    <h3 class="notification-title">${notif.data?.studentName || 'Siswa'} mengirim tugas ${!notif.read ? '<span class="unread-dot"></span>' : ''}</h3>
+                                                    <span class="notification-badge assignment_submitted">Pengumpulan</span>
+                                                </div>
+                                                <p class="notification-content">Siswa ${notif.data?.studentName || ''} mengumpulkan '${notif.data?.assignmentTitle || notif.body || ''}' dari kelas ${notif.data?.className || ''} ${lateBadge}</p>
+                                                <p style="font-size:0.9rem;color:rgba(232,244,248,0.7);margin-bottom:0.5rem;">Status: <strong>Menunggu penilaian</strong></p>
+                                                <div class="notification-meta">
+                                                    <span class="notification-time"><i class="fas fa-clock"></i> ${formatTime(notif.timestamp)}</span>
+                                                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                        <button class="mark-read-btn" onclick="toggleRead('${notif.id}')" title="Mark as ${notif.read ? 'unread' : 'read'}"></button>
+                                                    </div>
+                                                </div>
+                                                ${notif.actionLink ? `<a href="${notif.actionLink}" class="notification-action">→ Lihat Detail</a>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                            return '';
+                        }).join('')}
+                    </div>
+                `).join('');
+        }
+
+        // Group notifications by date
+        function groupByDate(notifications) {
+            const groups = {};
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+
+            notifications.forEach(notif => {
+                const notifDate = new Date(notif.timestamp);
+                notifDate.setHours(0, 0, 0, 0);
+
+                let dateLabel;
+                
+                if (notifDate.getTime() === today.getTime()) {
+                    dateLabel = 'Hari Ini';
+                } else if (notifDate.getTime() === yesterday.getTime()) {
+                    dateLabel = 'Kemarin';
+                } else if (notifDate > weekAgo) {
+                    const days = Math.floor((today.getTime() - notifDate.getTime()) / (1000 * 60 * 60 * 24));
+                    dateLabel = `${days} hari lalu`;
+                } else {
+                    dateLabel = notifDate.toLocaleDateString('id-ID', {month: 'short', day: 'numeric', year: 'numeric'});
+                }
+
+                if (!groups[dateLabel]) {
+                    groups[dateLabel] = [];
+                }
+                groups[dateLabel].push(notif);
+            });
+
+            return groups;
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                'assignment_created': 'Tugas Baru',
+                'assignment_submitted': 'Pengumpulan',
+                'assignment_graded': 'Penilaian',
+                'grade_updated': 'Nilai Diperbarui',
+                'forum_reply': 'Forum',
+                'forum_mention': 'Forum',
+                'message': 'Pesan',
+                'class_announcement': 'Pengumuman',
+                'deadline_reminder': 'Pengingat',
+                'system': 'Sistem',
+                'task': 'Tugas',
+                'submission': 'Pengumpulan'
+            };
+            return labels[type] || 'Notifikasi';
+        }
+
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 3600000) {
+                const minutes = Math.floor(diff / 60000);
+                return minutes === 1 ? '1 menit lalu' : `${minutes} menit lalu`;
+            } else if (diff < 86400000) {
+                const hours = Math.floor(diff / 3600000);
+                return hours === 1 ? '1 jam lalu' : `${hours} jam lalu`;
+            } else if (diff < 604800000) {
+                const days = Math.floor(diff / 86400000);
+                return days === 1 ? 'Kemarin' : `${days} hari lalu`;
+            } else {
+                return date.toLocaleDateString('id-ID', {month: 'short', day: 'numeric'});
+            }
+        }
+
+        function filterNotifications(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.filter-btn').classList.add('active');
+            updateUnreadBadge();
+            displayNotifications();
+        }
+
+        function toggleRead(id) {
+            const notif = allNotifications.find(n => n.id === id);
+            if (notif) {
+                notif.read = !notif.read;
+                if (notificationService) {
+                    notificationService.markAsRead(id);
+                }
+                updateUnreadBadge();
+                displayNotifications();
+            }
+        }
+
+        function deleteNotification(id) {
+            allNotifications = allNotifications.filter(n => n.id !== id);
+            if (notificationService) {
+                notificationService.deleteNotification(id);
+            }
+            updateUnreadBadge();
+            displayNotifications();
+        }
+
+        function markAllAsRead() {
+            allNotifications.forEach(n => n.read = true);
+            if (notificationService) {
+                notificationService.markAllAsRead();
+            }
+            updateUnreadBadge();
+            displayNotifications();
+        }
+
+        function showNotificationAlert(notification) {
+            // Show temporary alert for new notification
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(0, 217, 255, 0.9);
+                color: #0a0f1e;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+            `;
+            alert.innerHTML = `
+                <strong>${notification.title}</strong>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">${notification.body || notification.content}</p>
+            `;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeNotifications);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (unsubscribeNotifications) {
+                unsubscribeNotifications();
+            }
+            if (notificationService) {
+                notificationService.disconnect();
+            }
+        });
+    </script>
+</body>
+</html>

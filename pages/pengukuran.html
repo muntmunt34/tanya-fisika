@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengukuran - Materi</title>
+    <link rel="stylesheet" href="../style.css">
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .formula-box {
+            background: #f0f7ff;
+            border-left: 4px solid #4361ee;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+
+        .definition-box {
+            background: #f9f5ff;
+            border-left: 4px solid #a78bfa;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .funfact-box {
+            background: #eef2ff;
+            border-left: 4px solid #6366f1;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .tips-box {
+            background: #f0fdfa;
+            border-left: 4px solid #14b8a6;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .subsection {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .tool-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-card h5 {
+            margin-top: 0;
+            color: #4361ee;
+        }
+    </style>
+</head>
+
+<body data-content-type="materi">
+    <header class="page-header">
+        <a href="materi.html" class="back-link">← Kembali</a>
+        <div class="material-hero">
+            <div class="hero-left">
+                <div class="icon-circle">🔬</div>
+            </div>
+            <div class="hero-right">
+                <h1>Pengukuran</h1>
+                <p>Dasar-dasar pengukuran, besaran &amp; satuan, alat ukur, ketidakpastian, dan angka penting.</p>
+                <div class="hero-meta"><span class="tag-badge">Topik: Dasar</span> <span class="tag-badge">Level:
+                        1</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <section class="material-detail">
+            <h2>Ringkasan Umum</h2>
+            <p>Fisika dimulai dari <strong>pengukuran</strong>. Tanpa kemampuan mengukur, kita tidak bisa membuktikan
+                teori apapun. Bayangkan kalau Newton tidak bisa mengukur jarak dan waktu — dia tidak akan pernah
+                menemukan hukum gravitasi!</p>
+
+            <p>Topik ini mencakup:</p>
+            <ul>
+                <li><strong>Besaran dan satuan</strong> — bahasa universal fisika</li>
+                <li><strong>Alat-alat ukur</strong> — dari penggaris hingga mikrometer</li>
+                <li><strong>Notasi ilmiah</strong> — cara menulis angka raksasa dan mungil</li>
+                <li><strong>Akurasi vs presisi</strong> — dua konsep yang sering tertukar</li>
+                <li><strong>Angka penting</strong> — kejujuran dalam pengukuran</li>
+                <li><strong>Ketidakpastian</strong> — setiap pengukuran punya "tanda tanya"</li>
+            </ul>
+
+            <div class="funfact-box">
+                <strong>🔍 Tahukah Kamu?</strong> Pada tahun 1999, pesawat Mars Climate Orbiter NASA bernilai $125 juta
+                hancur karena satu tim menggunakan satuan imperial (pound-force) dan tim lain menggunakan satuan metrik
+                (newton). Kesalahan konversi satuan menyebabkan pesawat terlalu rendah memasuki atmosfer Mars dan
+                terbakar. <strong>Satuan itu penting!</strong>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 1: BESARAN DAN SATUAN -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>1. Besaran dan Satuan</h3>
+
+                <div class="definition-box">
+                    <strong>Besaran</strong> adalah segala sesuatu yang dapat <strong>diukur dan dinyatakan dengan
+                        angka</strong>. Contoh: panjang, massa, waktu, suhu. Bukan besaran: cantik, enak, lucu (tidak
+                    bisa diukur secara objektif).
+                </div>
+
+                <h4>1.1 Besaran Pokok (7 Besaran Dasar SI)</h4>
+                <p>Sistem Satuan Internasional (SI) menetapkan 7 besaran pokok — besaran paling fundamental yang tidak
+                    bisa diturunkan dari besaran lain:</p>
+
+                <table class="formula-box" style="width: 100%; border: none; background: #f0f7ff; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Besaran</th>
+                        <th style="text-align: left; padding: 6px;">Simbol</th>
+                        <th style="text-align: left; padding: 6px;">Satuan SI</th>
+                        <th style="text-align: left; padding: 6px;">Contoh di Kehidupan</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Panjang</td>
+                        <td style="padding: 6px;"><i>l</i></td>
+                        <td style="padding: 6px;">meter (m)</td>
+                        <td style="padding: 6px;">Tinggi badan, jarak rumah ke sekolah</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Massa</td>
+                        <td style="padding: 6px;"><i>m</i></td>
+                        <td style="padding: 6px;">kilogram (kg)</td>
+                        <td style="padding: 6px;">Berat badan, massa beras</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Waktu</td>
+                        <td style="padding: 6px;"><i>t</i></td>
+                        <td style="padding: 6px;">detik/sekon (s)</td>
+                        <td style="padding: 6px;">Durasi lagu, waktu lari 100 m</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Arus Listrik</td>
+                        <td style="padding: 6px;"><i>I</i></td>
+                        <td style="padding: 6px;">ampere (A)</td>
+                        <td style="padding: 6px;">Arus charger HP</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Suhu</td>
+                        <td style="padding: 6px;"><i>T</i></td>
+                        <td style="padding: 6px;">kelvin (K)</td>
+                        <td style="padding: 6px;">Suhu ruangan, suhu tubuh</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Jumlah Zat</td>
+                        <td style="padding: 6px;"><i>n</i></td>
+                        <td style="padding: 6px;">mol (mol)</td>
+                        <td style="padding: 6px;">Jumlah partikel dalam reaksi kimia</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Intensitas Cahaya</td>
+                        <td style="padding: 6px;"><i>I<sub>v</sub></i></td>
+                        <td style="padding: 6px;">candela (cd)</td>
+                        <td style="padding: 6px;">Kecerahan lampu, senter</td>
+                    </tr>
+                </table>
+
+                <div class="funfact-box">
+                    <strong>🔍 Tahukah Kamu?</strong> Sejak 2019, semua satuan SI didefinisikan ulang berdasarkan
+                    <strong>konstanta alam</strong>, bukan benda fisik. Sebelumnya, kilogram didefinisikan dari sebuah
+                    silinder platina-iridium yang disimpan di Paris — tapi silinder itu massa-nya berubah sedikit tiap
+                    tahun karena korosi atomik! Sekarang kilogram didefinisikan berdasarkan konstanta Planck.
+                </div>
+
+                <h4>1.2 Besaran Turunan</h4>
+                <p>Besaran turunan dibuat dari <strong>kombinasi besaran pokok</strong> melalui operasi matematika:</p>
+
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Besaran</th>
+                        <th style="text-align: left; padding: 6px;">Rumus</th>
+                        <th style="text-align: left; padding: 6px;">Satuan SI</th>
+                        <th style="text-align: left; padding: 6px;">Penjelasan</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Luas</td>
+                        <td style="padding: 6px;">panjang × lebar</td>
+                        <td style="padding: 6px;">m²</td>
+                        <td style="padding: 6px;">Ukuran permukaan</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Volume</td>
+                        <td style="padding: 6px;">p × l × t</td>
+                        <td style="padding: 6px;">m³</td>
+                        <td style="padding: 6px;">Ukuran ruang 3D</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Kecepatan</td>
+                        <td style="padding: 6px;">jarak / waktu</td>
+                        <td style="padding: 6px;">m/s</td>
+                        <td style="padding: 6px;">Seberapa cepat bergerak</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Percepatan</td>
+                        <td style="padding: 6px;">kecepatan / waktu</td>
+                        <td style="padding: 6px;">m/s²</td>
+                        <td style="padding: 6px;">Seberapa cepat kecepatan berubah</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Gaya</td>
+                        <td style="padding: 6px;">massa × percepatan</td>
+                        <td style="padding: 6px;">N (= kg·m/s²)</td>
+                        <td style="padding: 6px;">Dorong atau tarik</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Massa Jenis</td>
+                        <td style="padding: 6px;">massa / volume</td>
+                        <td style="padding: 6px;">kg/m³</td>
+                        <td style="padding: 6px;">Seberapa padat suatu benda</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">Energi</td>
+                        <td style="padding: 6px;">gaya × jarak</td>
+                        <td style="padding: 6px;">J (= kg·m²/s²)</td>
+                        <td style="padding: 6px;">Kemampuan melakukan kerja</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">Tekanan</td>
+                        <td style="padding: 6px;">gaya / luas</td>
+                        <td style="padding: 6px;">Pa (= N/m²)</td>
+                        <td style="padding: 6px;">Gaya per satuan luas</td>
+                    </tr>
+                </table>
+
+                <div class="tips-box">
+                    <strong>💡 Tips Analisis Dimensi:</strong> Kamu bisa memeriksa apakah rumus benar dengan mengecek
+                    satuannya. Contoh: apakah $v = \sqrt{2gh}$ benar?
+                    <br><br>
+                    Cek: $\sqrt{(m/s^2)(m)} = \sqrt{m^2/s^2} = m/s$ ✓ → Satuan hasilnya memang kecepatan!
+                    <br>
+                    Teknik ini sangat berguna saat ujian untuk mengecek jawaban.
+                </div>
+
+                <h4>1.3 Awalan (Prefiks) SI</h4>
+                <p>Untuk menuliskan angka yang sangat besar atau sangat kecil, kita menggunakan awalan SI:</p>
+
+                <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                    <tr style="border-bottom: 1px solid #a8c5f0;">
+                        <th style="text-align: left; padding: 6px;">Awalan</th>
+                        <th style="text-align: left; padding: 6px;">Simbol</th>
+                        <th style="text-align: left; padding: 6px;">Faktor</th>
+                        <th style="text-align: left; padding: 6px;">Contoh</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">giga</td>
+                        <td style="padding: 6px;">G</td>
+                        <td style="padding: 6px;">10⁹</td>
+                        <td style="padding: 6px;">1 GB = 1,000,000,000 byte</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">mega</td>
+                        <td style="padding: 6px;">M</td>
+                        <td style="padding: 6px;">10⁶</td>
+                        <td style="padding: 6px;">1 MW = 1,000,000 W</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">kilo</td>
+                        <td style="padding: 6px;">k</td>
+                        <td style="padding: 6px;">10³</td>
+                        <td style="padding: 6px;">1 km = 1,000 m</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">hekto</td>
+                        <td style="padding: 6px;">h</td>
+                        <td style="padding: 6px;">10²</td>
+                        <td style="padding: 6px;">1 hPa = 100 Pa</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">desi</td>
+                        <td style="padding: 6px;">d</td>
+                        <td style="padding: 6px;">10⁻¹</td>
+                        <td style="padding: 6px;">1 dm = 0.1 m</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">senti</td>
+                        <td style="padding: 6px;">c</td>
+                        <td style="padding: 6px;">10⁻²</td>
+                        <td style="padding: 6px;">1 cm = 0.01 m</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">mili</td>
+                        <td style="padding: 6px;">m</td>
+                        <td style="padding: 6px;">10⁻³</td>
+                        <td style="padding: 6px;">1 mm = 0.001 m</td>
+                    </tr>
+                    <tr style="background: #ffffff80;">
+                        <td style="padding: 6px;">mikro</td>
+                        <td style="padding: 6px;">μ</td>
+                        <td style="padding: 6px;">10⁻⁶</td>
+                        <td style="padding: 6px;">1 μm = 0.000001 m</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;">nano</td>
+                        <td style="padding: 6px;">n</td>
+                        <td style="padding: 6px;">10⁻⁹</td>
+                        <td style="padding: 6px;">1 nm = ukuran molekul</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 2: ALAT UKUR -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>2. Alat-Alat Ukur</h3>
+
+                <p>Setiap alat ukur punya tingkat <strong>ketelitian</strong> yang berbeda. Ketelitian adalah nilai
+                    terkecil yang dapat diukur oleh alat tersebut.</p>
+
+                <div class="tool-card">
+                    <h5>📏 Penggaris / Mistar</h5>
+                    <ul>
+                        <li><strong>Mengukur:</strong> Panjang</li>
+                        <li><strong>Ketelitian:</strong> 1 mm (0.1 cm)</li>
+                        <li><strong>Rentang:</strong> 0-30 cm (biasa) atau 0-100 cm (mistar panjang)</li>
+                        <li><strong>Cara baca:</strong> Letakkan mata sejajar skala untuk menghindari kesalahan paralaks
+                        </li>
+                        <li><strong>Cocok untuk:</strong> Pengukuran umum, menggambar garis</li>
+                    </ul>
+                </div>
+
+                <div class="tool-card">
+                    <h5>🔧 Jangka Sorong (Vernier Caliper)</h5>
+                    <ul>
+                        <li><strong>Mengukur:</strong> Panjang, diameter luar, diameter dalam, kedalaman</li>
+                        <li><strong>Ketelitian:</strong> 0.1 mm (0.01 cm) — <strong>10× lebih teliti dari
+                                penggaris!</strong></li>
+                        <li><strong>Rentang:</strong> 0-15 cm (biasa)</li>
+                        <li><strong>Cara baca:</strong>
+                            <ol>
+                                <li>Baca skala utama (di sebelah kiri garis nol nonius)</li>
+                                <li>Cari garis nonius yang <strong>paling lurus segaris</strong> dengan garis skala
+                                    utama</li>
+                                <li>Hasil = skala utama + (garis nonius × 0.1 mm)</li>
+                            </ol>
+                        </li>
+                    </ul>
+                    <div class="example-box">
+                        <strong>Contoh Pembacaan:</strong>
+                        <br>
+                        Skala utama menunjukkan 3.2 cm, garis nonius ke-7 segaris → Hasil = 3.2 + (7 × 0.01) =
+                        <strong>3.27 cm</strong>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h5>🔩 Mikrometer Sekrup</h5>
+                    <ul>
+                        <li><strong>Mengukur:</strong> Ketebalan benda tipis, diameter kawat, kertas</li>
+                        <li><strong>Ketelitian:</strong> 0.01 mm (0.001 cm) — <strong>100× lebih teliti dari
+                                penggaris!</strong></li>
+                        <li><strong>Rentang:</strong> 0-25 mm (biasa)</li>
+                        <li><strong>Cara baca:</strong>
+                            <ol>
+                                <li>Baca skala utama (garis horizontal di selongsong)</li>
+                                <li>Periksa apakah garis 0.5 mm terlihat atau tidak</li>
+                                <li>Baca skala putar (thimble) yang segaris dengan garis horizontal</li>
+                                <li>Hasil = skala utama + skala putar × 0.01 mm</li>
+                            </ol>
+                        </li>
+                    </ul>
+                    <div class="example-box">
+                        <strong>Contoh Pembacaan:</strong>
+                        <br>
+                        Skala utama: 5.5 mm, skala putar: 23 → Hasil = 5.5 + (23 × 0.01) = <strong>5.73 mm</strong>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h5>⚖️ Neraca (Timbangan)</h5>
+                    <ul>
+                        <li><strong>Neraca dua lengan (balance):</strong> Ketelitian 0.1 g — membandingkan massa dengan
+                            anak timbangan</li>
+                        <li><strong>Neraca digital:</strong> Ketelitian 0.01 g atau lebih — cepat dan mudah dibaca</li>
+                        <li><strong>Neraca pegas:</strong> Sebenarnya mengukur <strong>gaya berat</strong> (bukan
+                            massa!) → bacaannya berubah di tempat berbeda</li>
+                    </ul>
+                </div>
+
+                <div class="tool-card">
+                    <h5>⏱️ Stopwatch</h5>
+                    <ul>
+                        <li><strong>Stopwatch digital:</strong> Ketelitian 0.01 s</li>
+                        <li><strong>Stopwatch analog:</strong> Ketelitian 0.1 s</li>
+                        <li><strong>Sumber kesalahan utama:</strong> Waktu reaksi manusia (~0.2 s) — ini jauh lebih
+                            besar dari ketelitian alat!</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Perbandingan Ketelitian Alat Ukur Panjang:</strong>
+                    <br><br>
+                    Penggaris: 1 mm → Jangka Sorong: 0.1 mm → Mikrometer: 0.01 mm
+                    <br><br>
+                    Jadi mikrometer 100× lebih teliti dari penggaris! Pilih alat yang sesuai dengan kebutuhan
+                    pengukuranmu.
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 3: NOTASI ILMIAH -->
+            <!-- ============================================ -->
+            <div class="subsection">
+                <h3>3. Notasi Ilmiah (Scientific Notation)</h3>
+
+                <div class="definition-box">
+                    <strong>Notasi ilmiah</strong> adalah cara menulis angka dalam bentuk:
+                    <br><br>
+                    <center><strong>$a \times 10^n$</strong></center>
+                    <br>
+                    dimana $1 \leq a < 10$ dan $n$ adalah bilangan bulat (positif atau negatif). </div>
+
+                        <h4>Mengapa Perlu Notasi Ilmiah?</h4>
+                        <p>Karena dalam fisika, kita sering berurusan dengan angka yang sangat besar atau sangat kecil:
+                        </p>
+                        <ul>
+                            <li>Jarak Bumi-Matahari = 150,000,000,000 m = <strong>$1.5 \times 10^{11}$ m</strong> (lebih
+                                ringkas!)</li>
+                            <li>Massa elektron = 0.000000000000000000000000000000911 kg = <strong>$9.11 \times 10^{-31}$
+                                    kg</strong></li>
+                        </ul>
+
+                        <h4>Cara Mengkonversi</h4>
+                        <div class="example-box">
+                            <strong>Angka besar → Notasi ilmiah:</strong>
+                            <br>
+                            384,000 → Pindahkan koma 5 digit ke kiri → $3.84 \times 10^5$
+                            <br><br>
+                            <strong>Angka kecil → Notasi ilmiah:</strong>
+                            <br>
+                            0.00025 → Pindahkan koma 4 digit ke kanan → $2.5 \times 10^{-4}$
+                            <br><br>
+                            <strong>Trik:</strong> Pangkat positif = angka besar. Pangkat negatif = angka kecil.
+                        </div>
+
+                        <h4>Perbandingan Ukuran Alam Semesta</h4>
+                        <table class="formula-box" style="width: 100%; border: none; padding: 12px;">
+                            <tr style="border-bottom: 1px solid #a8c5f0;">
+                                <th style="text-align: left; padding: 6px;">Objek</th>
+                                <th style="text-align: left; padding: 6px;">Ukuran</th>
+                                <th style="text-align: left; padding: 6px;">Notasi Ilmiah</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px;">Inti atom</td>
+                                <td style="padding: 6px;">0.000000000000001 m</td>
+                                <td style="padding: 6px;">$10^{-15}$ m</td>
+                            </tr>
+                            <tr style="background: #ffffff80;">
+                                <td style="padding: 6px;">Atom</td>
+                                <td style="padding: 6px;">0.0000000001 m</td>
+                                <td style="padding: 6px;">$10^{-10}$ m</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px;">Virus</td>
+                                <td style="padding: 6px;">0.0000001 m</td>
+                                <td style="padding: 6px;">$10^{-7}$ m</td>
+                            </tr>
+                            <tr style="background: #ffffff80;">
+                                <td style="padding: 6px;">Sel darah merah</td>
+                                <td style="padding: 6px;">0.000007 m</td>
+                                <td style="padding: 6px;">$7 \times 10^{-6}$ m</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px;">Rambut manusia</td>
+                                <td style="padding: 6px;">0.00007 m</td>
+                                <td style="padding: 6px;">$7 \times 10^{-5}$ m</td>
+                            </tr>
+                            <tr style="background: #ffffff80;">
+                                <td style="padding: 6px;">Tinggi manusia</td>
+                                <td style="padding: 6px;">1.7 m</td>
+                                <td style="padding: 6px;">$1.7 \times 10^0$ m</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px;">Diameter Bumi</td>
+                                <td style="padding: 6px;">12,742,000 m</td>
+                                <td style="padding: 6px;">$1.27 \times 10^7$ m</td>
+                            </tr>
+                            <tr style="background: #ffffff80;">
+                                <td style="padding: 6px;">Jarak Bumi-Matahari</td>
+                                <td style="padding: 6px;">150,000,000,000 m</td>
+                                <td style="padding: 6px;">$1.5 \times 10^{11}$ m</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px;">Galaksi Bima Sakti</td>
+                                <td style="padding: 6px;">~950,000,000,000,000,000,000 m</td>
+                                <td style="padding: 6px;">$9.5 \times 10^{20}$ m</td>
+                            </tr>
+                        </table>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 4: AKURASI VS PRESISI -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>4. Akurasi vs Presisi</h3>
+
+                    <p>Dua kata ini sering dicampur-aduk, padahal artinya sangat berbeda:</p>
+
+                    <div class="definition-box">
+                        <strong>Akurasi</strong> = Seberapa <strong>dekat</strong> hasil pengukuran dengan <strong>nilai
+                            sebenarnya</strong>.
+                        <br>
+                        → Apakah tembakan kamu tepat sasaran?
+                    </div>
+
+                    <div class="definition-box">
+                        <strong>Presisi</strong> = Seberapa <strong>konsisten</strong> hasil pengukuran jika dilakukan
+                        <strong>berulang-ulang</strong>.
+                        <br>
+                        → Apakah tembakan kamu selalu di titik yang sama?
+                    </div>
+
+                    <h4>Analogi Target/Sasaran</h4>
+
+                    <table class="formula-box" style="width: 100%; border: none; padding: 12px; text-align: center;">
+                        <tr style="border-bottom: 1px solid #a8c5f0;">
+                            <th style="padding: 6px;"></th>
+                            <th style="padding: 6px;">Presisi RENDAH</th>
+                            <th style="padding: 6px;">Presisi TINGGI</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px;"><strong>Akurasi RENDAH</strong></td>
+                            <td style="padding: 8px;">🎯 Tembakan tersebar acak, jauh dari pusat<br><em>(buruk
+                                    semua)</em></td>
+                            <td style="padding: 8px;">🎯 Tembakan mengumpul, tapi jauh dari pusat<br><em>(konsisten tapi
+                                    salah)</em></td>
+                        </tr>
+                        <tr style="background: #ffffff80;">
+                            <td style="padding: 8px;"><strong>Akurasi TINGGI</strong></td>
+                            <td style="padding: 8px;">🎯 Tembakan di sekitar pusat, tapi tersebar<br><em>(rata-rata
+                                    benar)</em></td>
+                            <td style="padding: 8px;">🎯 Tembakan mengumpul tepat di pusat<br><em>(ideal! 🏆)</em></td>
+                        </tr>
+                    </table>
+
+                    <div class="example-box">
+                        <strong>Contoh Nyata:</strong>
+                        <br><br>
+                        <strong>Timbangan Pasar:</strong> Pedagang menimbang apel berkali-kali, selalu menunjukkan 503
+                        g, 502 g, 504 g, 503 g. Hasilnya <strong>presisi</strong> (konsisten). Tapi kalau timbangan itu
+                        belum dikalibrasi dan selalu menunjukkan 20 gram lebih berat, maka <strong>tidak akurat</strong>
+                        — berat apel sebenarnya hanya ~483 g.
+                        <br><br>
+                        <strong>Solusi:</strong> Kalibrasi timbangan (perbaiki akurasi) tanpa mengorbankan presisi yang
+                        sudah baik.
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Penting untuk Dipahami:</strong>
+                        <ul>
+                            <li><strong>Akurasi rendah + presisi tinggi</strong> = ada kesalahan
+                                <strong>sistematis</strong> → perbaiki alat/kalibrasi
+                            </li>
+                            <li><strong>Akurasi tinggi + presisi rendah</strong> = ada kesalahan <strong>acak</strong> →
+                                ukur berkali-kali, ambil rata-rata</li>
+                            <li>Pengukuran yang ideal: <strong>akurat DAN presisi</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 5: ANGKA PENTING -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>5. Angka Penting (Significant Figures)</h3>
+
+                    <div class="definition-box">
+                        <strong>Angka penting</strong> adalah semua angka yang bermakna dalam hasil pengukuran —
+                        menunjukkan <strong>seberapa teliti</strong> pengukuran kita.
+                    </div>
+
+                    <p>Menulis angka penting yang benar itu soal <strong>kejujuran ilmiah</strong>. Jangan menulis lebih
+                        banyak angka daripada yang benar-benar bisa kamu ukur!</p>
+
+                    <h4>5.1 Aturan Menghitung Angka Penting</h4>
+
+                    <ol>
+                        <li>
+                            <strong>Semua angka 1-9 SELALU dihitung</strong>
+                            <br>Contoh: 237 → <strong>3</strong> angka penting
+                        </li>
+                        <li style="margin-top: 8px;">
+                            <strong>Nol di TENGAH angka SELALU dihitung</strong> (nol "terjepit")
+                            <br>Contoh: 205 → <strong>3</strong> angka penting; 10,003 → <strong>5</strong> angka
+                            penting
+                        </li>
+                        <li style="margin-top: 8px;">
+                            <strong>Nol di DEPAN TIDAK dihitung</strong> (hanya penunjuk tempat desimal)
+                            <br>Contoh: 0.00237 → <strong>3</strong> angka penting (hanya 2, 3, 7)
+                        </li>
+                        <li style="margin-top: 8px;">
+                            <strong>Nol di BELAKANG:</strong>
+                            <ul>
+                                <li>Ada desimal → <strong>DIHITUNG</strong>: 2.30 → <strong>3</strong> angka penting
+                                </li>
+                                <li>Tidak ada desimal → <strong>AMBIGU</strong>: 230 → bisa 2 atau 3 angka penting</li>
+                            </ul>
+                        </li>
+                        <li style="margin-top: 8px;">
+                            <strong>Gunakan notasi ilmiah untuk menghilangkan ambiguitas</strong>
+                            <br>2.3 × 10² → pasti 2 angka penting
+                            <br>2.30 × 10² → pasti 3 angka penting
+                        </li>
+                    </ol>
+
+                    <div class="example-box">
+                        <strong>Latihan Cepat — Berapa angka penting?</strong>
+                        <br><br>
+                        • 4050 → <strong>3</strong> (nol tengah dihitung, nol akhir ambigu)
+                        <br>
+                        • 0.0060 → <strong>2</strong> (hanya 6 dan nol terakhir; nol depan tidak dihitung)
+                        <br>
+                        • 1.00 → <strong>3</strong> (nol belakang setelah desimal dihitung)
+                        <br>
+                        • $3.00 \times 10^5$ → <strong>3</strong> (notasi ilmiah menghilangkan ambiguitas)
+                        <br>
+                        • 100 → <strong>1, 2, atau 3</strong> (ambigu! Lebih baik tulis $1.00 \times 10^2$ jika memang 3
+                        AP)
+                    </div>
+
+                    <h4>5.2 Aturan Pembulatan dalam Perhitungan</h4>
+
+                    <div class="formula-box">
+                        <strong>Penjumlahan/Pengurangan:</strong> Bulatkan ke posisi desimal paling "kasar"
+                        <br>
+                        Contoh: 12.3 + 0.025 = 12.325 → tulis <strong>12.3</strong> (karena 12.3 hanya 1 desimal)
+                        <br><br>
+                        <strong>Perkalian/Pembagian:</strong> Bulatkan ke jumlah angka penting paling sedikit
+                        <br>
+                        Contoh: 12.34 × 0.5 = 6.17 → tulis <strong>6</strong> (karena 0.5 hanya 1 AP)
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 6: KETIDAKPASTIAN -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>6. Ketidakpastian Pengukuran</h3>
+
+                    <div class="definition-box">
+                        <strong>Ketidakpastian</strong> adalah kisaran berapa besar hasil pengukuran bisa "meleset" dari
+                        nilai sebenarnya. <strong>SEMUA pengukuran memiliki ketidakpastian</strong> — ini bukan
+                        kegagalan, tapi sifat alami pengukuran.
+                    </div>
+
+                    <h4>6.1 Cara Menulis Hasil Pengukuran</h4>
+                    <div class="formula-box">
+                        Hasil pengukuran ditulis: <strong>nilai ± ketidakpastian</strong>
+                        <br><br>
+                        Contoh: panjang = <strong>(120.5 ± 0.3) cm</strong>
+                        <br>
+                        Artinya: nilai sebenarnya kemungkinan besar antara 120.2 cm dan 120.8 cm
+                        <br><br>
+                        Atau dalam persen: panjang = 120.5 cm <strong>± 0.25%</strong>
+                    </div>
+
+                    <h4>6.2 Ketidakpastian Acak (Tipe A)</h4>
+                    <p>Hasil pengukuran berubah-ubah secara <strong>acak</strong> setiap kali diulang. Bisa lebih besar
+                        atau lebih kecil.</p>
+                    <ul>
+                        <li><strong>Penyebab:</strong> Getaran, fluktuasi suhu, keterbatasan pengamat</li>
+                        <li><strong>Ciri khas:</strong> Hasilnya tersebar acak di sekitar nilai sebenarnya</li>
+                        <li><strong>Solusi:</strong> Ukur berkali-kali, ambil <strong>rata-rata</strong> → semakin
+                            banyak pengukuran, semakin akurat rata-ratanya!</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <strong>Contoh:</strong> Mengukur panjang meja 5 kali: 120.2, 120.4, 120.3, 120.1, 120.3 cm
+                        <br><br>
+                        Rata-rata = (120.2 + 120.4 + 120.3 + 120.1 + 120.3) / 5 = <strong>120.26 cm</strong>
+                        <br>
+                        Hasilnya bervariasi karena ketidakpastian acak (posisi mata, titik ujung meja yang tidak rata,
+                        dll).
+                    </div>
+
+                    <h4>6.3 Ketidakpastian Sistematis (Tipe B)</h4>
+                    <p>Kesalahan yang <strong>konsisten dan selalu ke arah yang sama</strong>. Tidak bisa diatasi dengan
+                        mengulang pengukuran!</p>
+                    <ul>
+                        <li><strong>Penyebab:</strong> Alat rusak, tidak dikalibrasi, teknik pengukuran salah</li>
+                        <li><strong>Ciri khas:</strong> Semua hasil selalu lebih besar (atau lebih kecil) dari
+                            seharusnya</li>
+                        <li><strong>Solusi:</strong> Perbaiki atau kalibrasi alat, perbaiki teknik pengukuran</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <strong>Contoh Kesalahan Sistematis:</strong>
+                        <ul>
+                            <li><strong>Zero error:</strong> Jarum timbangan tidak di posisi nol saat tidak ada beban →
+                                semua pengukuran selalu salah sejumlah yang sama</li>
+                            <li><strong>Penggaris terpotong:</strong> Ujung penggaris patah 2 mm → semua pengukuran 2 mm
+                                lebih pendek</li>
+                            <li><strong>Suhu mempengaruhi alat:</strong> Termometer yang tidak dikalibrasi pada suhu
+                                ruangan → bacaan selalu salah</li>
+                        </ul>
+                    </div>
+
+                    <h4>6.4 Kesalahan Umum Saat Mengukur</h4>
+                    <ul>
+                        <li><strong>Kesalahan Paralaks:</strong> Membaca skala dari sudut miring. Solusi: posisikan mata
+                            selalu <strong>tegak lurus</strong> terhadap skala!</li>
+                        <li><strong>Zero Error:</strong> Alat tidak menunjuk nol saat tidak mengukur apapun. Solusi: cek
+                            posisi nol sebelum mengukur!</li>
+                        <li><strong>Reaksi Manusia:</strong> Saat menekan stopwatch, ada jeda ~0.2 detik. Solusi:
+                            gunakan sensor otomatis atau ukur waktu untuk banyak pengulangan.</li>
+                        <li><strong>Pengaruh Lingkungan:</strong> Suhu, kelembaban, getaran bisa mempengaruhi
+                            pengukuran. Solusi: kontrol lingkungan, catat kondisi saat mengukur.</li>
+                    </ul>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 7: PROPAGASI -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>7. Propagasi Ketidakpastian</h3>
+
+                    <p>Ketika hasil pengukuran digunakan untuk menghitung nilai lain, ketidakpastiannya <strong>ikut
+                            menyebar</strong>. Ini disebut propagasi ketidakpastian.</p>
+
+                    <h4>7.1 Penjumlahan/Pengurangan</h4>
+                    <div class="formula-box">
+                        <strong>Tambahkan ketidakpastian absolut (± nilai)</strong>
+                        <br><br>
+                        Contoh: Panjang papan A = (50.0 ± 0.2) cm, papan B = (30.0 ± 0.3) cm
+                        <br>
+                        Panjang total = (50.0 + 30.0) ± (0.2 + 0.3) = <strong>(80.0 ± 0.5) cm</strong>
+                        <br><br>
+                        <em>Logika: Papan A bisa meleset 0.2 cm, papan B bisa meleset 0.3 cm. Total bisa meleset sampai
+                            0.5 cm.</em>
+                    </div>
+
+                    <h4>7.2 Perkalian/Pembagian</h4>
+                    <div class="formula-box">
+                        <strong>Tambahkan ketidakpastian persen (± %)</strong>
+                        <br><br>
+                        Contoh: Panjang = (120.0 ± 1%) cm, Lebar = (80.0 ± 2%) cm
+                        <br>
+                        Luas = 120 × 80 = 9600 cm²
+                        <br>
+                        Ketidakpastian = 1% + 2% = 3% dari 9600 = ± 288 cm²
+                        <br>
+                        Hasil: <strong>Luas = (9600 ± 3%) cm²</strong>
+                    </div>
+
+                    <div class="tips-box">
+                        <strong>📝 Ringkasan Cepat Propagasi:</strong>
+                        <ul>
+                            <li><strong>Ditambah/Dikurangi:</strong> Tambahkan <strong>ketidakpastian absolut</strong>
+                                (± cm, ± kg)</li>
+                            <li><strong>Dikali/Dibagi:</strong> Tambahkan <strong>ketidakpastian persen</strong> (± %)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 8: TIPS PRAKTIKUM -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>8. Tips Praktikum Fisika</h3>
+
+                    <div class="tips-box">
+                        <strong>🔬 Tips untuk Pengukuran yang Baik di Laboratorium:</strong>
+                        <ol>
+                            <li><strong>Cek zero error</strong> — Sebelum mengukur, pastikan alat menunjuk nol saat
+                                tidak ada yang diukur.</li>
+                            <li><strong>Pilih alat yang tepat</strong> — Mengukur diameter kawat? Pakai mikrometer.
+                                Mengukur panjang meja? Pakai penggaris atau meteran.</li>
+                            <li><strong>Ulangi pengukuran minimal 3-5 kali</strong> — Untuk mengurangi ketidakpastian
+                                acak dan mendapat rata-rata yang lebih akurat.</li>
+                            <li><strong>Hindari paralaks</strong> — Posisikan mata tegak lurus terhadap skala alat ukur.
+                            </li>
+                            <li><strong>Catat SEMUA data</strong> — Termasuk yang tampak "aneh". Jangan buang data hanya
+                                karena tidak sesuai harapan.</li>
+                            <li><strong>Tulis satuan SELALU</strong> — 12.5 tidak bermakna tanpa satuan. 12.5 cm berarti
+                                sesuatu.</li>
+                            <li><strong>Catat kondisi lingkungan</strong> — Suhu ruangan, tekanan udara, kelembaban bisa
+                                mempengaruhi hasil.</li>
+                            <li><strong>Ukur di posisi berbeda</strong> — Untuk kawat, ukur diameternya di 3 titik
+                                berbeda untuk memastikan keseragaman.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SECTION 9: SOAL LATIHAN -->
+                <!-- ============================================ -->
+                <div class="subsection">
+                    <h3>9. Soal Latihan & Studi Kasus</h3>
+
+                    <h4>9.1 Studi Kasus: Mengukur Kawat</h4>
+                    <p>Lucky mengukur ketebalan kawat 5 kali dengan mikrometer. Hasilnya: 2.42, 2.43, 2.41, 2.44, 2.42
+                        mm.</p>
+
+                    <p><strong>Pertanyaan untuk dipikirkan:</strong></p>
+                    <ul>
+                        <li>Berapa rata-rata ketebalannya?</li>
+                        <li>Mengapa hasilnya berbeda-beda? Apakah ini kesalahan acak atau sistematis?</li>
+                        <li>Bagaimana cara melaporkan hasil dengan benar?</li>
+                    </ul>
+
+                    <h4>9.2 Studi Kasus: Hitung Luas</h4>
+                    <p>Agus mengukur panjang dan lebar meja:</p>
+                    <ul>
+                        <li>Panjang = (150 ± 1) cm → ketidakpastian = 1/150 × 100% = 0.67%</li>
+                        <li>Lebar = (80 ± 2) cm → ketidakpastian = 2/80 × 100% = 2.5%</li>
+                    </ul>
+
+                    <p><strong>Pertanyaan:</strong></p>
+                    <ul>
+                        <li>Mana yang punya kesalahan lebih besar secara persentase?</li>
+                        <li>Berapa luas meja dan ketidakpastiannya?</li>
+                        <li>Kalau ingin mengurangi ketidakpastian, ukuran mana yang harus diperbaiki dulu?</li>
+                    </ul>
+
+                    <h4>9.3 Pertanyaan Konsep</h4>
+                    <ol>
+                        <li>Apa bedanya besaran pokok dan besaran turunan? Beri 3 contoh masing-masing.</li>
+                        <li>Jelaskan perbedaan akurasi dan presisi dengan analogi memanah. Beri contoh situasi
+                            pengukuran yang presisi tapi tidak akurat.</li>
+                        <li>Berapa angka penting pada bilangan: 0.00340, 1.500, 2050, dan $4.00 \times 10^3$?</li>
+                        <li>Mengapa pengukuran berulang tidak bisa mengatasi kesalahan sistematis? Apa yang harus
+                            dilakukan?</li>
+                        <li>konversikan ke notasi ilmiah: 0.000045 m, 6,370,000 m, dan 299,792,458 m/s.</li>
+                    </ol>
+
+                    <details style="margin-top: 16px; background: #f3f4f6; padding: 12px; border-radius: 6px;">
+                        <summary style="cursor: pointer; font-weight: 600;">📋 Jawaban (Klik untuk Buka)</summary>
+                        <div style="margin-top: 12px;">
+                            <h4>Studi Kasus 1:</h4>
+                            <p>
+                                Rata-rata = (2.42 + 2.43 + 2.41 + 2.44 + 2.42) / 5 = <strong>2.424 mm</strong>
+                                <br>
+                                Perbedaan hasil disebabkan <strong>ketidakpastian acak</strong> — posisi kawat sedikit
+                                berbeda, tekanan pada mikrometer sedikit berbeda, dll.
+                                <br>
+                                Laporan: ketebalan kawat = <strong>(2.42 ± 0.01) mm</strong> (menggunakan ketelitian
+                                mikrometer)
+                            </p>
+
+                            <h4>Studi Kasus 2:</h4>
+                            <p>
+                                Persen kesalahan lebar (2.5%) > panjang (0.67%) → <strong>lebar punya kesalahan lebih
+                                    besar</strong>
+                                <br>
+                                Luas = 150 × 80 = 12,000 cm²
+                                <br>
+                                Ketidakpastian = 0.67% + 2.5% = 3.17% ≈ 3.2% → ± 380 cm²
+                                <br>
+                                Hasil: <strong>Luas = (12,000 ± 380) cm²</strong>
+                                <br>
+                                Untuk mengurangi ketidakpastian, perbaiki pengukuran <strong>lebar</strong> dulu
+                                (kontribusinya paling besar)
+                            </p>
+
+                            <h4>Pertanyaan Konsep 3:</h4>
+                            <p>
+                                • 0.00340 → <strong>3 AP</strong> (3, 4, 0 terakhir dihitung; nol depan tidak)
+                                <br>
+                                • 1.500 → <strong>4 AP</strong> (nol belakang setelah desimal dihitung)
+                                <br>
+                                • 2050 → <strong>3 AP</strong> (nol tengah dihitung, nol akhir ambigu)
+                                <br>
+                                • $4.00 \times 10^3$ → <strong>3 AP</strong> (notasi ilmiah menghilangkan ambiguitas)
+                            </p>
+
+                            <h4>Pertanyaan Konsep 5:</h4>
+                            <p>
+                                • 0.000045 m = $4.5 \times 10^{-5}$ m
+                                <br>
+                                • 6,370,000 m = $6.37 \times 10^6$ m
+                                <br>
+                                • 299,792,458 m/s = $2.998 \times 10^8$ m/s (kecepatan cahaya!)
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <button class="modal-btn" id="markDonePengukuran" style="margin-top: 32px;">Tandai Selesai</button>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setLastActivity(getPageNameFromPath());
+            const btn = document.getElementById('markDonePengukuran');
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    completeTask('pengukuran');
+                    alert('Aktivitas "Pengukuran" ditandai selesai.');
+                });
+            }
+        });
+    </script>
+    <script src="../streak-manager.js"></script>
+    <script src="../history-manager.js"></script>
+    <script src="tts-reader.js"></script>
+</body>
+
+</html>

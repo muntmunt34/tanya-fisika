@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0f1e">
+    <meta name="description" content="Physics Components & UI Library">
+    <title>Physics Components Library</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Physics Styles -->
+    <link rel="stylesheet" href="physics-background.css">
+    <link rel="stylesheet" href="physics-components.css">
+    
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f1b35 25%, #1a2a4a 50%, #0f3a5f 75%, #0a0f1e 100%);
+            color: #e8f4f8;
+        }
+        
+        .components-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .component-section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #00d9ff;
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+            border-bottom: 2px solid rgba(0, 217, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-item {
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: rgba(232, 244, 248, 0.02);
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            text-align: center;
+        }
+        
+        .demo-label {
+            font-size: 0.85rem;
+            color: rgba(232, 244, 248, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        code {
+            display: block;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #00d9ff;
+            margin-top: 0.5rem;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Physics Background -->
+    <div id="app"></div>
+    
+    <!-- Components Showcase -->
+    <div class="components-container">
+        <header style="text-align: center; margin-bottom: 4rem;">
+            <h1 class="heading-physics h1 gradient">Physics UI Components</h1>
+            <p style="font-size: 1.2rem; color: rgba(232, 244, 248, 0.8); margin-top: 1rem;">
+                Complete library for of pre-built components
+            </p>
+        </header>
+
+        <!-- BUTTONS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Buttons</h2>
+            
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <button class="btn-physics primary">Primary Button</button>
+                    <code>class="btn-physics primary"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics secondary">Secondary Button</button>
+                    <code>class="btn-physics secondary"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics tertiary">Tertiary Button</button>
+                    <code>class="btn-physics tertiary"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics accent">Accent Button</button>
+                    <code>class="btn-physics accent"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics primary sm">Small</button>
+                    <code>class="sm"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics primary lg">Large</button>
+                    <code>class="lg"</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUTS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Form Elements</h2>
+            
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <input type="text" class="input-physics" placeholder="Text Input">
+                    <code>class="input-physics"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <input type="email" class="input-physics" placeholder="Email Input">
+                    <code>type="email"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <input type="password" class="input-physics" placeholder="Password">
+                    <code>type="password"</code>
+                </div>
+                
+                <div class="demo-item">
+                    <select class="select-physics">
+                        <option>Select Option</option>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                    </select>
+                    <code>class="select-physics"</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- BADGES SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Badges & Labels</h2>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+                <span class="badge-physics cyan">New</span>
+                <span class="badge-physics purple">Featured</span>
+                <span class="badge-physics blue">Physics</span>
+                <code>class="badge-physics cyan|purple|blue"</code>
+            </div>
+        </div>
+
+        <!-- ICONS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Icons</h2>
+            
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="icon-physics sm cyan">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <p class="demo-label">Small Cyan</p>
+                    <code>icon-physics sm cyan</code>
+                </div>
+                
+                <div class="demo-item">
+                    <div class="icon-physics md cyan">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <p class="demo-label">Medium Cyan</p>
+                    <code>icon-physics md cyan</code>
+                </div>
+                
+                <div class="demo-item">
+                    <div class="icon-physics lg cyan">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <p class="demo-label">Large Cyan</p>
+                    <code>icon-physics lg cyan</code>
+                </div>
+                
+                <div class="demo-item">
+                    <div class="icon-physics md purple">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="demo-label">Purple Icon</p>
+                    <code>icon-physics purple</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARDS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Cards</h2>
+            
+            <div class="grid-physics cols-2">
+                <div class="card-physics">
+                    <h3 style="color: #00d9ff; margin-bottom: 0.5rem;">Standard Card</h3>
+                    <p>Glass morphism with cyan border and glow effect on hover.</p>
+                    <code style="margin-top: 1rem;">class="card-physics"</code>
+                </div>
+                
+                <div class="card-physics accent">
+                    <h3 style="color: #c77dff; margin-bottom: 0.5rem;">Accent Card</h3>
+                    <p>Purple accent variant for featured content sections.</p>
+                    <code style="margin-top: 1rem;">class="card-physics accent"</code>
+                </div>
+                
+                <div class="card-physics sm">
+                    <h3 style="color: #00d9ff; margin-bottom: 0.5rem;">Small Card</h3>
+                    <p>Compact size variant</p>
+                    <code>class="sm"</code>
+                </div>
+                
+                <div class="card-physics lg elevated">
+                    <h3 style="color: #00d9ff; margin-bottom: 0.5rem;">Elevated Card</h3>
+                    <p>Large card with shadow elevation</p>
+                    <code>class="lg elevated"</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRIDS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Grid Layouts</h2>
+            
+            <div>
+                <h4 style="color: #00d9ff; margin-bottom: 1rem;">3 Columns Auto-responsive</h4>
+                <div class="grid-physics cols-3">
+                    <div style="padding: 2rem; background: rgba(0,217,255,0.1); border-radius: 12px; border: 1px solid rgba(0,217,255,0.2);">
+                        Column 1
+                    </div>
+                    <div style="padding: 2rem; background: rgba(0,217,255,0.1); border-radius: 12px; border: 1px solid rgba(0,217,255,0.2);">
+                        Column 2
+                    </div>
+                    <div style="padding: 2rem; background: rgba(0,217,255,0.1); border-radius: 12px; border: 1px solid rgba(0,217,255,0.2);">
+                        Column 3
+                    </div>
+                </div>
+                <code style="margin-top: 1rem;">class="grid-physics cols-3"</code>
+            </div>
+        </div>
+
+        <!-- DIVIDERS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Dividers</h2>
+            
+            <div class="divider-physics"></div>
+            <code>class="divider-physics"</code>
+            
+            <div style="margin: 2rem 0;">
+                <div class="divider-physics accent"></div>
+                <code>class="divider-physics accent"</code>
+            </div>
+        </div>
+
+        <!-- HEADINGS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Headings</h2>
+            
+            <h1 class="heading-physics h1" style="margin-bottom: 1rem;">Heading H1</h1>
+            <code>class="heading-physics h1"</code>
+            
+            <h2 class="heading-physics h2 gradient" style="margin: 2rem 0 1rem;">Heading H2 Gradient</h2>
+            <code>class="heading-physics h2 gradient"</code>
+            
+            <h3 class="heading-physics h3" style="margin: 2rem 0 1rem;">Heading H3</h3>
+            <code>class="heading-physics h3"</code>
+        </div>
+
+        <!-- TEXT UTILITIES SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Text Utilities</h2>
+            
+            <div class="grid-physics">
+                <div><p class="text-cyan">Cyan Text</p><code>.text-cyan</code></div>
+                <div><p class="text-purple">Purple Text</p><code>.text-purple</code></div>
+                <div><p class="text-blue">Blue Text</p><code>.text-blue</code></div>
+                <div><p class="text-white">White Text</p><code>.text-white</code></div>
+            </div>
+        </div>
+
+        <!-- ANIMATIONS SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Animations</h2>
+            
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="card-physics animate-physics-glow" style="height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <span>Glow Breath</span>
+                    </div>
+                    <code>.animate-physics-glow</code>
+                </div>
+                
+                <div class="demo-item">
+                    <div style="height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-atom fa-2x animate-physics-spin" style="color: #00d9ff;"></i>
+                    </div>
+                    <code>.animate-physics-spin</code>
+                </div>
+                
+                <div class="demo-item">
+                    <button class="btn-physics primary animate-physics-pulse">Pulse Button</button>
+                    <code>.animate-physics-pulse</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPACING & LAYOUT SECTION -->
+        <div class="component-section">
+            <h2 class="section-title">Layout Utilities</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="padding: 1.5rem; background: rgba(0,217,255,0.1); border-radius: 12px;">
+                    <p style="margin: 0;">Flex Container</p>
+                    <code>.flex</code>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(0,217,255,0.1); border-radius: 12px;">
+                    <p style="margin: 0;">Flex Center</p>
+                    <code>.flex-center</code>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(0,217,255,0.1); border-radius: 12px;">
+                    <p style="margin: 0;">Flex Between</p>
+                    <code>.flex-between</code>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(0,217,255,0.1); border-radius: 12px;">
+                    <p style="margin: 0;">Container</p>
+                    <code>.container-physics</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer style="text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(0, 217, 255, 0.1);">
+            <p style="color: rgba(232, 244, 248, 0.6);">Physics Components Library v1.0</p>
+            <p style="font-size: 0.9rem; color: rgba(232, 244, 248, 0.4);">All components are fully customizable and responsive</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="physics-animations.js"></script>
+    
+    <script>
+        // Cool interactive demo
+        document.querySelectorAll('.btn-physics').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.background = 'rgba(255,255,255,0.5)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+    
+    <style>
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+    </style>
+</body>
+</html>
