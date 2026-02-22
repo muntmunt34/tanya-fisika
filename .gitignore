@@ -7,3 +7,4 @@ __pycache__/
 Thumbs.db
 .DS_Store
 test-audio.mp3
+.vercel
