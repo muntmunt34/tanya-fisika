@@ -3,10 +3,11 @@
     "framework": null,
     "buildCommand": "",
     "outputDirectory": ".",
+    "cleanUrls": true,
     "redirects": [
         {
             "source": "/",
-            "destination": "/login.html",
+            "destination": "/login",
             "statusCode": 302
         }
     ]
