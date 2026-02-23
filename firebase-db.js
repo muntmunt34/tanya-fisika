@@ -352,15 +352,47 @@ const DB = (() => {
                 ? (user.displayName || localStorage.getItem('userName') || 'Anonim')
                 : (localStorage.getItem('userName') || 'Anonim');
 
+            const authorId = user ? user.uid : 'guest';
+
             await db.collection('forum_posts').doc(postId).update({
                 replies: firebase.firestore.FieldValue.arrayUnion({
+                    id: 'r' + Date.now(),
                     author: author,
-                    authorId: user ? user.uid : 'guest',
+                    authorId: authorId,
                     content: content,
                     createdAt: new Date().toISOString()
                 })
             });
             console.log('[DB.forum] Reply added to:', postId);
+        },
+
+        // Toggle like/reaction on a post
+        async toggleReaction(postId) {
+            const user = auth.currentUser;
+            const uid = user ? user.uid : localStorage.getItem('anonId') || 'guest';
+            const docRef = db.collection('forum_posts').doc(postId);
+
+            await db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(docRef);
+                if (!doc.exists) throw "Post does not exist!";
+                const data = doc.data();
+                let likedBy = data.likedBy || [];
+
+                if (likedBy.includes(uid)) {
+                    likedBy = likedBy.filter(id => id !== uid);
+                } else {
+                    likedBy.push(uid);
+                }
+
+                transaction.update(docRef, { likedBy: likedBy });
+            });
+            console.log('[DB.forum] Reaction toggled for:', postId);
+        },
+
+        // Delete a post
+        async deletePost(postId) {
+            await db.collection('forum_posts').doc(postId).delete();
+            console.log('[DB.forum] Post deleted:', postId);
         }
     };
 

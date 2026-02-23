@@ -1219,19 +1219,39 @@
                 } catch (e) { return null; }
             }
 
-            function populateSubmissionSection(taskId) {
+            async function populateSubmissionSection(taskId) {
                 try {
-                    const my = findMySubmission(taskId);
                     const preview = document.getElementById('submissionPreview');
                     const nameEl = document.getElementById('submissionName');
                     const textEl = document.getElementById('submissionText');
+
+                    let my = null;
+
+                    if (typeof DB !== 'undefined' && DB.submissions) {
+                        const allSubs = await DB.submissions.getMySubmissions();
+                        my = allSubs.find(s => s.taskId === taskId);
+                    } else {
+                        my = findMySubmission(taskId);
+                    }
+
                     if (my) {
-                        preview.innerHTML = `<div class="card"><strong>Dikirim oleh Anda</strong> • ${new Date(my.time).toLocaleString()}<div style="margin-top:.4rem">${my.text ? '<div>' + escapeHtml(my.text) + '</div>' : ''}${my.file ? '<div style="margin-top:.4rem"><a href="' + my.file.data + '" download="' + my.file.name + '">📎 ' + my.file.name + '</a></div>' : ''}</div></div>`;
-                        if (nameEl) nameEl.value = my.name || '';
-                        if (textEl) textEl.value = my.text || '';
+                        // Extract time, handle Firestore Timestamp or local ISO string
+                        const timeStr = my.submittedAt ? (my.submittedAt.toDate ? my.submittedAt.toDate().toLocaleString() : new Date(my.submittedAt).toLocaleString()) : (my.time ? new Date(my.time).toLocaleString() : '');
+                        const noteText = my.note !== undefined ? my.note : (my.text || '');
+                        const fileNameStr = my.fileName || (my.file && my.file.name) || '';
+                        const fileDataUrl = my.fileData || (my.file && my.file.data) || '#';
+
+                        let html = `<div class="card"><strong>Dikirim oleh Anda</strong> • ${timeStr}<div style="margin-top:.4rem">`;
+                        if (noteText) html += `<div>${escapeHtml(noteText)}</div>`;
+                        if (fileNameStr) html += `<div style="margin-top:.4rem"><a href="${fileDataUrl}" download="${fileNameStr}" target="_blank">📎 ${fileNameStr}</a></div>`;
+                        html += `</div></div>`;
+                        preview.innerHTML = html;
+
+                        if (nameEl) nameEl.value = my.studentName || my.name || '';
+                        if (textEl) textEl.value = noteText;
                     } else {
                         preview.innerHTML = '<div class="muted">Belum ada pengumpulan untuk tugas ini.</div>';
-                        if (nameEl) nameEl.value = (sessionStorage.getItem('studentName') || '');
+                        if (nameEl) nameEl.value = localStorage.getItem('userName') || sessionStorage.getItem('userName') || '';
                         if (textEl) textEl.value = '';
                     }
                 } catch (e) { console.error('populateSubmissionSection', e); }
@@ -1274,7 +1294,13 @@
             (function () {
                 const form = document.getElementById('submissionForm');
                 const cancel = document.getElementById('submissionCancel');
-                if (cancel) cancel.addEventListener('click', function (e) { e.preventDefault(); const t = document.getElementById('submissionText'); const f = document.getElementById('submissionFileInput'); if (t) t.value = ''; if (f) f.value = ''; });
+                if (cancel) cancel.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const t = document.getElementById('submissionText');
+                    const f = document.getElementById('submissionFileInput');
+                    if (t) t.value = '';
+                    if (f) f.value = '';
+                });
 
                 if (form) {
                     form.addEventListener('submit', function (e) {
@@ -1287,28 +1313,48 @@
                             const fileEl = document.getElementById('submissionFileInput');
                             const studentId = currentStudentId();
 
-                            function finalizeSave(fileObj) {
-                                const subs = getSubmissions(); subs[taskId] = subs[taskId] || [];
-                                const entry = { id: 's' + Date.now() + '-' + Math.floor(Math.random() * 999), studentId: studentId, name: name, text: text, file: fileObj || null, time: new Date().toISOString() };
-                                const idx = subs[taskId].findIndex(s => s.studentId === studentId);
-                                if (idx !== -1) subs[taskId][idx] = entry; else subs[taskId].push(entry);
-                                saveSubmissionObj(subs);
-                                // mark complete for student
-                                try { const arr = JSON.parse(localStorage.getItem('completedTasks') || '[]'); if (arr.indexOf(taskId) === -1) { arr.push(taskId); localStorage.setItem('completedTasks', JSON.stringify(arr)); } } catch (e) { }
-                                // also copy file to uploadedFiles for teacher view
-                                if (fileObj && fileObj.data) { try { const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}'); uploaded[taskId + '::' + studentId] = { name: fileObj.name, type: fileObj.type, data: fileObj.data }; localStorage.setItem('uploadedFiles', JSON.stringify(uploaded)); } catch (e) { } }
-                                if (window.__classTasks && typeof window.__classTasks.render === 'function') window.__classTasks.render();
-                                updateClassProgress();
-                                populateSubmissionSection(taskId);
-                                alert('Pengumpulan berhasil disimpan.');
-
-                                // Notify teacher of this submission (real-time if possible)
+                            async function finalizeSave(fileObj) {
                                 try {
-                                    const tasksObj = JSON.parse(localStorage.getItem('classTasks') || '{}');
-                                    const taskMeta = tasksObj[taskId] || {};
-                                    notifyTeacherOfSubmission({ taskId: taskId, taskTitle: taskMeta.title || '', deadline: taskMeta.due || '' });
-                                } catch (e) {
-                                    console.warn('Failed to notify teacher:', e);
+                                    if (typeof DB !== 'undefined' && DB.submissions) {
+                                        await DB.submissions.submit(taskId, {
+                                            note: text,
+                                            fileName: fileObj ? fileObj.name : '',
+                                            // Sending fileData as base64 string could exceed Firestore 1MB limits for large files in production,
+                                            // but we'll include it for the prototype's sake so the UI functions as before.
+                                            fileData: fileObj ? fileObj.data : ''
+                                        });
+                                        console.log('[Submission] Saved to Firestore');
+                                    } else {
+                                        // Fallback local
+                                        const subs = getSubmissions(); subs[taskId] = subs[taskId] || [];
+                                        const entry = { id: 's' + Date.now() + '-' + Math.floor(Math.random() * 999), studentId: studentId, name: name, text: text, file: fileObj || null, time: new Date().toISOString() };
+                                        const idx = subs[taskId].findIndex(s => s.studentId === studentId);
+                                        if (idx !== -1) subs[taskId][idx] = entry; else subs[taskId].push(entry);
+                                        saveSubmissionObj(subs);
+                                    }
+
+                                    // mark complete for student
+                                    try { const arr = JSON.parse(localStorage.getItem('completedTasks') || '[]'); if (arr.indexOf(taskId) === -1) { arr.push(taskId); localStorage.setItem('completedTasks', JSON.stringify(arr)); } } catch (e) { }
+
+                                    // local caching of file for UI
+                                    if (fileObj && fileObj.data) { try { const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}'); uploaded[taskId + '::' + studentId] = { name: fileObj.name, type: fileObj.type, data: fileObj.data }; localStorage.setItem('uploadedFiles', JSON.stringify(uploaded)); } catch (e) { } }
+
+                                    if (window.__classTasks && typeof window.__classTasks.render === 'function') window.__classTasks.render();
+                                    updateClassProgress();
+                                    await populateSubmissionSection(taskId);
+                                    alert('Pengumpulan berhasil disimpan.');
+
+                                    // Notify teacher of this submission
+                                    try {
+                                        const tasksObj = JSON.parse(localStorage.getItem('classTasks') || '{}');
+                                        const taskMeta = tasksObj[taskId] || {};
+                                        notifyTeacherOfSubmission({ taskId: taskId, taskTitle: taskMeta.title || '', deadline: taskMeta.due || '' });
+                                    } catch (e) {
+                                        console.warn('Failed to notify teacher:', e);
+                                    }
+                                } catch (err) {
+                                    console.error('Finalize error', err);
+                                    alert('Gagal mengirim pengumpulan.');
                                 }
                             }
 

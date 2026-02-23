@@ -165,6 +165,13 @@
         </section>
     </main>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../firebase-db.js"></script>
+    <!-- Main App Script -->
     <script src="../script.js"></script>
     <script>
         (function () {
@@ -235,7 +242,6 @@
 
             function saveMessages(msgs) {
                 localStorage.setItem('forumMessages', JSON.stringify(msgs));
-                // trigger storage event for same-origin tabs
                 window.dispatchEvent(new Event('storage'));
             }
 
@@ -255,89 +261,102 @@
                 } catch (e) { console.error('toast error', e); }
             }
 
-            function renderMessages() {
+            function renderMessages(msgsList) {
                 const thread = document.getElementById('forumThread');
                 if (!thread) return;
-                const msgs = loadMessages();
+                const msgs = msgsList || loadMessages();
+
+                // When using local storage fallback, sort reverse. But Firestore listener returns desc already, so no reverse needed if it's from Firestore?
+                // Wait, getPosts in DB gives desc (newest first). Let's keep it consistent.
                 if (msgs.length === 0) {
                     thread.innerHTML = '<p class="muted">Belum ada pesan. Jadilah yang pertama!</p>';
                     return;
                 }
 
-                // Full thread (latest first)
-                thread.innerHTML = msgs.slice().reverse().map(m => `
+                const currentAnonId = currentAnon();
+                let currentUserId = currentAnonId;
+                if (typeof DB !== 'undefined' && DB.auth && DB.auth.getUid()) {
+                    currentUserId = DB.auth.getUid();
+                }
+
+                // Full thread processing
+                const listToRender = msgsList ? msgsList : msgs.slice().reverse();
+
+                thread.innerHTML = listToRender.map(m => {
+                    const timeRaw = m.createdAt ? (m.createdAt.toDate ? m.createdAt.toDate() : new Date(m.createdAt)) : new Date(m.time);
+                    const authorName = m.author || m.name || 'Anonim';
+                    const isMine = (m.authorId === currentUserId) || (m.authorId === currentAnonId);
+
+                    return `
                     <div class="forum-message" data-id="${m.id}">
                         <div class="msg-head">
-                            <div class="msg-meta"><strong>${escapeHtml(m.name)}</strong> • <span class="time">${timeAgo(new Date(m.time))}</span></div>
+                            <div class="msg-meta"><strong>${escapeHtml(authorName)}</strong> • <span class="time">${timeAgo(timeRaw)}</span></div>
                             <div class="msg-controls">
                                 <button class="btn tiny btn-reply" data-id="${m.id}">Reply</button>
                                 <button class="btn outline btn-react" data-id="${m.id}">👍 <span class="react-count">${(m.likedBy || []).length}</span></button>
                                 <div class="msg-menu-wrapper">
                                     <button class="btn icon btn-menu" data-id="${m.id}" aria-haspopup="true" aria-expanded="false">⋯</button>
                                     <div class="msg-menu" data-for="${m.id}" style="display:none;">
-                                        ${m.authorId === currentAnon() ? '<button class="btn-menu-delete" data-id="' + m.id + '">Hapus pesan</button>' : '<div class="muted">Tidak tersedia</div>'}
+                                        ${isMine ? '<button class="btn-menu-delete" data-id="' + m.id + '">Hapus pesan</button>' : '<div class="muted">Tidak tersedia</div>'}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="msg-body">${escapeHtml(m.text)}</div>
+                        <div class="msg-body">${escapeHtml(m.content || m.text)}</div>
                         <div class="replies">
-                            ${(m.replies || []).map(r => `
+                            ${(m.replies || []).map(r => {
+                        const rTimeRaw = r.createdAt ? new Date(r.createdAt) : new Date(r.time);
+                        return `
                                 <div class="reply-item" data-reply-id="${r.id}">
-                                    <div class="reply-meta"><strong>${escapeHtml(r.name)}</strong> • <span class="time">${timeAgo(new Date(r.time))}</span></div>
-                                    <div class="reply-body">${escapeHtml(r.text)}</div>
+                                    <div class="reply-meta"><strong>${escapeHtml(r.author || r.name)}</strong> • <span class="time">${timeAgo(rTimeRaw)}</span></div>
+                                    <div class="reply-body">${escapeHtml(r.content || r.text)}</div>
                                 </div>
-                            `).join('')}
+                                `;
+                    }).join('')}
                         </div>
                         <div class="reply-form-container" data-for="${m.id}" style="display:none; margin-top:0.5rem">
                             <input class="reply-input" placeholder="Balas pesan..." />
                             <button class="btn tiny btn-send-reply" data-for="${m.id}">Kirim</button>
                         </div>
                     </div>
-                `).join('');
-
-                // Auto-scroll to latest
-                try {
-                    thread.scrollTop = thread.scrollHeight;
-                } catch (e) { }
+                `}).join('');
             }
 
-            function postMessage(name, text) {
+            async function postMessage(name, text) {
                 if (!text || !text.trim()) return;
-                const msgs = loadMessages();
-                const entry = {
-                    id: 'm' + Date.now() + '-' + Math.floor(Math.random() * 999),
-                    name: name && name.trim() ? name.trim() : ('Anon' + Math.floor(Math.random() * 9000 + 1000)),
-                    text: text.trim(),
-                    time: new Date().toISOString(),
-                    authorId: currentAnon()
-                };
-                msgs.push(entry);
-                saveMessages(msgs);
-                renderMessages();
-                // Notify user briefly and highlight the new message
-                try {
-                    showToast((entry.name || 'Anon') + ' • pesan terkirim');
-                    // highlight newly added message element
-                    setTimeout(() => {
-                        const el = document.querySelector('.forum-message[data-id="' + entry.id + '"]');
-                        if (el) {
-                            el.classList.add('message-new');
-                            setTimeout(() => el.classList.remove('message-new'), 1800);
-                        }
-                    }, 40);
-                } catch (e) { }
-            }
 
-            function clearForum() {
-                if (!confirm('Hapus semua pesan dari penyimpanan lokal di perangkat ini?')) return;
-                localStorage.removeItem('forumMessages');
-                renderMessages();
+                if (typeof DB !== 'undefined' && DB.forum) {
+                    await DB.forum.createPost({ content: text.trim() });
+                } else {
+                    const msgs = loadMessages();
+                    const entry = {
+                        id: 'm' + Date.now() + '-' + Math.floor(Math.random() * 999),
+                        name: name && name.trim() ? name.trim() : ('Anon' + Math.floor(Math.random() * 9000 + 1000)),
+                        text: text.trim(),
+                        time: new Date().toISOString(),
+                        authorId: currentAnon()
+                    };
+                    msgs.push(entry);
+                    saveMessages(msgs);
+                    renderMessages(msgs);
+                }
+
+                try {
+                    showToast((name || 'Anon') + ' • pesan terkirim');
+                } catch (e) { }
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                // initialize
-                renderMessages();
+                // Determine if we use Firebase logic
+                if (typeof DB !== 'undefined' && DB.forum) {
+                    console.log('[Forum] Using Firestore real-time listener');
+                    DB.forum.getPosts(function (posts) {
+                        renderMessages(posts);
+                    });
+                } else {
+                    renderMessages(loadMessages());
+                }
+
                 // show last activity
                 updateLastActivityUI();
                 const last = JSON.parse(localStorage.getItem('lastActivity') || 'null');
@@ -366,7 +385,7 @@
                 });
 
                 // delete handler (event delegation)
-                document.getElementById('forumThread').addEventListener('click', function (e) {
+                document.getElementById('forumThread').addEventListener('click', async function (e) {
                     // Toggle msg menu
                     if (e.target.classList.contains('btn-menu')) {
                         const id = e.target.getAttribute('data-id');
@@ -385,17 +404,25 @@
                     // delete (from menu)
                     if (e.target.classList.contains('btn-menu-delete')) {
                         const id = e.target.getAttribute('data-id');
-                        let msgs = loadMessages();
-                        msgs = msgs.filter(m => m.id !== id);
-                        saveMessages(msgs);
-                        renderMessages();
+                        if (typeof DB !== 'undefined' && DB.forum) {
+                            await DB.forum.deletePost(id);
+                        } else {
+                            let msgs = loadMessages();
+                            msgs = msgs.filter(m => m.id !== id);
+                            saveMessages(msgs);
+                            renderMessages();
+                        }
                         return;
                     }
 
                     // reaction
                     if (e.target.classList.contains('btn-react')) {
                         const id = e.target.getAttribute('data-id');
-                        toggleReaction(id);
+                        if (typeof DB !== 'undefined' && DB.forum) {
+                            await DB.forum.toggleReaction(id);
+                        } else {
+                            toggleReaction(id);
+                        }
                         return;
                     }
 
@@ -420,7 +447,12 @@
                         const text = (input && input.value) ? input.value.trim() : '';
                         if (!text) { alert('Isi balasan terlebih dahulu.'); return; }
                         const name = sessionStorage.getItem('anonName') || '';
-                        postReply(forId, name, text);
+
+                        if (typeof DB !== 'undefined' && DB.forum) {
+                            await DB.forum.addReply(forId, { content: text });
+                        } else {
+                            postReply(forId, name, text);
+                        }
                         input.value = '';
                         container.style.display = 'none';
                         return;
@@ -431,19 +463,16 @@
                 document.addEventListener('click', function (e) {
                     const openMenus = document.querySelectorAll('.msg-menu');
                     if (!openMenus || openMenus.length === 0) return;
-                    // if click inside a msg-menu or on a btn-menu, ignore
                     if (e.target.closest && (e.target.closest('.msg-menu') || e.target.closest('.btn-menu'))) return;
                     openMenus.forEach(m => m.style.display = 'none');
                 });
-
-                // Note: nickname input removed from UI; replies will use session-stored anonName if set.
 
                 // Save last activity when opening forum
                 setLastActivity('Forum');
                 updateLastActivityUI();
             });
 
-            // Reaction toggle
+            // Reaction toggle fallback
             function toggleReaction(messageId) {
                 const anon = currentAnon();
                 let msgs = loadMessages();
@@ -459,34 +488,7 @@
                 renderMessages();
             }
 
-            // Show typing indicator when receiving localStorage events
-            function showTypingIndicator(payload) {
-                const el = document.getElementById('typingIndicator');
-                if (!el) return;
-                if (!payload) { el.textContent = ''; return; }
-                const now = Date.now();
-                if (now - payload.time > 3000) { el.textContent = ''; return; }
-                el.textContent = payload.name + ' sedang mengetik...';
-            }
-
-            // React to storage events for typing and messages
-            window.addEventListener('storage', function (e) {
-                if (!e.key) return;
-                if (e.key === 'forumMessages' || e.key === 'recentActivities' || e.key === 'lastActivity') {
-                    renderMessages();
-                    updateLastActivityUI();
-                }
-                if (e.key === 'forum_typing') {
-                    try { const p = JSON.parse(e.newValue || 'null'); showTypingIndicator(p); } catch (e) { }
-                }
-            });
-
-            // Poll typing indicator from localStorage on load (in case set by same tab)
-            setInterval(function () {
-                try { const p = JSON.parse(localStorage.getItem('forum_typing') || 'null'); showTypingIndicator(p); } catch (e) { }
-            }, 800);
-
-            // Post a reply to a message
+            // Post a reply fallback
             function postReply(messageId, name, text) {
                 if (!text || !text.trim()) return;
                 let msgs = loadMessages();
@@ -503,11 +505,14 @@
                 saveMessages(msgs);
                 renderMessages();
             }
+
             // Sync across tabs using storage event
             window.addEventListener('storage', function (e) {
                 if (!e.key || e.key === 'forumMessages' || e.key === 'recentActivities' || e.key === 'lastActivity') {
-                    renderMessages();
-                    updateLastActivityUI();
+                    if (typeof DB === 'undefined' || !DB.forum) {
+                        renderMessages();
+                        updateLastActivityUI();
+                    }
                 }
             });
 
