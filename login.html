@@ -840,6 +840,13 @@
         })();
     </script>
 
+    <!-- Firebase SDK (CDN - no npm needed) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-db.js"></script>
+
     <script src="script.js"></script>
 
     <!-- Tab switching + reveal -->
@@ -865,11 +872,10 @@
         })();
     </script>
 
-    <!-- Fallback auth -->
+    <!-- Firebase-powered auth (replaces old localStorage auth) -->
     <script>
         (function () {
             // Only add fallback signin if script.js didn't handle it
-            // (updateUserName is local to script.js DOMContentLoaded, so we check a different flag)
             if (window._authHandlersReady) return;
             const form = document.getElementById('signinForm');
             if (!form) return;
@@ -877,8 +883,29 @@
                 e.preventDefault();
                 const email = ((document.getElementById('signinEmail') && document.getElementById('signinEmail').value) || '').trim().toLowerCase();
                 const password = (document.getElementById('signinPassword') && document.getElementById('signinPassword').value) || '';
-                const remember = !!(document.getElementById('rememberMe') && document.getElementById('rememberMe').checked);
                 if (!email || !password) return alert('Harap isi email dan password!');
+
+                // Try Firebase Auth first
+                if (typeof DB !== 'undefined' && DB.auth) {
+                    const result = await DB.auth.signIn(email, password);
+                    if (result.success) {
+                        sessionStorage.setItem('fromLogin', 'true');
+                        try { localStorage.setItem('fromLogin', 'true'); } catch (e) { }
+                        window.location.href = 'index.html';
+                        return;
+                    } else {
+                        // If Firebase says user not found, try localStorage fallback
+                        if (result.code === 'auth/user-not-found') {
+                            console.log('[auth] Firebase user not found, trying localStorage fallback');
+                        } else if (result.code === 'auth/wrong-password' || result.code === 'auth/invalid-credential') {
+                            return alert('Password salah.');
+                        } else {
+                            return alert('Login gagal: ' + result.error);
+                        }
+                    }
+                }
+
+                // Fallback to localStorage auth for existing users
                 let users = {}; try { users = JSON.parse(localStorage.getItem('users') || '{}'); } catch (e) { }
                 const user = users[email];
                 if (!user) return alert('Akun tidak ditemukan. Silakan daftar terlebih dahulu.');
@@ -891,7 +918,6 @@
                 } catch (err) { return alert('Terjadi kesalahan verifikasi.'); }
                 const userName = user.name || (email.split('@')[0]) || 'Siswa';
                 try {
-                    // Always persist to localStorage so session survives browser close
                     localStorage.setItem('userLoggedIn', 'true'); localStorage.setItem('userEmail', email); localStorage.setItem('userName', userName); localStorage.setItem('userRole', user.role || 'siswa');
                     sessionStorage.setItem('userLoggedIn', 'true'); sessionStorage.setItem('userEmail', email); sessionStorage.setItem('userName', userName); sessionStorage.setItem('userRole', user.role || 'siswa');
                     try { localStorage.setItem('fromLogin', 'true'); } catch (e) { }

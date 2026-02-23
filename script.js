@@ -59,10 +59,28 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             const email = (document.getElementById('signinEmail').value || '').trim().toLowerCase();
             const password = document.getElementById('signinPassword').value || '';
-            const rememberMe = document.getElementById('rememberMe').checked;
 
             if (!email || !password) return alert('Harap isi email dan password!');
 
+            // Try Firebase Auth first
+            if (typeof DB !== 'undefined' && DB.auth) {
+                const result = await DB.auth.signIn(email, password);
+                if (result.success) {
+                    sessionStorage.setItem('fromLogin', 'true');
+                    try { localStorage.setItem('fromLogin', 'true'); } catch (e) { }
+                    window.location.href = 'index.html';
+                    return;
+                } else if (result.code !== 'auth/user-not-found') {
+                    if (result.code === 'auth/wrong-password' || result.code === 'auth/invalid-credential') {
+                        return alert('Password salah.');
+                    }
+                    return alert('Login gagal: ' + result.error);
+                }
+                // If user-not-found in Firebase, try localStorage fallback below
+                console.log('[auth] Firebase user not found, trying localStorage fallback');
+            }
+
+            // Fallback to localStorage auth
             const users = getUsers();
             const user = users[email];
             if (!user) {
@@ -75,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const userName = user.name || email.split('@')[0];
-            // Always persist login in localStorage so session survives browser close
             localStorage.setItem('userLoggedIn', 'true');
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userName', userName);
@@ -123,9 +140,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Harap setujui syarat dan ketentuan!');
                 return;
             }
-            // Save user credentials (hashed) and auto-login
+            // Save user credentials and auto-login
             (async function () {
                 const normalizedEmail = (email || '').trim().toLowerCase();
+
+                // Try Firebase Auth signup first
+                if (typeof DB !== 'undefined' && DB.auth) {
+                    const result = await DB.auth.signUp(normalizedEmail, password, name, role);
+                    if (result.success) {
+                        console.log('[auth] Firebase signup success');
+                        sessionStorage.setItem('fromSignup', 'true');
+                        sessionStorage.setItem('justRegistered', 'true');
+                        try { localStorage.setItem('fromSignup', 'true'); } catch (e) { }
+                        alert('Pendaftaran berhasil! Mengarahkan ke aplikasi...');
+                        window.location.href = 'index.html';
+                        return;
+                    } else if (result.code === 'auth/email-already-in-use') {
+                        return alert('Email sudah terdaftar. Silakan masuk.');
+                    } else {
+                        console.error('[auth] Firebase signup failed:', result.error);
+                        // Fall through to localStorage as backup
+                    }
+                }
+
+                // Fallback: localStorage signup
                 const users = (function () { try { return JSON.parse(localStorage.getItem('users') || '{}'); } catch (e) { return {}; } })();
                 if (users[normalizedEmail]) return alert('Email sudah terdaftar. Silakan masuk.');
                 const pwHash = await computeHash(password);
@@ -140,12 +178,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 sessionStorage.setItem('userName', name);
                 sessionStorage.setItem('userEmail', normalizedEmail);
                 sessionStorage.setItem('userRole', role);
-                // Flag to indicate we came from signup so index can advance to dashboard
                 sessionStorage.setItem('fromSignup', 'true');
                 sessionStorage.setItem('justRegistered', 'true');
                 try { localStorage.setItem('fromSignup', 'true'); } catch (e) { }
 
-                // Redirect to index (index will then forward to dashboard when it sees fromSignup)
                 window.location.href = 'index.html';
             })();
         });

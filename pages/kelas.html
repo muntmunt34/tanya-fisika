@@ -430,6 +430,12 @@
     <script src="../notification-config.js"></script>
     <script src="../notification-service.js"></script>
     <!-- Main App Script -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../firebase-db.js"></script>
     <script src="../script.js"></script>
     <script>
         // Simple robust form initialization
@@ -517,129 +523,41 @@
                 }
             };
 
-            // FORM SUBMISSION - This is the critical part
-            form.onsubmit = function (e) {
+            // FORM SUBMISSION — save task to Firestore (or localStorage fallback)
+            form.onsubmit = async function (e) {
                 e.preventDefault();
                 console.log('[FORM] Submit event fired!');
 
                 const titleEl = document.getElementById('taskTitleInput');
                 const descEl = document.getElementById('taskDescInput');
                 const dueEl = document.getElementById('taskDueInput');
-                const fileEl = document.getElementById('taskFileInput');
 
                 const title = (titleEl?.value?.trim()) || 'Tugas Baru';
                 const desc = (descEl?.value?.trim()) || '';
                 const due = dueEl?.value || '';
-                const taskId = 'task-' + Date.now();
 
-                console.log('[FORM] Data:', { title, desc, due, taskId });
+                console.log('[FORM] Data:', { title, desc, due });
 
-                // Save task
                 try {
-                    let tasks = {};
-                    try {
-                        tasks = JSON.parse(localStorage.getItem('classTasks') || '{}');
-                    } catch (e) {
-                        console.error('[FORM] Parse error:', e);
-                        tasks = {};
-                    }
-
-                    tasks[taskId] = {
-                        id: taskId,
-                        title: title,
-                        desc: desc,
-                        due: due
-                    };
-
-                    console.log('[FORM] Tasks object:', tasks);
-
-                    // Handle file if exists
-                    if (fileEl && fileEl.files && fileEl.files.length > 0) {
-                        const file = fileEl.files[0];
-                        console.log('[FORM] File detected:', file.name, file.size);
-
-                        const reader = new FileReader();
-                        reader.onload = function (evt) {
-                            console.log('[FILE] Read complete');
-                            try {
-                                let uploaded = {};
-                                try {
-                                    uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
-                                } catch (e) {
-                                    uploaded = {};
-                                }
-
-                                uploaded[taskId] = {
-                                    name: file.name,
-                                    type: file.type,
-                                    data: evt.target.result
-                                };
-
-                                localStorage.setItem('uploadedFiles', JSON.stringify(uploaded));
-                                localStorage.setItem('classTasks', JSON.stringify(tasks));
-
-                                console.log('[FORM] ✓ Saved with file');
-                                finalizeSave();
-                            } catch (err) {
-                                console.error('[FILE] Save error:', err);
-                                alert('Error saving file: ' + err.message);
-                            }
-                        };
-
-                        reader.onerror = function () {
-                            console.error('[FILE] Read error');
-                            alert('Error reading file');
-                        };
-
-                        reader.readAsDataURL(file);
+                    // Try Firebase Firestore first
+                    if (typeof DB !== 'undefined' && DB.tasks) {
+                        const task = await DB.tasks.create({ title, desc, due });
+                        console.log('[FORM] ✓ Saved to Firestore:', task.id);
                     } else {
-                        // No file
-                        console.log('[FORM] No file');
-                        localStorage.setItem('classTasks', JSON.stringify(tasks));
-                        localStorage.setItem('completedTasks', localStorage.getItem('completedTasks') || '[]');
-                        console.log('[FORM] ✓ Saved without file');
-                        finalizeSave();
-                    }
-
-                    function finalizeSave() {
-                        console.log('[FORM] Finalizing...');
-
-                        // Get the task data we just saved
-                        const titleEl = document.getElementById('taskTitleInput');
-                        const dueEl = document.getElementById('taskDueInput');
+                        // Fallback to localStorage
                         const taskId = 'task-' + Date.now();
-
-                        // Broadcast task to all students in class
-                        try {
-                            broadcastTaskToStudents({
-                                id: taskId,
-                                title: titleEl?.value?.trim() || 'Tugas Baru',
-                                due: dueEl?.value || ''
-                            });
-                        } catch (e) {
-                            console.log('[Broadcast] Error:', e);
-                        }
-
-                        // Trigger re-render
-                        if (window.__classTasks && window.__classTasks.render) {
-                            console.log('[FORM] Calling render');
-                            window.__classTasks.render();
-                        }
-
-                        if (window.updateClassProgress) {
-                            console.log('[FORM] Calling updateClassProgress');
-                            window.updateClassProgress();
-                        }
-
-                        // Close modal
-                        modal.style.display = 'none';
-                        console.log('[FORM] Modal closed');
-
-                        // Reload page to show new task
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
+                        let tasks = {};
+                        try { tasks = JSON.parse(localStorage.getItem('classTasks') || '{}'); } catch (e) { tasks = {}; }
+                        tasks[taskId] = { id: taskId, title, desc, due };
+                        localStorage.setItem('classTasks', JSON.stringify(tasks));
+                        console.log('[FORM] ✓ Saved to localStorage:', taskId);
                     }
+
+                    // Close modal
+                    modal.style.display = 'none';
+
+                    // Reload page to show new task (Firestore listener will also auto-update)
+                    setTimeout(() => { location.reload(); }, 1000);
 
                 } catch (err) {
                     console.error('[FORM] Fatal error:', err);
@@ -728,35 +646,27 @@
     </script>
 
     <script>
-        // Render tasks from `localStorage.classTasks`. Do NOT create sample tasks; keep list empty by default.
-        // Clear any previous tasks/submissions so teacher fills them manually.
+        // Render tasks from Firestore (or localStorage fallback)
         (function () {
-            // Keep tasks persistent: do not clear `localStorage.classTasks` here.
             const storageKey = 'classTasks';
-
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            function getTasks() {
-                try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { return {}; }
-            }
 
             function formatDate(iso) {
                 if (!iso) return '';
                 try { const d = new Date(iso); return d.toLocaleDateString(); } catch (e) { return iso; }
             }
 
-            function renderTasks() {
-                const tasks = getTasks();
+            function getLocalTasks() {
+                try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { return {}; }
+            }
+
+            // Render task list from an array of task objects
+            function renderTaskList(taskArray) {
                 const list = document.getElementById('assignmentList');
                 if (!list) return;
                 list.innerHTML = '';
                 const userRole = sessionStorage.getItem('userRole') || localStorage.getItem('userRole') || 'siswa';
-                const ids = Object.keys(tasks);
-                if (ids.length === 0) {
+
+                if (!taskArray || taskArray.length === 0) {
                     const empty = document.createElement('div');
                     empty.className = 'card';
                     empty.innerHTML = '<p class="muted">Belum ada tugas. Guru dapat membuat tugas lewat tombol +.</p>';
@@ -764,20 +674,8 @@
                     return;
                 }
 
-                // Sort by creation time descending (IDs contain timestamp)
-                ids.sort((a, b) => {
-                    try {
-                        const ta = parseInt((tasks[a].id || '').replace(/^task-/, '')) || 0;
-                        const tb = parseInt((tasks[b].id || '').replace(/^task-/, '')) || 0;
-                        return tb - ta;
-                    } catch (e) { return 0; }
-                });
-
-                const deleted = (function () { try { return JSON.parse(localStorage.getItem('deletedTasks') || '[]'); } catch (e) { return []; } })();
-                ids.forEach(id => {
-                    const t = tasks[id];
+                taskArray.forEach(t => {
                     if (!t) return;
-                    if (deleted.includes(t.id)) return; // skip tasks marked deleted
                     const card = document.createElement('div');
                     card.className = 'card assignment-card';
                     card.setAttribute('data-task', t.id);
@@ -793,46 +691,24 @@
                         }
                     }
 
-                    // determine if completed
                     const completedList = JSON.parse(localStorage.getItem('completedTasks') || '[]');
                     const isDone = completedList.indexOf(t.id) !== -1;
 
-                    // show attachment link if present
-                    let attachHtml = '';
-                    try {
-                        const uploaded = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
-                        if (uploaded && uploaded[t.id]) {
-                            const a = uploaded[t.id];
-                            attachHtml = `<div class="attachment" style="margin-top:.5rem"><a href="${a.data}" download="${a.name}" target="_blank">📎 ${a.name}</a></div>`;
-                        }
-                    } catch (e) { }
-
-                    // show student's submission status if available (session-based studentId)
-                    let submissionHtml = '';
-                    try {
-                        const studentId = sessionStorage.getItem('studentId') || null;
-                        if (studentId) {
-                            const subs = JSON.parse(localStorage.getItem('submissions') || '{}');
-                            const arr = subs[t.id] || [];
-                            const me = arr.find(s => s.studentId === studentId);
-                            if (me) { submissionHtml = `<div class="muted" style="margin-top:.5rem">Anda: Dikirim • ${new Date(me.time).toLocaleDateString()}</div>`; }
-                        }
-                    } catch (e) { }
+                    const createdByHtml = t.createdByName ? '<br><small class="muted">Oleh: ' + t.createdByName + '</small>' : '';
 
                     card.innerHTML = `
                     <div class="assignment-main">
                         <h3>${t.title}</h3>
-                        <p class="muted">${t.desc} ${dueHtml}</p>
-                        ${attachHtml}
-                        ${submissionHtml}
+                        <p class="muted">${t.desc || ''} ${dueHtml}</p>
+                        ${createdByHtml}
                     </div>
                     <div class="assignment-actions">
                         <button class="btn start-lesson" data-task="${t.id}" data-label="${t.title}">Buka</button>
                         <button class="btn ${isDone ? 'outline' : ''} btn-complete" data-task="${t.id}" ${isDone ? 'disabled' : ''}>${isDone ? 'Selesai' : 'Tandai Selesai'}</button>
                         ${userRole === 'guru' ? `<div class="task-menu-wrapper">
                             <button class="task-menu-btn" data-task="${t.id}" aria-label="Menu">⋯</button>
-                            <div class="task-menu-dropdown" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #e0e0e0;border-radius:6px;min-width:150px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;margin-top:4px;">
-                                <button class="task-menu-item delete-task" data-task="${t.id}" style="width:100%;padding:10px 12px;border:none;background:none;text-align:left;cursor:pointer;color:#e63946;font-size:14px;border-radius:6px;transition:background 0.2s;display:block;">Hapus Tugas</button>
+                            <div class="task-menu-dropdown" style="display:none;position:absolute;right:0;top:100%;background:rgba(15,27,53,0.95);border:1px solid rgba(0,217,255,0.2);border-radius:6px;min-width:150px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:1000;margin-top:4px;">
+                                <button class="task-menu-item delete-task" data-task="${t.id}">Hapus Tugas</button>
                             </div>
                         </div>` : ''}
                     </div>
@@ -841,13 +717,29 @@
                 });
             }
 
-            // initial render from persisted storage
-            renderTasks();
+            // Try Firestore real-time listener, fallback to localStorage
+            let unsubscribe = null;
+            if (typeof DB !== 'undefined' && DB.tasks) {
+                console.log('[Tasks] Using Firestore real-time listener');
+                unsubscribe = DB.tasks.getAll(function (tasks) {
+                    console.log('[Tasks] Firestore update:', tasks.length, 'tasks');
+                    renderTaskList(tasks);
+                });
+            } else {
+                console.log('[Tasks] Using localStorage fallback');
+                const localTasks = getLocalTasks();
+                renderTaskList(Object.values(localTasks));
+            }
 
-            // expose simple API for other scripts
+            // Expose API
             window.__classTasks = {
-                get: getTasks,
-                render: renderTasks
+                get: getLocalTasks,
+                render: function () {
+                    if (!unsubscribe) {
+                        renderTaskList(Object.values(getLocalTasks()));
+                    }
+                    // If using Firestore, auto-updates via listener
+                }
             };
 
             // Add event delegation for task menu and delete functionality
@@ -893,33 +785,27 @@
 
             function deleteTask(taskId) {
                 try {
-                    const tasks = getTasks();
-                    const deleted = (() => { try { return JSON.parse(localStorage.getItem('deletedTasks') || '[]'); } catch (e) { return []; } })();
+                    // Try Firebase Firestore first
+                    if (typeof DB !== 'undefined' && DB.tasks) {
+                        DB.tasks.delete(taskId).then(() => {
+                            console.log('[Delete] Removed from Firestore:', taskId);
+                            alert('Tugas berhasil dihapus.');
+                        }).catch(err => {
+                            console.error('[Delete] Firestore error:', err);
+                            alert('Gagal menghapus tugas.');
+                        });
+                        return;
+                    }
 
-                    // Add to deleted tasks list
+                    // Fallback: localStorage
+                    const deleted = (() => { try { return JSON.parse(localStorage.getItem('deletedTasks') || '[]'); } catch (e) { return []; } })();
                     if (!deleted.includes(taskId)) {
                         deleted.push(taskId);
                         localStorage.setItem('deletedTasks', JSON.stringify(deleted));
                     }
 
-                    // Also remove from completedTasks if exists
-                    try {
-                        const completed = JSON.parse(localStorage.getItem('completedTasks') || '[]');
-                        const idx = completed.indexOf(taskId);
-                        if (idx !== -1) {
-                            completed.splice(idx, 1);
-                            localStorage.setItem('completedTasks', JSON.stringify(completed));
-                        }
-                    } catch (e) { }
-
-                    // Re-render
-                    if (typeof renderTasks === 'function') {
-                        renderTasks();
-                    }
-
-                    // Update progress
-                    if (typeof updateClassProgress === 'function') {
-                        updateClassProgress();
+                    if (window.__classTasks && window.__classTasks.render) {
+                        window.__classTasks.render();
                     }
 
                     alert('Tugas berhasil dihapus.');
