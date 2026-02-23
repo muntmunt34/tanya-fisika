@@ -1235,15 +1235,23 @@
     <script>
         // Initialize XP display
         (function initXP() {
+            // If this is a brand new account, skip daily login bonus
+            const isNewSignup = sessionStorage.getItem('justRegistered');
+            if (isNewSignup) {
+                sessionStorage.removeItem('justRegistered');
+                // New user starts with 0 XP — no daily login bonus on first visit
+            } else {
+                // Daily login bonus for returning users
+                const loginResult = XPManager.checkDailyLogin();
+                if (loginResult && loginResult.leveledUp) {
+                    XPManager.showLevelUpPopup(loginResult.newInfo);
+                }
+            }
+
             const info = XPManager.getData();
             document.getElementById('xpCount').textContent = info.totalXP.toLocaleString('id-ID');
             document.getElementById('levelCount').textContent = info.level;
             XPManager.renderXPBar('xpBarContainer');
-            // Daily login bonus
-            const loginResult = XPManager.checkDailyLogin();
-            if (loginResult && loginResult.leveledUp) {
-                XPManager.showLevelUpPopup(loginResult.newInfo);
-            }
         })();
     </script>
     <!-- Starfield Script -->

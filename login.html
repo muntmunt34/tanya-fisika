@@ -868,7 +868,9 @@
     <!-- Fallback auth -->
     <script>
         (function () {
-            if (window.updateUserName) return;
+            // Only add fallback signin if script.js didn't handle it
+            // (updateUserName is local to script.js DOMContentLoaded, so we check a different flag)
+            if (window._authHandlersReady) return;
             const form = document.getElementById('signinForm');
             if (!form) return;
             form.addEventListener('submit', async function (e) {
@@ -889,43 +891,14 @@
                 } catch (err) { return alert('Terjadi kesalahan verifikasi.'); }
                 const userName = user.name || (email.split('@')[0]) || 'Siswa';
                 try {
-                    const s = remember ? localStorage : sessionStorage;
-                    s.setItem('userLoggedIn', 'true'); s.setItem('userEmail', email); s.setItem('userName', userName); s.setItem('userRole', user.role || 'siswa');
+                    // Always persist to localStorage so session survives browser close
+                    localStorage.setItem('userLoggedIn', 'true'); localStorage.setItem('userEmail', email); localStorage.setItem('userName', userName); localStorage.setItem('userRole', user.role || 'siswa');
+                    sessionStorage.setItem('userLoggedIn', 'true'); sessionStorage.setItem('userEmail', email); sessionStorage.setItem('userName', userName); sessionStorage.setItem('userRole', user.role || 'siswa');
                     try { localStorage.setItem('fromLogin', 'true'); } catch (e) { }
                 } catch (err) { }
                 setTimeout(() => { window.location.href = 'index.html'; }, 150);
             });
-            const signup = document.getElementById('signupForm');
-            if (signup) signup.addEventListener('submit', async function (ev) {
-                ev.preventDefault();
-                const name = (document.getElementById('signupName') && document.getElementById('signupName').value) || '';
-                const email = ((document.getElementById('signupEmail') && document.getElementById('signupEmail').value) || '').trim().toLowerCase();
-                const password = (document.getElementById('signupPassword') && document.getElementById('signupPassword').value) || '';
-                const confirm = (document.getElementById('signupConfirmPassword') && document.getElementById('signupConfirmPassword').value) || '';
-                const role = (document.querySelector('input[name="signupRole"]:checked') && document.querySelector('input[name="signupRole"]:checked').value) || 'siswa';
-                const agree = !!(document.getElementById('agreeTerms') && document.getElementById('agreeTerms').checked);
-                if (!name || !email || !password || !confirm) return alert('Harap isi semua field!');
-                if (password !== confirm) return alert('Password dan konfirmasi password tidak cocok!');
-                if (password.length < 6) return alert('Password minimal 6 karakter!');
-                if (!agree) return alert('Harap setujui syarat dan ketentuan!');
-                let pwHash; try {
-                    if (window.crypto && crypto.subtle && typeof crypto.subtle.digest === 'function') {
-                        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
-                        pwHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-                    } else { let h = 5381; for (let i = 0; i < password.length; i++) { h = ((h << 5) + h) + password.charCodeAt(i); h = h & 0xffffffff; } pwHash = (h >>> 0).toString(16).padStart(8, '0'); }
-                } catch (err) { return alert('Terjadi kesalahan saat membuat akun.'); }
-                try {
-                    const users = JSON.parse(localStorage.getItem('users') || '{}');
-                    if (users[email]) return alert('Email sudah terdaftar. Silakan masuk.');
-                    users[email] = { name, email, passwordHash: pwHash, role, createdAt: new Date().toISOString() };
-                    localStorage.setItem('users', JSON.stringify(users));
-                    sessionStorage.setItem('userLoggedIn', 'true'); sessionStorage.setItem('userEmail', email);
-                    sessionStorage.setItem('userName', name); sessionStorage.setItem('userRole', role);
-                    sessionStorage.setItem('fromSignup', 'true'); try { localStorage.setItem('fromSignup', 'true'); } catch (e) { }
-                    alert('Pendaftaran berhasil! Mengarahkan ke aplikasi...');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 120);
-                } catch (err) { alert('Gagal menyimpan data akun.'); }
-            });
+            // Signup handler is in script.js — no duplicate needed here
         })();
     </script>
 </body>

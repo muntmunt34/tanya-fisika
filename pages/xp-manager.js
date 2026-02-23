@@ -5,7 +5,11 @@
 // Usage: XPManager.addXP(amount, source); XPManager.getData();
 
 const XPManager = (() => {
-    const LS_KEY = 'tanyafisika_xp';
+    // Dynamic key: per-user XP storage
+    function getKey() {
+        const email = sessionStorage.getItem('userEmail') || localStorage.getItem('userEmail') || '';
+        return email ? 'tanyafisika_xp_' + email : 'tanyafisika_xp';
+    }
 
     // Level thresholds — XP needed to REACH each level
     // Level 1: 0, Level 2: 100, Level 3: 300 ... grows progressively
@@ -35,14 +39,18 @@ const XPManager = (() => {
 
     function load() {
         try {
-            const raw = JSON.parse(localStorage.getItem(LS_KEY));
+            const raw = JSON.parse(localStorage.getItem(getKey()));
             if (raw && typeof raw.totalXP === 'number') return raw;
         } catch (e) { /* ignore */ }
         return { totalXP: 0, history: [], lastLogin: null };
     }
 
     function save(data) {
-        localStorage.setItem(LS_KEY, JSON.stringify(data));
+        localStorage.setItem(getKey(), JSON.stringify(data));
+    }
+
+    function reset() {
+        localStorage.removeItem(getKey());
     }
 
     function getLevelInfo(xp) {
@@ -169,6 +177,7 @@ const XPManager = (() => {
         checkDailyLogin,
         renderXPBar,
         showLevelUpPopup,
+        reset,
         LEVELS,
         XP_REWARDS
     };
